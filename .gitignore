@@ -42,6 +42,7 @@ project/bin/windows/*
 # VSCode
 .vscode/*
 !.vscode/extensions.json
+!.vscode/tasks.json
 
 # Visual Studio Code workspace file
 *.code-workspace
