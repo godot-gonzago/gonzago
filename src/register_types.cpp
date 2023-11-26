@@ -1,11 +1,14 @@
-#include "register_types.h"
+#include "register_types.hpp"
 
-#include "gdexample.h"
+#include "gdexample.hpp"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
+
+//#include <godot_cpp/classes/engine.hpp>
+//#include <godot_cpp/classes/editor_plugin.hpp>
 
 using namespace godot;
 
@@ -13,6 +16,9 @@ void initialize_gonzago_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
+
+	// https://github.com/BOTLANNER/godot-gif/blob/main/src/editor/import_gif_to_animated_texture.h
+	// https://github.com/BOTLANNER/godot-gif/blob/main/src/register_types.cpp
 
 	ClassDB::register_class<GDExample>();
 }
