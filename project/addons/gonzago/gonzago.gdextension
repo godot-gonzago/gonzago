@@ -1,0 +1,23 @@
+[configuration]
+
+entry_symbol = "gonzago_library_init"
+compatibility_minimum = "4.1"
+
+[libraries]
+
+macos.debug = "res://addons/gonzago/bin/libgonzago.macos.debug.framework"
+macos.release = "res://addons/gonzago/bin/libgonzago.macos.release.framework"
+windows.debug.x86_32 = "res://addons/gonzago/bin/libgonzago.windows.debug.x86_32.dll"
+windows.release.x86_32 = "res://addons/gonzago/bin/libgonzago.windows.release.x86_32.dll"
+windows.debug.x86_64 = "res://addons/gonzago/bin/libgonzago.windows.debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/gonzago/bin/libgonzago.windows.release.x86_64.dll"
+linux.debug.x86_64 = "res://addons/gonzago/bin/libgonzago.linux.debug.x86_64.so"
+linux.release.x86_64 = "res://addons/gonzago/bin/libgonzago.linux.release.x86_64.so"
+linux.debug.arm64 = "res://addons/gonzago/bin/libgonzago.linux.debug.arm64.so"
+linux.release.arm64 = "res://addons/gonzago/bin/libgonzago.linux.release.arm64.so"
+linux.debug.rv64 = "res://addons/gonzago/bin/libgonzago.linux.debug.rv64.so"
+linux.release.rv64 = "res://addons/gonzago/bin/libgonzago.linux.release.rv64.so"
+android.debug.x86_64 = "res://addons/gonzago/bin/libgonzago.android.debug.x86_64.so"
+android.release.x86_64 = "res://addons/gonzago/bin/libgonzago.android.release.x86_64.so"
+android.debug.arm64 = "res://addons/gonzago/bin/libgonzago.android.debug.arm64.so"
+android.release.arm64 = "res://addons/gonzago/bin/libgonzago.android.release.arm64.so"
