@@ -16,29 +16,21 @@ env = SConscript("godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
-addon_path = "project/addons/gonzago"
-project_name = "gonzago"
-debug_or_release = "release" if env["target"] == "template_release" else "debug"
+is_editor = "" if env["target"] == "template_release" else "_editor"
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "{}/bin/lib{}.{}.{}.framework/libgdexample.{}.{}".format(
-            addon_path,
-            project_name,
+        "project/addons/gonzago/lib/{0}/gonzago_{0}{1}.framework/libgonzago.{0}{1}".format(
             env["platform"],
-            debug_or_release,
-            env["platform"],
-            debug_or_release
+            is_editor
         ),
         source=sources,
     )
 else:
     library = env.SharedLibrary(
-        "{}/bin/lib{}.{}.{}.{}{}".format(
-            addon_path,
-            project_name,
+        "project/addons/gonzago/lib/{0}/gonzago_{0}{1}-{2}{3}".format(
             env["platform"],
-            debug_or_release,
+            is_editor,
             env["arch"],
             env["SHLIBSUFFIX"]
         ),
