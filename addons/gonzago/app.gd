@@ -1,4 +1,5 @@
 @tool
+class_name GonzagoApp
 extends Node
 
 
