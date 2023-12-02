@@ -2,8 +2,16 @@
 extends EditorPlugin
 
 
+#static var _dependant_plugins: Array[GonzagoEditorPlugin] = []
+
+
+#static func register_dependant_plugin(plugin: GonzagoEditorPlugin) -> void:
+#    if not plugin in _dependant_plugins:
+#        _dependant_plugins.push_back(plugin)
+
+
 func _init() -> void:
-    name = "GonzagoPlugin"
+    name = "GonzagoCorePlugin"
 
 
 func _enter_tree() -> void:
