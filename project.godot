@@ -13,10 +13,30 @@ config_version=5
 config/name="Gonzago"
 config/description="Addons, tools and utilities for the Godot game engine"
 config/version="0.0.1"
+run/main_scene="res://main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Gonzago"
 config/project_settings_override="user://settings.cfg"
 config/features=PackedStringArray("4.2", "Forward Plus")
 boot_splash/bg_color=Color(0.6, 0.835294, 0.584314, 1)
-boot_splash/fullsize=false
-config/icon="res://icon.svg"
+boot_splash/image="res://addons/gonzago/assets/gonzago-splash.png"
+config/icon="res://addons/gonzago/assets/gonzago-icon.svg"
+
+[audio]
+
+buses/default_bus_layout="res://addons/gonzago/assets/default_bus_layout.tres"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/window_width_override=1280
+window/size/window_height_override=720
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gonzago/plugin.cfg")
+
+[rendering]
+
+environment/defaults/default_environment="res://addons/gonzago/assets/default_env.tres"
