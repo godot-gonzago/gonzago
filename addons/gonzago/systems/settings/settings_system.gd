@@ -1,15 +1,16 @@
 @tool
-extends EditorPlugin
+class_name GonzagoSettingsSystem
+extends GonzagoSystem
 
 
-func _enter_tree() -> void:
-    var toggle_fullscreen_event := InputEventKey.new()
-    toggle_fullscreen_event.physical_keycode = KEY_ENTER
-    toggle_fullscreen_event.alt_pressed = true
-    _add_input_action("toggle_fullscreen", [toggle_fullscreen_event])
-
-func _exit_tree() -> void:
-    _remove_input_action("toggle_fullscreen")
+#func _enter_tree() -> void:
+#    var toggle_fullscreen_event := InputEventKey.new()
+#    toggle_fullscreen_event.physical_keycode = KEY_ENTER
+#    toggle_fullscreen_event.alt_pressed = true
+#    _add_input_action("toggle_fullscreen", [toggle_fullscreen_event])
+#
+#func _exit_tree() -> void:
+#    _remove_input_action("toggle_fullscreen")
 
 # Editor isn't updated for some reason
 func _add_input_action(action: String, events: Array[InputEvent], deadzone: float = 0.5) -> void:
@@ -25,6 +26,13 @@ func _add_input_action(action: String, events: Array[InputEvent], deadzone: floa
         events_array.append_array(events)
         var setting_value := { "deadzone": deadzone, "events": events_array }
         ProjectSettings.set_setting(setting_name, setting_value)
+#        ProjectSettings.add_property_info({
+#            "name": setting_name,
+#            "type": TYPE_DICTIONARY,
+#            "hint": PROPERTY_HINT_NONE,
+#            "hint_string": ""
+#        })
+#        ProjectSettings.set_initial_value(setting_name, setting_value)
 
 func _remove_input_action(action: String) -> void:
     if InputMap.has_action(action):

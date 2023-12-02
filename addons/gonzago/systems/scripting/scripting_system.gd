@@ -1,0 +1,3 @@
+@tool
+class_name GonzagoScriptingSystem
+extends GonzagoSystem

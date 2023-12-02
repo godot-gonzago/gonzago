@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://crm3c5m1ph1wp"]
 
-[ext_resource type="Script" path="res://addons/gonzago/app.gd" id="1_klhjm"]
+[ext_resource type="Script" path="res://addons/gonzago/core/app.gd" id="1_klhjm"]
 
 [node name="GonzagoApp" type="Node"]
 script = ExtResource("1_klhjm")

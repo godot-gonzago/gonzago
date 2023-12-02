@@ -1,0 +1,126 @@
+[gd_scene load_steps=9 format=3 uid="uid://oi77wsyiytwx"]
+
+[ext_resource type="Texture2D" uid="uid://b813k2vpmbb6m" path="res://addons/gonzago/assets/gonzago-logo.svg" id="1_knspl"]
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="3_00hbb"]
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="3_y4vjp"]
+
+[sub_resource type="StyleBox" id="StyleBox_etlpf"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+script = ExtResource("3_00hbb")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "EditorAbout"
+
+[sub_resource type="Texture2D" id="Texture2D_cx1ev"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("3_y4vjp")
+use_editor_theme = true
+icon_name = "Debug"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_sujii"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("3_y4vjp")
+use_editor_theme = true
+icon_name = "Environment"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_d235t"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("3_y4vjp")
+use_editor_theme = true
+icon_name = "Help"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_wuehq"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("3_y4vjp")
+use_editor_theme = true
+icon_name = "Heart"
+icon_type = "EditorIcons"
+
+[node name="AboutDialog" type="AcceptDialog"]
+title = "Thanks from the Gonzago community!"
+size = Vector2i(800, 747)
+visible = true
+popup_window = true
+min_size = Vector2i(800, 600)
+theme_override_styles/panel = SubResource("StyleBox_etlpf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -99.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+color = Color(0.6, 0.835294, 0.584314, 1)
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_knspl")
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Gonzago Framework v0.0.1"
+
+[node name="IssueButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Report a Bug"
+icon = SubResource("Texture2D_cx1ev")
+
+[node name="WebButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Visit Gonzago Website"
+icon = SubResource("Texture2D_sujii")
+
+[node name="DocsButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Open Gonzago Documentation"
+icon = SubResource("Texture2D_d235t")
+
+[node name="SupportButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Support Gonzago Development"
+icon = SubResource("Texture2D_wuehq")
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+tab_alignment = 1
+clip_tabs = false
+
+[node name="Authors" type="ItemList" parent="VBoxContainer/TabContainer"]
+layout_mode = 2
+item_count = 1
+item_0/text = "David Krummenacher"
+
+[node name="ThirdPartyLicenses" type="ItemList" parent="VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2

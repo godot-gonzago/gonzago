@@ -13,7 +13,7 @@ config_version=5
 config/name="Gonzago"
 config/description="Addons, tools and utilities for the Godot game engine"
 config/version="0.0.1"
-run/main_scene="res://addons/gonzago/app.tscn"
+run/main_scene="res://addons/gonzago/core/app.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Gonzago"
 config/project_settings_override="user://settings.cfg"
@@ -35,7 +35,7 @@ window/size/window_height_override=720
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gonzago-dev_tools/plugin.cfg", "res://addons/gonzago-settings/plugin.cfg", "res://addons/gonzago/plugin.cfg")
+enabled=PackedStringArray("res://addons/gonzago-dev_tools/plugin.cfg", "res://addons/gonzago/plugin.cfg")
 
 [input]
 
