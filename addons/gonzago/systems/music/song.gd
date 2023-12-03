@@ -1,6 +1,4 @@
 @tool
 class_name GonzagoSong
-extends Resource
-
-
+extends GonzagoData
 ## Base class for Gonzago adaptive music pieces.

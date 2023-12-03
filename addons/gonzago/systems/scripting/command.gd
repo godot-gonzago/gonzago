@@ -1,9 +1,8 @@
 @tool
 class_name GonzagoCommand
 extends Resource
-
-
 ## Base class for Gonzago script commands.
+
 
 func validate(arguments: Array) -> bool:
     return true
