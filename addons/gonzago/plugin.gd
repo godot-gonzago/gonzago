@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
-
-
+## Gonzago core editor plugin.
+##
 ## Gonzago Core Framework
 ## Systems can have extentions that add functionality.
 ## Scene Objects and Data Objects can have components
@@ -22,21 +22,37 @@ extends EditorPlugin
 ## Systems can be overriden by a different implementation or simply just extended.
 ## Extentions can add new component types to data objects?
 
+var _main_screen: GonzagoEditorMainScreen
+var _tool_menu: PopupMenu
+
 
 func _init() -> void:
     name = "GonzagoCorePlugin"
 
 
 func _enter_tree() -> void:
-    pass
+    _main_screen = preload("./editor/main/main_screen.tscn").instantiate() as GonzagoEditorMainScreen
+    EditorInterface.get_editor_main_screen().add_child(_main_screen)
+    _make_visible(false)
+
+    _tool_menu = PopupMenu.new()
+    add_tool_submenu_item("Gonzago", _tool_menu)
 
 
 func _exit_tree() -> void:
-    pass
+    if _main_screen:
+        _main_screen.queue_free()
+
+    remove_tool_menu_item("Gonzago")
 
 
 func _has_main_screen() -> bool:
     return true
+
+
+func _make_visible(visible: bool) -> void:
+    if _main_screen:
+        _main_screen.visible = visible
 
 
 func _get_plugin_name() -> String:

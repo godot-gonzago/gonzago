@@ -1,8 +1,103 @@
-[gd_scene format=3 uid="uid://5l2hll0j34o0"]
+[gd_scene load_steps=5 format=3 uid="uid://5l2hll0j34o0"]
 
-[node name="MainScreen" type="VBoxContainer"]
+[ext_resource type="Script" path="res://addons/gonzago/editor/main/main_screen.gd" id="1_cfcfx"]
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_d1y14"]
+
+[sub_resource type="Texture2D" id="Texture2D_5iu60"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_d1y14")
+use_editor_theme = true
+icon_name = "Search"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_cyx5a"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_d1y14")
+use_editor_theme = true
+icon_name = "VisualShaderPort"
+icon_type = "EditorIcons"
+
+[node name="MainScreen" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"MarginContainer4px"
+script = ExtResource("1_cfcfx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter..."
+clear_button_enabled = true
+right_icon = SubResource("Texture2D_5iu60")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+text = "Test"
+
+[node name="Tree" type="Tree" parent="VBoxContainer/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+hide_root = true
+
+[node name="GraphEdit" type="GraphEdit" parent="VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="GraphElement" type="GraphElement" parent="VBoxContainer/HSplitContainer/GraphEdit"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 200.0
+offset_right = 327.0
+offset_bottom = 251.0
+position_offset = Vector2(200, 200)
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/GraphEdit/GraphElement"]
+layout_mode = 2
+text = "asdffdsa"
+
+[node name="GraphNode" type="GraphNode" parent="VBoxContainer/HSplitContainer/GraphEdit"]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 500.0
+offset_right = 699.0
+offset_bottom = 602.0
+mouse_filter = 1
+position_offset = Vector2(500, 500)
+title = "FlowNode"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = SubResource("Texture2D_cyx5a")
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/HSplitContainer/GraphEdit/GraphNode"]
+layout_mode = 2
+text = "Await"
