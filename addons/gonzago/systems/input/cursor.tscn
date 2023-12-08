@@ -1,7 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5hdb2peyatb3"]
+[gd_scene load_steps=3 format=3 uid="uid://c5hdb2peyatb3"]
 
 [ext_resource type="Script" path="res://addons/gonzago/systems/input/cursor.gd" id="1_ju7yl"]
+[ext_resource type="Texture2D" uid="uid://ble3iwpcmop27" path="res://addons/gonzago/assets/gonzago-icon.svg" id="2_sj25e"]
 
-[node name="Cursor" type="CanvasLayer"]
+[node name="Cursor" type="CanvasLayer" node_paths=PackedStringArray("position")]
 layer = 128
 script = ExtResource("1_ju7yl")
+position = NodePath("Position")
+
+[node name="Position" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Position"]
+texture = ExtResource("2_sj25e")
+centered = false
