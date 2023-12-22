@@ -129,8 +129,13 @@ func _get_property_list() -> Array[Dictionary]:
     ]
 
 
-# Return 1 if other takes precedent, 0 if equal, -1 if this takes precedent and -2 on error.
+## Compare this versions order of in relation to the specified [param other] version.
+## Returns [code]1[/code] if [param other] takes precedent,
+## [code]0[/code] if both are equal, [code]-1[/code] if this takes precedent
+## and [code]-2[/code] on error.
 func compare(other: Version) -> int:
+    # https://semver.org/#spec-item-11
+    #
     # Precedence MUST be calculated by separating the version into major, minor, patch
     # and pre-release identifiers in that order (Build metadata does not figure into precedence).
 
