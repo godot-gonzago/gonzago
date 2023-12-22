@@ -100,73 +100,35 @@ enum Operator {
 
 
 static var version_regex := RegEx.create_from_string(
-    "^(?<major>0|[1-9]\\d*)\\.(?<minor>0|[1-9]\\d*)\\.(?<patch>0|[1-9]\\d*)" + \
-    "(?:\\-(?<status>(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?" + \
-    "(?:\\+(?<build>[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+    "(?(DEFINE)(?P<n>0|[1-9]\\d*)(?P<s>\\d*[a-zA-Z_-][\\w-]*|(?P>n))(?P<b>[\\w-]+))" + \
+    "^(?:(?P<epoch>(?P>n))!)?(?P<major>(?P>n))(?:\\.(?P<minor>(?P>n)))(?:\\.(?P<patch>(?P>n)))?" + \
+    "(?:-(?P<status>(?P>s)(?:\\.(?P>s))*))?" + \
+    "(?:\\+(?P<build>(?P>b)(?:\\.(?P>b))*))?$"
 )
 static var status_regex := RegEx.create_from_string(
-    "^(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*$"
+    "(?(DEFINE)(?P<n>0|[1-9]\\d*)(?P<s>\\d*[a-zA-Z_-][\\w-]*|(?P>n)))" + \
+    "^(?P>s)(?:\\.(?P>s))*$"
 )
 static var build_regex := RegEx.create_from_string(
-    "^[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*$"
+    "(?(DEFINE)(?P<b>[\\w-]+))" + \
+    "^(?P>b)(?:\\.(?P>b))*$"
 )
 
-
-var epoch: int = 0:
-    get = get_epoch, set = set_epoch
+@export_range(0, 255)
 var major: int = 0:
     get = get_major, set = set_major
+@export_range(0, 255)
 var minor: int = 0:
     get = get_minor, set = set_minor
+@export_range(0, 255)
 var patch: int = 0:
     get = get_patch, set = set_patch
-var release: int = 0:
-    get = get_release, set = set_release
+@export
 var status: String = "":
     get = get_status, set = set_status
+@export
 var build: String = "":
     get = get_build, set = set_build
-
-#var _components := PackedInt32Array()
-#
-#func get_component(idx: int) -> int:
-#    if idx < 0:
-#        push_error("Index out of range!")
-#        return -1
-#    if idx < _components.size():
-#        return 0
-#    return _components[idx]
-#
-#func set_component(idx: int, value: int) -> void:
-#    if idx < 0:
-#        push_error("Index out of range!")
-#        return
-#    value = maxi(0, value)
-#    var size := _components.size()
-#    if idx < size:
-#        if _components[idx] != value:
-#            _components[idx] = value
-#        if value == 0:
-#            for new_size in range(size, 0, -1):
-#                if _components[new_size - 1] > 0:
-#                    _components.resize(new_size)
-#                    return
-#    if idx >= size:
-#        if value == 0:
-#            return
-#        _components.resize(idx + 1)
-#        _components[idx] = value
-
-func get_epoch() -> int:
-    return epoch
-func set_epoch(value: int) -> void:
-    value = maxi(0, value)
-    if epoch != value:
-        epoch = value
-        emit_changed()
-func bump_epoch() -> void:
-    # TODO: reset others
-    epoch += 1
 
 func get_major() -> int:
     return major
@@ -200,17 +162,6 @@ func set_patch(value: int) -> void:
 func bump_patch() -> void:
     # TODO: reset others
     patch += 1
-
-func get_release() -> int:
-    return release
-func set_release(value: int) -> void:
-    value = maxi(0, value)
-    if release != value:
-        release = value
-        emit_changed()
-func bump_release() -> void:
-    # TODO: reset others
-    release += 1
 
 func get_status() -> String:
     return status
@@ -259,8 +210,7 @@ func _init(
 
 
 func _to_string() -> String:
-    var result := "%d!" % epoch if epoch > 0 else ""
-    result += "%d.%d.%d" % [major, minor, patch]
+    var result := "%d.%d.%d" % [major, minor, patch]
     if not status.is_empty():
         result += "-%s" % status
     if not build.is_empty():
@@ -270,11 +220,7 @@ func _to_string() -> String:
 
 func to_pretty_string() -> String:
     var result := "v"
-    if epoch > 0:
-        result += "%d!" % epoch
-    result += "%d" % major
-    if minor > 0 or patch > 0:
-        result += ".%d" % minor
+    result += "%d.%d" % [major, minor]
     if patch > 0:
         result += ".%d" % patch
     if not status.is_empty():
