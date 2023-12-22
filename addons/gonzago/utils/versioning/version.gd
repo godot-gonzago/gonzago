@@ -11,10 +11,7 @@ extends Resource
 
 # Working on more generalized regex
 #^(?:0*(?P<epoch>0|[1-9]\d*)!)?(?:0*(?P<major>0|[1-9]\d*))(?:\.0*(?P<minor>0|[1-9]\d*))?(?:\.0*(?P<patch>0|[1-9]\d*))?(?:\.(?P<release>\d+(?:\.\d+)*))?(?:[-.]*(?P<status>[a-zA-Z][a-zA-Z0-9_.-]*))?(?:\+(?P<buildmetadata>[a-zA-Z0-9_.-]+))?$
-
-# Dependancy matching https://python-poetry.org/docs/dependency-specification/
-# https://docs.godotengine.org/en/latest/classes/class_engine.html#class-engine-method-get-version-info
-# https://getcomposer.org/doc/articles/versions.md
+#^[vV]?[ ]*(?:(?P<epoch>0|[1-9]\d*)!)?(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:(?:[-]+|[.])?(?P<status>[a-zA-Z]+[a-zA-Z0-9_-]*(?:[.][a-zA-Z0-9_-]+)*))?(?:(?:[+]|[ ]*[(]?)(?P<build>[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*)(?:[)]?))?$
 
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
