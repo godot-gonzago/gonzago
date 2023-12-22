@@ -18,6 +18,15 @@ extends Resource
 #(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:[-.]?(?P<status>[a-zA-Z]+(?:0|[1-9]\d*)?))?
 #(?:(?:[+]|(?:[ ]*[(]))(?P<build>[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*)(?:[)])?)?$
 
+#^[vV]?[ ]*
+#(?:(?P<epoch>0|[1-9]\d*)!)?
+#(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:[-.]?
+#(?P<status>[a-zA-Z]+)
+#(?:[.]?(?P<status_number>0|[1-9]\d*))?
+#(?:[.](?P<status_features>[a-zA-Z0-9_-]+(?:[.]?[a-zA-Z0-9_-]+)))*
+#)?
+#(?:(?:[+]|(?:[ ]*[(]))(?P<build>[a-zA-Z0-9_-]+(?:[.][a-zA-Z0-9_-]+)*)(?:[)])?)?$
+
 # https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
@@ -166,7 +175,7 @@ func bump_status_num() -> void:
     # TODO: Check number and increase
     pass
 func bump_status() -> void:
-    # TODO: Check status and increase (alpha > beta > rc > stable)
+    # TODO: Check status and increase (dev (means no release) > alpha > beta > rc > stable (empty))
     pass
 
 # TODO: Use feature tags?
