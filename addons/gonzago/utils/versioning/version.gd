@@ -31,73 +31,54 @@ static var build_regex := RegEx.create_from_string(
 )
 
 var major: int:
-    get = get_major, set = set_major
+    get:
+        return (hex & 0xff0000) >> 16
+    set(value):
+        hex = (hex & ~0xff0000) ^ (clampi(value, 0, 255) << 16)
 var minor: int:
-    get = get_minor, set = set_minor
+    get:
+        return (hex & 0x00ff00) >> 8
+    set(value):
+        hex = (hex & ~0x00ff00) ^ (clampi(value, 0, 255) << 8)
 var patch: int:
-    get = get_patch, set = set_patch
+    get:
+        return (hex & 0x0000ff) >> 0
+    set(value):
+        hex = (hex & ~0x0000ff) ^ (clampi(value, 0, 255) << 0)
 var hex := 0:
-    get = get_hex, set = set_hex
+    set(value):
+        value = clampi(value, 0, 0xffffff)
+        if hex != value:
+            hex = value
+            emit_changed()
 var status := "":
-    get = get_status, set = set_status
-var build := "":
-    get = get_build, set = set_build
-
-func get_major() -> int:
-    return (hex & 0xff0000) >> 16
-func set_major(value: int) -> void:
-    hex = (hex & ~0xff0000) ^ (clampi(value, 0, 255) << 16)
-
-
-func get_minor() -> int:
-    return (hex & 0x00ff00) >> 8
-func set_minor(value: int) -> void:
-    hex = (hex & ~0x00ff00) ^ (clampi(value, 0, 255) << 8)
-
-
-func get_patch() -> int:
-    return (hex & 0x0000ff) >> 0
-func set_patch(value: int) -> void:
-    hex = (hex & ~0x0000ff) ^ (clampi(value, 0, 255) << 0)
-
-
-func get_hex() -> int:
-    return hex
-func set_hex(value: int) -> void:
-    value = clampi(value, 0, 0xffffff)
-    if hex != value:
-        hex = value
-        emit_changed()
-
-func get_status() -> String:
-    return status
-func set_status(value: String) -> void:
-    if not value.is_empty():
-        var regex_match := status_regex.search(value)
-        if not is_instance_valid(regex_match):
-            push_error("%s is not a valid status string!" % value)
-            return
-    if status != value:
-        status = value
-        emit_changed()
-
+    set(value):
+        if not value.is_empty():
+            var regex_match := status_regex.search(value)
+            if not is_instance_valid(regex_match):
+                push_error("%s is not a valid status string!" % value)
+                return
+        if status != value:
+            status = value
+            emit_changed()
 # TODO: Use feature tags?
 # https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
-func get_build() -> String:
-    return build
-func set_build(value: String) -> void:
-    if not value.is_empty():
-        var regex_match := build_regex.search(value)
-        if not is_instance_valid(regex_match):
-            push_error("%s is not a valid build string!" % value)
-            return
-    if build != value:
-        build = value
-        emit_changed()
+var build := "":
+    set(value):
+        if not value.is_empty():
+            var regex_match := build_regex.search(value)
+            if not is_instance_valid(regex_match):
+                push_error("%s is not a valid build string!" % value)
+                return
+        if build != value:
+            build = value
+            emit_changed()
 
 
 func _property_can_revert(property: StringName) -> bool:
     return true
+
+
 func _property_get_revert(property: StringName) -> Variant:
     match property:
         "major": return 0
@@ -107,6 +88,8 @@ func _property_get_revert(property: StringName) -> Variant:
         "status": return ""
         "build": return ""
     return null
+
+
 func _get_property_list() -> Array[Dictionary]:
     return [
         {
