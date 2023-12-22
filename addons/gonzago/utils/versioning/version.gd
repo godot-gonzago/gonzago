@@ -44,16 +44,26 @@ extends Resource
 #(?:[)])?)?$
 
 #(?(DEFINE)
-#(?'n'0|[1-9]\d*)
-#(?'s'0|[1-9]\d*|\d*[a-zA-Z-][\w-]*)
-#(?'b'[\w-]+)
+#(?P<number>0|[1-9]\d*)
+#(?P<status_segment_number>\d*[a-zA-Z-][\w-]*|(?P>number))
+#(?P<status_segment>[a-zA-Z][\w-]*)
+#(?P<build_segment>[\w-]+)
+#(?P<build_pattern>(?P>build_segment)(?:\.(?P>build_segment))*)
 #)
 #^[vV]?
-#(?P<major>(?P>n))
-#(?:\.(?P<minor>(?P>n)))?
-#(?:\.(?P<patch>(?P>n)))?
-#(?:-(?P<status>(?P>s)(?:\.(?P>s))*))?
-#(?:\+(?P<build>(?P>b)(?:\.(?P>b))*))?
+#(?P<major>(?P>number))
+#(?:\.(?P<minor>(?P>number)))?
+#(?:\.(?P<patch>(?P>number)))?
+#(?:(?:(?P<status_segment_allow_number>\-)?|(?:\.?))
+#(?P<status>
+#(?(status_segment_allow_number)(?P>status_segment_number)|(?P>status_segment))(?:\.(?P>status_segment_number))*
+#)
+#)?
+#(?:
+#(?:(?P<build_needs_closer>[ ][(])?|\+)
+#(?P<build>(?P>build_pattern))
+#(?(build_needs_closer)[)])
+#)?
 #$
 
 # https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
