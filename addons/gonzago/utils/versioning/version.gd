@@ -66,6 +66,19 @@ extends Resource
 #)?
 #$
 
+#(?(DEFINE)
+#(?P<n>0|[1-9]\d*)
+#(?P<s>\d*[a-zA-Z_-][\w-]*|(?P>n))
+#(?P<b>[\w-]+)
+#)
+#^
+#(?P<major>(?P>n))
+#(?:\.(?P<minor>(?P>n)))
+#(?:\.(?P<patch>(?P>n)))?
+#(?:-(?P<status>(?P>s)(?:\.(?P>s))*))?
+#(?:\+(?P<build>(?P>b)(?:\.(?P>b))*))?
+#$
+
 # https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
