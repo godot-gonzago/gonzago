@@ -309,6 +309,20 @@ func to_hex() -> int:
     return mini(major, 255) << 16 & mini(minor, 255) << 8 & mini(patch, 255)
 
 
+func to_bytes() -> PackedByteArray:
+    var bytes := PackedByteArray()
+    bytes.encode_u32(0, major)
+    bytes.encode_u32(4, minor)
+    bytes.encode_u32(8, patch)
+    var status_buffer := status.to_ascii_buffer()
+    bytes.encode_u32(12, status_buffer.size())
+    bytes.append_array(status_buffer)
+    var build_buffer := build.to_ascii_buffer()
+    bytes.encode_u32(bytes.size(), build_buffer.size())
+    bytes.append_array(build_buffer)
+    return bytes
+
+
 # Return 1 if other takes precedent, 0 if equal, -1 if this takes precedent and -2 on error.
 func compare(other: Version) -> int:
     # Precedence MUST be calculated by separating the version into major, minor, patch
@@ -427,6 +441,23 @@ static func from_hex(hex: int) -> Version:
         (hex & 0xFF0000) >> 16,
         (hex & 0x00FF00) >> 8,
         (hex & 0x0000FF) >> 0
+    )
+
+
+static func from_bytes(bytes: PackedByteArray) -> Version:
+    var major := bytes.decode_u32(0)
+    var minor := bytes.decode_u32(4)
+    var patch := bytes.decode_u32(8)
+    var status_length := bytes.decode_u32(12)
+    var status := bytes.slice(16, status_length).get_string_from_ascii()
+    var build_length := bytes.decode_u32(20 + status_length)
+    var build := bytes.slice(24 + status_length).get_string_from_ascii()
+    return Version.new(
+        major,
+        minor,
+        patch,
+        status,
+        build
     )
 
 
