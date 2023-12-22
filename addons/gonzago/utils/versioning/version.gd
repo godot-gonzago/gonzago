@@ -23,9 +23,38 @@ extends Resource
 #(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:[-.]?
 #(?P<status>[a-zA-Z]+)
 #(?:[.]?(?P<status_number>0|[1-9]\d*))?
-#(?:[.](?P<status_features>[a-zA-Z0-9_-]+(?:[.]?[a-zA-Z0-9_-]+)))*
 #)?
-#(?:(?:[+]|(?:[ ]*[(]))(?P<build>[a-zA-Z0-9_-]+(?:[.][a-zA-Z0-9_-]+)*)(?:[)])?)?$
+#(?:(?:[+]|(?:[ ]*[(]))
+#(?P<build>[a-zA-Z0-9_-]+(?:[.][a-zA-Z0-9_-]+)*)
+#(?:[)])?)?$
+
+#(?(DEFINE)
+#(?'n'0|[1-9]\d*)
+#(?'b'[a-zA-Z0-9_-]+)
+#)
+#^[vV]?[ ]*
+#(?:(?P<epoch>(?P>n))!)?
+#(?P<components>(?P>n)(?:[.](?P>n))*)
+#(?:[-.]?
+#(?P<status>[a-zA-Z]+)
+#(?:[.]?(?P<status_number>(?P>n)))?
+#)?
+#(?:(?:[+]|(?:[ ]*[(]))
+#(?P<build>(?P>b)(?:[.](?P>b))*)
+#(?:[)])?)?$
+
+#(?(DEFINE)
+#(?'n'0|[1-9]\d*)
+#(?'s'0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)
+#(?'b'[0-9a-zA-Z-]+)
+#)
+#^[vV]?
+#(?P<major>(?P>n))
+#(?:\.(?P<minor>(?P>n)))?
+#(?:\.(?P<patch>(?P>n)))?
+#(?:-(?P<status>(?P>s)(?:\.(?P>s))*))?
+#(?:\+(?P<build>(?P>b)(?:\.(?P>b))*))?
+#$
 
 # https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
@@ -175,7 +204,7 @@ func bump_status_num() -> void:
     # TODO: Check number and increase
     pass
 func bump_status() -> void:
-    # TODO: Check status and increase (dev (means no release) > alpha > beta > rc > stable (empty))
+    # TODO: Check status and increase (dev (means no release) > alpha > beta > rc > stable (empty) > hotfix?)
     pass
 
 # TODO: Use feature tags?
