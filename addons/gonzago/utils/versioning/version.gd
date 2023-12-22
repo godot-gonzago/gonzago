@@ -13,6 +13,12 @@ extends Resource
 #^(?:0*(?P<epoch>0|[1-9]\d*)!)?(?:0*(?P<major>0|[1-9]\d*))(?:\.0*(?P<minor>0|[1-9]\d*))?(?:\.0*(?P<patch>0|[1-9]\d*))?(?:\.(?P<release>\d+(?:\.\d+)*))?(?:[-.]*(?P<status>[a-zA-Z][a-zA-Z0-9_.-]*))?(?:\+(?P<buildmetadata>[a-zA-Z0-9_.-]+))?$
 #^[vV]?[ ]*(?:(?P<epoch>0|[1-9]\d*)!)?(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:(?:[-]+|[.])?(?P<status>[a-zA-Z]+[a-zA-Z0-9_-]*(?:[.][a-zA-Z0-9_-]+)*))?(?:(?:[+]|[ ]*[(]?)(?P<build>[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*)(?:[)]?))?$
 
+#^[vV]?[ ]*
+#(?:(?P<epoch>0|[1-9]\d*)!)?
+#(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:[-.]?(?P<status>[a-zA-Z]+(?:0|[1-9]\d*)?))?
+#(?:(?:[+]|(?:[ ]*[(]))(?P<build>[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*)(?:[)])?)?$
+
+# https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 # https://en.wikipedia.org/wiki/Software_versioning#Schemes
@@ -45,22 +51,18 @@ static var build_regex := RegEx.create_from_string(
 )
 
 
-@export_range(0, 255, 1, "or_greater")
 var epoch: int = 0:
     get = get_epoch, set = set_epoch
-@export_range(0, 255, 1, "or_greater")
 var major: int = 0:
     get = get_major, set = set_major
-@export_range(0, 255, 1, "or_greater")
 var minor: int = 0:
     get = get_minor, set = set_minor
-@export_range(0, 255, 1, "or_greater")
 var patch: int = 0:
     get = get_patch, set = set_patch
-@export
+var release: int = 0:
+    get = get_release, set = set_release
 var status: String = "":
     get = get_status, set = set_status
-@export
 var build: String = "":
     get = get_build, set = set_build
 
@@ -137,6 +139,17 @@ func set_patch(value: int) -> void:
 func bump_patch() -> void:
     # TODO: reset others
     patch += 1
+
+func get_release() -> int:
+    return release
+func set_release(value: int) -> void:
+    value = maxi(0, value)
+    if release != value:
+        release = value
+        emit_changed()
+func bump_release() -> void:
+    # TODO: reset others
+    release += 1
 
 func get_status() -> String:
     return status
@@ -357,7 +370,7 @@ static func from_hex(hex: int) -> Version:
 
 
 static func get_application_version() -> Version:
-    var str := str(ProjectSettings.get_setting("application/config/version"))
+    var str := str(ProjectSettings.get_setting("application/config/version"), "1.0.0")
     return from_string(str)
 
 
