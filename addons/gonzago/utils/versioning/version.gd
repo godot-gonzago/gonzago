@@ -2,19 +2,22 @@
 @static_unload
 class_name Version
 extends Resource
+## A brief description of the class's role and functionality.
+##
+## The description of the script, what it can do,
+## and any further detail.
 
 # https://docs.godotengine.org/en/stable/classes/class_engine.html#class-engine-method-get-version-info
 # https://semver.org/
 # https://regex101.com/r/Ly7O1x/3/
 
-# https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 # Make Godot compliant: https://docs.godotengine.org/en/stable/about/release_policy.html#godot-versioning
 
 static var version_regex := RegEx.create_from_string(
     "(?(DEFINE)(?P<n>0|[1-9]\\d*)(?P<s>\\d*[a-zA-Z_-][\\w-]*|(?P>n))(?P<b>[\\w-]+))" + \
-    "^(?P<major>(?P>n))(?:\\.(?P<minor>(?P>n)))(?:\\.(?P<patch>(?P>n)))?" + \
+    "^(?P<major>(?P>n))(?:\\.(?P<minor>(?P>n)))?(?:\\.(?P<patch>(?P>n)))?" + \
     "(?:-(?P<status>(?P>s)(?:\\.(?P>s))*))?" + \
     "(?:\\+(?P<build>(?P>b)(?:\\.(?P>b))*))?$"
 )
@@ -33,41 +36,35 @@ var minor: int:
     get = get_minor, set = set_minor
 var patch: int:
     get = get_patch, set = set_patch
-var hex: int = 0:
+var hex := 0:
     get = get_hex, set = set_hex
-var status: String = "":
+var status := "":
     get = get_status, set = set_status
-var build: String = "":
+var build := "":
     get = get_build, set = set_build
 
 func get_major() -> int:
-    return (hex & 0xFF0000) >> 16
+    return (hex & 0xff0000) >> 16
 func set_major(value: int) -> void:
-    hex = (hex & ~0xFF0000) ^ (clampi(value, 0, 255) << 16)
-func bump_major() -> void:
-    # TODO: reset others
-    major += 1
+    hex = (hex & ~0xff0000) ^ (clampi(value, 0, 255) << 16)
+
 
 func get_minor() -> int:
-    return (hex & 0x00FF00) >> 8
+    return (hex & 0x00ff00) >> 8
 func set_minor(value: int) -> void:
-    hex = (hex & ~0x00FF00) ^ (clampi(value, 0, 255) << 8)
-func bump_minor() -> void:
-    # TODO: reset others
-    minor += 1
+    hex = (hex & ~0x00ff00) ^ (clampi(value, 0, 255) << 8)
+
 
 func get_patch() -> int:
-    return (hex & 0x0000FF) >> 0
+    return (hex & 0x0000ff) >> 0
 func set_patch(value: int) -> void:
-    hex = (hex & ~0x0000FF) ^ (clampi(value, 0, 255) << 0)
-func bump_patch() -> void:
-    # TODO: reset others
-    patch += 1
+    hex = (hex & ~0x0000ff) ^ (clampi(value, 0, 255) << 0)
+
 
 func get_hex() -> int:
     return hex
 func set_hex(value: int) -> void:
-    value = clampi(value, 0, 0xFFFFFF)
+    value = clampi(value, 0, 0xffffff)
     if hex != value:
         hex = value
         emit_changed()
@@ -83,14 +80,9 @@ func set_status(value: String) -> void:
     if status != value:
         status = value
         emit_changed()
-func bump_status_num() -> void:
-    # TODO: Check number and increase
-    pass
-func bump_status() -> void:
-    # TODO: Check status and increase (dev (means no release) > alpha > beta > rc > stable (empty) > hotfix?)
-    pass
 
 # TODO: Use feature tags?
+# https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 func get_build() -> String:
     return build
 func set_build(value: String) -> void:
@@ -119,37 +111,37 @@ func _get_property_list() -> Array[Dictionary]:
     return [
         {
             "name": "major",
-              "type": TYPE_INT,
-              "usage": PROPERTY_USAGE_EDITOR,
-              "hint": PROPERTY_HINT_RANGE,
-              "hint_string": "0,255"
+            "type": TYPE_INT,
+            "usage": PROPERTY_USAGE_EDITOR,
+            "hint": PROPERTY_HINT_RANGE,
+            "hint_string": "0,255"
         },
         {
             "name": "minor",
-              "type": TYPE_INT,
-              "usage": PROPERTY_USAGE_EDITOR,
-              "hint": PROPERTY_HINT_RANGE,
-              "hint_string": "0,255"
+            "type": TYPE_INT,
+            "usage": PROPERTY_USAGE_EDITOR,
+            "hint": PROPERTY_HINT_RANGE,
+            "hint_string": "0,255"
         },
         {
             "name": "patch",
-              "type": TYPE_INT,
-              "usage": PROPERTY_USAGE_EDITOR,
-              "hint": PROPERTY_HINT_RANGE,
-              "hint_string": "0,255"
+            "type": TYPE_INT,
+            "usage": PROPERTY_USAGE_EDITOR,
+            "hint": PROPERTY_HINT_RANGE,
+            "hint_string": "0,255"
         },
         {
             "name": "hex",
-              "type": TYPE_INT,
-              "usage": PROPERTY_USAGE_NO_EDITOR
+            "type": TYPE_INT,
+            "usage": PROPERTY_USAGE_NO_EDITOR
         },
         {
             "name": "status",
-              "type": TYPE_STRING
+            "type": TYPE_STRING
         },
         {
             "name": "build",
-              "type": TYPE_STRING
+            "type": TYPE_STRING
         }
     ]
 
@@ -270,7 +262,7 @@ func to_bytes() -> PackedByteArray:
 
 
 static func is_valid_hex(hex: int) -> bool:
-    return hex >= 0 and hex <= 0xFFFFFF
+    return hex >= 0 and hex <= 0xffffff
 
 
 static func from_hex(hex: int) -> Version:
