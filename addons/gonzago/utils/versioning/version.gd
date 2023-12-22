@@ -7,101 +7,14 @@ extends Resource
 # https://semver.org/
 # https://regex101.com/r/Ly7O1x/3/
 
-# https://docs.godotengine.org/en/stable/about/release_policy.html
-
-# Working on more generalized regex
-#^(?:0*(?P<epoch>0|[1-9]\d*)!)?(?:0*(?P<major>0|[1-9]\d*))(?:\.0*(?P<minor>0|[1-9]\d*))?(?:\.0*(?P<patch>0|[1-9]\d*))?(?:\.(?P<release>\d+(?:\.\d+)*))?(?:[-.]*(?P<status>[a-zA-Z][a-zA-Z0-9_.-]*))?(?:\+(?P<buildmetadata>[a-zA-Z0-9_.-]+))?$
-#^[vV]?[ ]*(?:(?P<epoch>0|[1-9]\d*)!)?(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:(?:[-]+|[.])?(?P<status>[a-zA-Z]+[a-zA-Z0-9_-]*(?:[.][a-zA-Z0-9_-]+)*))?(?:(?:[+]|[ ]*[(]?)(?P<build>[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*)(?:[)]?))?$
-
-#^[vV]?[ ]*
-#(?:(?P<epoch>0|[1-9]\d*)!)?
-#(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:[-.]?(?P<status>[a-zA-Z]+(?:0|[1-9]\d*)?))?
-#(?:(?:[+]|(?:[ ]*[(]))(?P<build>[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*)(?:[)])?)?$
-
-#^[vV]?[ ]*
-#(?:(?P<epoch>0|[1-9]\d*)!)?
-#(?P<components>(?:0|[1-9]\d*)(?:[.](?:0|[1-9]\d*))*)(?:[-.]?
-#(?P<status>[a-zA-Z]+)
-#(?:[.]?(?P<status_number>0|[1-9]\d*))?
-#)?
-#(?:(?:[+]|(?:[ ]*[(]))
-#(?P<build>[a-zA-Z0-9_-]+(?:[.][a-zA-Z0-9_-]+)*)
-#(?:[)])?)?$
-
-#(?(DEFINE)
-#(?'n'0|[1-9]\d*)
-#(?'b'[a-zA-Z0-9_-]+)
-#)
-#^[vV]?[ ]*
-#(?:(?P<epoch>(?P>n))!)?
-#(?P<components>(?P>n)(?:[.](?P>n))*)
-#(?:[-.]?
-#(?P<status>[a-zA-Z]+)
-#(?:[.]?(?P<status_number>(?P>n)))?
-#)?
-#(?:(?:[+]|(?:[ ]*[(]))
-#(?P<build>(?P>b)(?:[.](?P>b))*)
-#(?:[)])?)?$
-
-#(?(DEFINE)
-#(?P<number>0|[1-9]\d*)
-#(?P<status_segment_number>\d*[a-zA-Z-][\w-]*|(?P>number))
-#(?P<status_segment>[a-zA-Z][\w-]*)
-#(?P<build_segment>[\w-]+)
-#(?P<build_pattern>(?P>build_segment)(?:\.(?P>build_segment))*)
-#)
-#^[vV]?
-#(?P<major>(?P>number))
-#(?:\.(?P<minor>(?P>number)))?
-#(?:\.(?P<patch>(?P>number)))?
-#(?:(?:(?P<status_segment_allow_number>\-)?|(?:\.?))
-#(?P<status>
-#(?(status_segment_allow_number)(?P>status_segment_number)|(?P>status_segment))(?:\.(?P>status_segment_number))*
-#)
-#)?
-#(?:
-#(?:(?P<build_needs_closer>[ ][(])?|\+)
-#(?P<build>(?P>build_pattern))
-#(?(build_needs_closer)[)])
-#)?
-#$
-
-#(?(DEFINE)
-#(?P<n>0|[1-9]\d*)
-#(?P<s>\d*[a-zA-Z_-][\w-]*|(?P>n))
-#(?P<b>[\w-]+)
-#)
-#^
-#(?P<major>(?P>n))
-#(?:\.(?P<minor>(?P>n)))
-#(?:\.(?P<patch>(?P>n)))?
-#(?:-(?P<status>(?P>s)(?:\.(?P>s))*))?
-#(?:\+(?P<build>(?P>b)(?:\.(?P>b))*))?
-#$
-
 # https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
-# https://en.wikipedia.org/wiki/Software_versioning#Schemes
-# https://peps.python.org/pep-0440/
-# https://packaging.python.org/en/latest/specifications/version-specifiers/#version-specifiers
-# https://packaging.python.org/en/latest/specifications/dependency-specifiers/
-
 # Make Godot compliant: https://docs.godotengine.org/en/stable/about/release_policy.html#godot-versioning
-
-enum Operator {
-    EQUAL = OP_EQUAL,
-    NOT_EQUAL = OP_NOT_EQUAL,
-    GREATER = OP_GREATER,
-    GREATER_EQUAL = OP_GREATER_EQUAL,
-    LESS = OP_LESS,
-    LESS_EQUAL = OP_LESS_EQUAL
-}
-
 
 static var version_regex := RegEx.create_from_string(
     "(?(DEFINE)(?P<n>0|[1-9]\\d*)(?P<s>\\d*[a-zA-Z_-][\\w-]*|(?P>n))(?P<b>[\\w-]+))" + \
-    "^(?:(?P<epoch>(?P>n))!)?(?P<major>(?P>n))(?:\\.(?P<minor>(?P>n)))(?:\\.(?P<patch>(?P>n)))?" + \
+    "^(?P<major>(?P>n))(?:\\.(?P<minor>(?P>n)))(?:\\.(?P<patch>(?P>n)))?" + \
     "(?:-(?P<status>(?P>s)(?:\\.(?P>s))*))?" + \
     "(?:\\+(?P<build>(?P>b)(?:\\.(?P>b))*))?$"
 )
@@ -114,54 +27,50 @@ static var build_regex := RegEx.create_from_string(
     "^(?P>b)(?:\\.(?P>b))*$"
 )
 
-@export_range(0, 255)
-var major: int = 0:
+var major: int:
     get = get_major, set = set_major
-@export_range(0, 255)
-var minor: int = 0:
+var minor: int:
     get = get_minor, set = set_minor
-@export_range(0, 255)
-var patch: int = 0:
+var patch: int:
     get = get_patch, set = set_patch
-@export
+var hex: int = 0:
+    get = get_hex, set = set_hex
 var status: String = "":
     get = get_status, set = set_status
-@export
 var build: String = "":
     get = get_build, set = set_build
 
 func get_major() -> int:
-    return major
+    return (hex & 0xFF0000) >> 16
 func set_major(value: int) -> void:
-    value = maxi(0, value)
-    if major != value:
-        major = value
-        emit_changed()
+    hex = (hex & ~0xFF0000) ^ (clampi(value, 0, 255) << 16)
 func bump_major() -> void:
     # TODO: reset others
     major += 1
 
 func get_minor() -> int:
-    return minor
+    return (hex & 0x00FF00) >> 8
 func set_minor(value: int) -> void:
-    value = maxi(0, value)
-    if minor != value:
-        minor = value
-        emit_changed()
+    hex = (hex & ~0x00FF00) ^ (clampi(value, 0, 255) << 8)
 func bump_minor() -> void:
     # TODO: reset others
     minor += 1
 
 func get_patch() -> int:
-    return patch
+    return (hex & 0x0000FF) >> 0
 func set_patch(value: int) -> void:
-    value = maxi(0, value)
-    if patch != value:
-        patch = value
-        emit_changed()
+    hex = (hex & ~0x0000FF) ^ (clampi(value, 0, 255) << 0)
 func bump_patch() -> void:
     # TODO: reset others
     patch += 1
+
+func get_hex() -> int:
+    return hex
+func set_hex(value: int) -> void:
+    value = clampi(value, 0, 0xFFFFFF)
+    if hex != value:
+        hex = value
+        emit_changed()
 
 func get_status() -> String:
     return status
@@ -195,78 +104,54 @@ func set_build(value: String) -> void:
         emit_changed()
 
 
-func _init(
-    major: int = 0,
-    minor: int = 0,
-    patch: int = 0,
-    status: String = "",
-    build: String = ""
-) -> void:
-    self.major = major
-    self.minor = minor
-    self.patch = patch
-    self.status = status
-    self.build = build
-
-
-func _to_string() -> String:
-    var result := "%d.%d.%d" % [major, minor, patch]
-    if not status.is_empty():
-        result += "-%s" % status
-    if not build.is_empty():
-        result += "+%s" % build
-    return result
-
-
-func to_pretty_string() -> String:
-    var result := "v"
-    result += "%d.%d" % [major, minor]
-    if patch > 0:
-        result += ".%d" % patch
-    if not status.is_empty():
-        result += "-%s" % status
-    if not build.is_empty():
-        result += " (%s)" % build
-    return result
-
-
-# {
-#   "major": 4,
-#   "minor": 2,
-#   "patch": 0,
-#   "hex": 262656,
-#   "status": "stable",
-#   "build": "official",
-#   "string": "4.2-stable (official)"
-# }
-func to_dict() -> Dictionary:
-    return {
-        "major": major,
-        "minor": minor,
-        "patch": patch,
-        "status": status,
-        "build": build,
-        "hex": to_hex(),
-        "string": to_pretty_string()
-    }
-
-
-func to_hex() -> int:
-    return mini(major, 255) << 16 & mini(minor, 255) << 8 & mini(patch, 255)
-
-
-func to_bytes() -> PackedByteArray:
-    var bytes := PackedByteArray()
-    bytes.encode_u32(0, major)
-    bytes.encode_u32(4, minor)
-    bytes.encode_u32(8, patch)
-    var status_buffer := status.to_ascii_buffer()
-    bytes.encode_u32(12, status_buffer.size())
-    bytes.append_array(status_buffer)
-    var build_buffer := build.to_ascii_buffer()
-    bytes.encode_u32(bytes.size(), build_buffer.size())
-    bytes.append_array(build_buffer)
-    return bytes
+func _property_can_revert(property: StringName) -> bool:
+    return true
+func _property_get_revert(property: StringName) -> Variant:
+    match property:
+        "major": return 0
+        "minor": return 0
+        "patch": return 0
+        "hex": return 0
+        "status": return ""
+        "build": return ""
+    return null
+func _get_property_list() -> Array[Dictionary]:
+    return [
+        {
+            "name": "major",
+              "type": TYPE_INT,
+              "usage": PROPERTY_USAGE_EDITOR,
+              "hint": PROPERTY_HINT_RANGE,
+              "hint_string": "0,255"
+        },
+        {
+            "name": "minor",
+              "type": TYPE_INT,
+              "usage": PROPERTY_USAGE_EDITOR,
+              "hint": PROPERTY_HINT_RANGE,
+              "hint_string": "0,255"
+        },
+        {
+            "name": "patch",
+              "type": TYPE_INT,
+              "usage": PROPERTY_USAGE_EDITOR,
+              "hint": PROPERTY_HINT_RANGE,
+              "hint_string": "0,255"
+        },
+        {
+            "name": "hex",
+              "type": TYPE_INT,
+              "usage": PROPERTY_USAGE_NO_EDITOR
+        },
+        {
+            "name": "status",
+              "type": TYPE_STRING
+        },
+        {
+            "name": "build",
+              "type": TYPE_STRING
+        }
+    ]
 
 
 # Return 1 if other takes precedent, 0 if equal, -1 if this takes precedent and -2 on error.
@@ -277,13 +162,7 @@ func compare(other: Version) -> int:
     # Precedence is determined by the first difference when comparing each of these identifiers
     # from left to right as follows: Major, minor, and patch versions are always compared
     # numerically. Example: 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1.
-    var result := signi(other.major - major)
-    if result != 0:
-        return result
-    result = signi(other.minor - minor)
-    if result != 0:
-        return result
-    result = signi(other.patch - patch)
+    var result := signi(other.hex - hex)
     if result != 0:
         return result
 
@@ -336,10 +215,25 @@ func compare(other: Version) -> int:
     return result
 
 
-func matches(other: Version, operator: Operator) -> bool:
-    return false
+func _to_string() -> String:
+    var result := "%d.%d.%d" % [major, minor, patch]
+    if not status.is_empty():
+        result += "-%s" % status
+    if not build.is_empty():
+        result += "+%s" % build
+    return result
 
 
+func to_pretty_string() -> String:
+    var result := "v"
+    result += "%d.%d" % [major, minor]
+    if patch > 0:
+        result += ".%d" % patch
+    if not status.is_empty():
+        result += "-%s" % status
+    if not build.is_empty():
+        result += " (%s)" % build
+    return result
 
 
 # {
@@ -349,62 +243,89 @@ func matches(other: Version, operator: Operator) -> bool:
 #   "hex": 262656,
 #   "status": "stable",
 #   "build": "official",
-#   "year": 2023,
-#   "hash": "46dc277917a93cbf601bbcf0d27d00f6feeec0d5",
 #   "string": "4.2-stable (official)"
 # }
-static func from_dict(dict: Dictionary) -> Version:
-    if not dict.has("major"):
-        if dict.has("string"):
-            return from_string(dict.get("string"))
-        if dict.has("hex"):
-            return from_hex(dict.get("hex"))
-        return Version.new()
-    return Version.new(
-        dict.get("major", 0),
-        dict.get("minor", 0),
-        dict.get("patch", 0),
-        dict.get("status", ""),
-        dict.get("build", "")
-    )
+func to_dict() -> Dictionary:
+    return {
+        "major": major,
+        "minor": minor,
+        "patch": patch,
+        "hex": hex,
+        "status": status,
+        "build": build,
+        "string": to_pretty_string()
+    }
 
 
-static func from_string(str: String) -> Version:
-    var regex_match := version_regex.search(str)
-    if is_instance_valid(regex_match):
-        return Version.new(
-            int(regex_match.get_string("major")),
-            int(regex_match.get_string("minor")),
-            int(regex_match.get_string("patch")),
-            regex_match.get_string("status"),
-            regex_match.get_string("build")
-        )
-    return Version.new()
+func to_bytes() -> PackedByteArray:
+    var bytes := PackedByteArray()
+    bytes.encode_u32(0, hex)
+    var status_buffer := status.to_ascii_buffer()
+    bytes.encode_u32(4, status_buffer.size())
+    bytes.append_array(status_buffer)
+    var build_buffer := build.to_ascii_buffer()
+    bytes.encode_u32(bytes.size(), build_buffer.size())
+    bytes.append_array(build_buffer)
+    return bytes
+
+
+static func is_valid_hex(hex: int) -> bool:
+    return hex >= 0 and hex <= 0xFFFFFF
 
 
 static func from_hex(hex: int) -> Version:
-    return Version.new(
-        (hex & 0xFF0000) >> 16,
-        (hex & 0x00FF00) >> 8,
-        (hex & 0x0000FF) >> 0
+    var version := Version.new()
+    version.hex = hex
+    return version
+
+
+static func is_valid_string(str: String) -> bool:
+    var regex_match := version_regex.search(str)
+    return is_instance_valid(regex_match)
+
+
+static func from_string(str: String) -> Version:
+    var version := Version.new()
+    var regex_match := version_regex.search(str)
+    if is_instance_valid(regex_match):
+        version.major = int(regex_match.get_string("major"))
+        version.minor = int(regex_match.get_string("minor"))
+        version.patch = int(regex_match.get_string("patch"))
+        version.status = regex_match.get_string("status")
+        version.build = regex_match.get_string("build")
+    return version
+
+
+static func is_valid_dict(dict: Dictionary) -> bool:
+    return (
+        dict.has("hex") or
+        dict.has("major") or
+        dict.has("minor") or
+        dict.has("patch")
     )
+
+
+static func from_dict(dict: Dictionary) -> Version:
+    var version := Version.new()
+    if dict.has("hex"):
+        version.hex = dict.get("hex", 0)
+    else:
+        version.major = dict.get("major", 0)
+        version.minor = dict.get("minor", 0)
+        version.patch = dict.get("patch", 0)
+    version.status = dict.get("status", "")
+    version.build = dict.get("build", "")
+    return version
 
 
 static func from_bytes(bytes: PackedByteArray) -> Version:
-    var major := bytes.decode_u32(0)
-    var minor := bytes.decode_u32(4)
-    var patch := bytes.decode_u32(8)
-    var status_length := bytes.decode_u32(12)
-    var status := bytes.slice(16, status_length).get_string_from_ascii()
-    var build_length := bytes.decode_u32(20 + status_length)
-    var build := bytes.slice(24 + status_length).get_string_from_ascii()
-    return Version.new(
-        major,
-        minor,
-        patch,
-        status,
-        build
-    )
+    var version := Version.new()
+    version.hex = bytes.decode_u32(0)
+    var status_length := bytes.decode_u32(4)
+    version.status = bytes.slice(8, status_length).get_string_from_ascii()
+    var build_length := bytes.decode_u32(12 + status_length)
+    version.build = bytes.slice(16 + status_length).get_string_from_ascii()
+    return version
 
 
 static func get_application_version() -> Version:
@@ -427,28 +348,5 @@ static func get_engine_version() -> Version:
     var dict := Engine.get_version_info()
     return from_dict(dict)
 
-
-#static func is_valid_string(version_string: String) -> bool:
-#    var regex_match := version_regex.search(version_string)
-#    return is_instance_valid(regex_match)
-
-
-# {
-#   "major": 4,
-#   "minor": 2,
-#   "patch": 0,
-#   "hex": 262656,
-#   "status": "stable",
-#   "build": "official",
-#   "year": 2023,
-#   "hash": "46dc277917a93cbf601bbcf0d27d00f6feeec0d5",
-#   "string": "4.2-stable (official)"
-# }
-#static func is_valid_dict(dict: Dictionary) -> bool:
-#    return false
-
-
-#static func is_valid_hex(hex: int) -> bool:
-#    return false
 
 # add static direct conversion methods (string to dict and vice versa)
