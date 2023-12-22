@@ -1,6 +1,6 @@
 @tool
 @static_unload
-class_name VersionInfo
+class_name Version
 extends Resource
 
 # https://docs.godotengine.org/en/stable/classes/class_engine.html#class-engine-method-get-version-info
@@ -31,103 +31,8 @@ enum Operator {
     GREATER = OP_GREATER,
     GREATER_EQUAL = OP_GREATER_EQUAL,
     LESS = OP_LESS,
-    LESS_EQUAL = OP_LESS_EQUAL,
-    MIN = OP_BIT_NEGATE # Tilde, min until last specified segment
+    LESS_EQUAL = OP_LESS_EQUAL
 }
-
-class VersionData extends RefCounted:
-    var epoch := 0
-    var status := "":
-        set(value):
-            # TODO: Sanitize
-            if status != value:
-                status = value
-    var build := "":
-        set(value):
-            # TODO: Sanitize
-            if build != value:
-                build = value
-
-    var _components := PackedInt32Array()
-
-    func get_component(idx: int) -> int:
-        if idx < 0:
-            push_error("Index out of range!")
-            return -1
-        if idx < _components.size():
-            return 0
-        return _components[idx]
-
-    func set_component(idx: int, value: int) -> void:
-        if idx < 0:
-            push_error("Index out of range!")
-            return
-        value = maxi(0, value)
-        var size := _components.size()
-        if idx < size:
-            if _components[idx] != value:
-                _components[idx] = value
-            if value == 0:
-                for new_size in range(size, 0, -1):
-                    if _components[new_size - 1] > 0:
-                        _components.resize(new_size)
-                        return
-        if idx >= size:
-            if value == 0:
-                return
-            _components.resize(idx + 1)
-            _components[idx] = value
-
-    func _init(
-        components := PackedInt32Array(),
-        status := "", build := "",
-        epoch := 0
-    ) -> void:
-        self.epoch = epoch
-        self.status = status
-        self.build = build
-
-        _components = components.duplicate()
-        var new_size := 0
-        for idx in _components.size():
-            var value := mini(0, _components[idx])
-            if value > 0:
-                new_size = idx
-            _components[idx] = value
-        _components.resize(new_size)
-
-    func _to_string() -> String:
-        var result := ""
-        if epoch > 1:
-            result += "%d!" % epoch
-        var size := _components.size()
-        result += "%d" % _components[0] if size > 1 else "0"
-        for idx in range(2, size):
-            result += ".%d" % _components[idx]
-        if not status.is_empty():
-            result += "-%s" % status
-        if not build.is_empty():
-            result += "+%s" % build
-        return result
-
-
-class VersionDependancy extends RefCounted:
-    var operator := Operator.EQUAL
-    var epoch := 0
-    var major := 0
-    var minor := -1
-    var patch := -1
-
-    func _init(
-        operator: Operator = Operator.EQUAL,
-        major: int = 0, minor: int = -1, patch: int = -1,
-        epoch: int = 0
-    ) -> void:
-        self.operator = operator
-        self.epoch = epoch
-        self.major = major
-        self.minor = minor
-        self.patch = patch
 
 
 static var version_regex := RegEx.create_from_string(
@@ -142,44 +47,102 @@ static var build_regex := RegEx.create_from_string(
     "^[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*$"
 )
 
-@export_range(0, 255, 1, "or_greater")
-var epoch: int = 0: set = set_epoch
-@export_range(0, 255, 1, "or_greater")
-var major: int = 0: set = set_major
-@export_range(0, 255, 1, "or_greater")
-var minor: int = 0: set = set_minor
-@export_range(0, 255, 1, "or_greater")
-var patch: int = 0: set = set_patch
-@export
-var status: String = "": set = set_status
-@export
-var build: String = "": set = set_build
 
+@export_range(0, 255, 1, "or_greater")
+var epoch: int = 0:
+    get = get_epoch, set = set_epoch
+@export_range(0, 255, 1, "or_greater")
+var major: int = 0:
+    get = get_major, set = set_major
+@export_range(0, 255, 1, "or_greater")
+var minor: int = 0:
+    get = get_minor, set = set_minor
+@export_range(0, 255, 1, "or_greater")
+var patch: int = 0:
+    get = get_patch, set = set_patch
+@export
+var status: String = "":
+    get = get_status, set = set_status
+@export
+var build: String = "":
+    get = get_build, set = set_build
 
+#var _components := PackedInt32Array()
+#
+#func get_component(idx: int) -> int:
+#    if idx < 0:
+#        push_error("Index out of range!")
+#        return -1
+#    if idx < _components.size():
+#        return 0
+#    return _components[idx]
+#
+#func set_component(idx: int, value: int) -> void:
+#    if idx < 0:
+#        push_error("Index out of range!")
+#        return
+#    value = maxi(0, value)
+#    var size := _components.size()
+#    if idx < size:
+#        if _components[idx] != value:
+#            _components[idx] = value
+#        if value == 0:
+#            for new_size in range(size, 0, -1):
+#                if _components[new_size - 1] > 0:
+#                    _components.resize(new_size)
+#                    return
+#    if idx >= size:
+#        if value == 0:
+#            return
+#        _components.resize(idx + 1)
+#        _components[idx] = value
+
+func get_epoch() -> int:
+    return epoch
 func set_epoch(value: int) -> void:
     value = maxi(0, value)
     if epoch != value:
         epoch = value
         emit_changed()
+func bump_epoch() -> void:
+    # TODO: reset others
+    epoch += 1
 
+func get_major() -> int:
+    return major
 func set_major(value: int) -> void:
     value = maxi(0, value)
     if major != value:
         major = value
         emit_changed()
+func bump_major() -> void:
+    # TODO: reset others
+    major += 1
 
+func get_minor() -> int:
+    return minor
 func set_minor(value: int) -> void:
     value = maxi(0, value)
     if minor != value:
         minor = value
         emit_changed()
+func bump_minor() -> void:
+    # TODO: reset others
+    minor += 1
 
+func get_patch() -> int:
+    return patch
 func set_patch(value: int) -> void:
     value = maxi(0, value)
     if patch != value:
         patch = value
         emit_changed()
+func bump_patch() -> void:
+    # TODO: reset others
+    patch += 1
 
+func get_status() -> String:
+    return status
 func set_status(value: String) -> void:
     if not value.is_empty():
         var regex_match := status_regex.search(value)
@@ -189,7 +152,16 @@ func set_status(value: String) -> void:
     if status != value:
         status = value
         emit_changed()
+func bump_status_num() -> void:
+    # TODO: Check number and increase
+    pass
+func bump_status() -> void:
+    # TODO: Check status and increase (alpha > beta > rc > stable)
+    pass
 
+# TODO: Use feature tags?
+func get_build() -> String:
+    return build
 func set_build(value: String) -> void:
     if not value.is_empty():
         var regex_match := build_regex.search(value)
@@ -201,34 +173,23 @@ func set_build(value: String) -> void:
         emit_changed()
 
 
-func load_from_dict(dict: Dictionary) -> void:
-    major = dict.get("major", 0)
-    minor = dict.get("minor", 0)
-    patch = dict.get("patch", 0)
-    status = dict.get("status", "")
-    build = dict.get("build", "")
-
-
-func load_from_string(version_string: String) -> void:
-    var regex_match := version_regex.search(version_string)
-    if is_instance_valid(regex_match):
-        major = int(regex_match.get_string("major"))
-        minor = int(regex_match.get_string("minor"))
-        patch = int(regex_match.get_string("patch"))
-        status = regex_match.get_string("status")
-        build = regex_match.get_string("build")
-
-
-func load_from_hex(hex: int, status: String = "", build: String = "") -> void:
-    major = (hex & 0xFF0000) >> 16
-    minor = (hex & 0x00FF00) >> 8
-    patch = (hex & 0x0000FF) >> 0
+func _init(
+    major: int = 0,
+    minor: int = 0,
+    patch: int = 0,
+    status: String = "",
+    build: String = ""
+) -> void:
+    self.major = major
+    self.minor = minor
+    self.patch = patch
     self.status = status
     self.build = build
 
 
 func _to_string() -> String:
-    var result := "%d.%d.%d" % [major, minor, patch]
+    var result := "%d!" % epoch if epoch > 0 else ""
+    result += "%d.%d.%d" % [major, minor, patch]
     if not status.is_empty():
         result += "-%s" % status
     if not build.is_empty():
@@ -236,13 +197,40 @@ func _to_string() -> String:
     return result
 
 
+func to_pretty_string() -> String:
+    var result := "v"
+    if epoch > 0:
+        result += "%d!" % epoch
+    result += "%d" % major
+    if minor > 0 or patch > 0:
+        result += ".%d" % minor
+    if patch > 0:
+        result += ".%d" % patch
+    if not status.is_empty():
+        result += "-%s" % status
+    if not build.is_empty():
+        result += " (%s)" % build
+    return result
+
+
+# {
+#   "major": 4,
+#   "minor": 2,
+#   "patch": 0,
+#   "hex": 262656,
+#   "status": "stable",
+#   "build": "official",
+#   "string": "4.2-stable (official)"
+# }
 func to_dict() -> Dictionary:
     return {
         "major": major,
         "minor": minor,
         "patch": patch,
         "status": status,
-        "build": build
+        "build": build,
+        "hex": to_hex(),
+        "string": to_pretty_string()
     }
 
 
@@ -251,7 +239,7 @@ func to_hex() -> int:
 
 
 # Return 1 if other takes precedent, 0 if equal, -1 if this takes precedent and -2 on error.
-func compare(other: VersionInfo) -> int:
+func compare(other: Version) -> int:
     # Precedence MUST be calculated by separating the version into major, minor, patch
     # and pre-release identifiers in that order (Build metadata does not figure into precedence).
 
@@ -317,15 +305,79 @@ func compare(other: VersionInfo) -> int:
     return result
 
 
-func matches(other: VersionInfo, operator: Operator) -> bool:
+func matches(other: Version, operator: Operator) -> bool:
     return false
 
 
-# { "major": 4, "minor": 2, "patch": 0, "hex": 262656, "status": "stable", "build": "official", "year": 2023, "hash": "46dc277917a93cbf601bbcf0d27d00f6feeec0d5", "string": "4.2-stable (official)" }
-static func get_engine_version() -> VersionInfo:
-    var version_info := VersionInfo.new()
-    version_info.load_from_dict(Engine.get_version_info())
-    return version_info
+
+
+# {
+#   "major": 4,
+#   "minor": 2,
+#   "patch": 0,
+#   "hex": 262656,
+#   "status": "stable",
+#   "build": "official",
+#   "year": 2023,
+#   "hash": "46dc277917a93cbf601bbcf0d27d00f6feeec0d5",
+#   "string": "4.2-stable (official)"
+# }
+static func from_dict(dict: Dictionary) -> Version:
+    if not dict.has("major"):
+        if dict.has("string"):
+            return from_string(dict.get("string"))
+        if dict.has("hex"):
+            return from_hex(dict.get("hex"))
+        return Version.new()
+    return Version.new(
+        dict.get("major", 0),
+        dict.get("minor", 0),
+        dict.get("patch", 0),
+        dict.get("status", ""),
+        dict.get("build", "")
+    )
+
+
+static func from_string(str: String) -> Version:
+    var regex_match := version_regex.search(str)
+    if is_instance_valid(regex_match):
+        return Version.new(
+            int(regex_match.get_string("major")),
+            int(regex_match.get_string("minor")),
+            int(regex_match.get_string("patch")),
+            regex_match.get_string("status"),
+            regex_match.get_string("build")
+        )
+    return Version.new()
+
+
+static func from_hex(hex: int) -> Version:
+    return Version.new(
+        (hex & 0xFF0000) >> 16,
+        (hex & 0x00FF00) >> 8,
+        (hex & 0x0000FF) >> 0
+    )
+
+
+static func get_application_version() -> Version:
+    var str := str(ProjectSettings.get_setting("application/config/version"))
+    return from_string(str)
+
+
+# {
+#   "major": 4,
+#   "minor": 2,
+#   "patch": 0,
+#   "hex": 262656,
+#   "status": "stable",
+#   "build": "official",
+#   "year": 2023,
+#   "hash": "46dc277917a93cbf601bbcf0d27d00f6feeec0d5",
+#   "string": "4.2-stable (official)"
+# }
+static func get_engine_version() -> Version:
+    var dict := Engine.get_version_info()
+    return from_dict(dict)
 
 
 #static func is_valid_string(version_string: String) -> bool:
@@ -333,6 +385,17 @@ static func get_engine_version() -> VersionInfo:
 #    return is_instance_valid(regex_match)
 
 
+# {
+#   "major": 4,
+#   "minor": 2,
+#   "patch": 0,
+#   "hex": 262656,
+#   "status": "stable",
+#   "build": "official",
+#   "year": 2023,
+#   "hash": "46dc277917a93cbf601bbcf0d27d00f6feeec0d5",
+#   "string": "4.2-stable (official)"
+# }
 #static func is_valid_dict(dict: Dictionary) -> bool:
 #    return false
 
