@@ -45,7 +45,7 @@ focus_mode = 0
 icon = SubResource("Texture2D_rjrmh")
 flat = true
 
-[node name="Button2" type="MenuButton" parent="Items"]
+[node name="MenuButton" type="MenuButton" parent="Items"]
 layout_mode = 2
 icon = SubResource("Texture2D_d87wq")
 item_count = 1

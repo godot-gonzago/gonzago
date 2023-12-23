@@ -1,4 +1,5 @@
 @tool
+class_name GonzagoMainEditorPlugin
 extends EditorPlugin
 ## Gonzago core editor plugin.
 ##
@@ -21,6 +22,13 @@ extends EditorPlugin
 ## 2D/3D will be interchangable with abstraction objects.
 ## Systems can be overriden by a different implementation or simply just extended.
 ## Extentions can add new component types to data objects?
+
+
+signal initialized
+signal pre_delete
+signal enabled
+signal disabled
+
 
 var _main_screen: GonzagoEditorMainScreen
 var _quickbar: GonzagoEditorQuickbar
