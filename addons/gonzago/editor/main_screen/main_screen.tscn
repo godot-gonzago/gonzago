@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://5l2hll0j34o0"]
 
-[ext_resource type="Script" path="res://addons/gonzago/editor/main/main_screen.gd" id="1_cfcfx"]
+[ext_resource type="Script" path="res://addons/gonzago/editor/main_screen/main_screen.gd" id="1_cfcfx"]
 [ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_d1y14"]
 
 [sub_resource type="Texture2D" id="Texture2D_5iu60"]

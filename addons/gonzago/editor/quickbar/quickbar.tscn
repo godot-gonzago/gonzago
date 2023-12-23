@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://du6m30kv76f00"]
+[gd_scene load_steps=8 format=3 uid="uid://du6m30kv76f00"]
 
 [ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_v1kkd"]
 [ext_resource type="Script" path="res://addons/gonzago/editor/quickbar/quickbar.gd" id="2_q8l1w"]
 [ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="3_aujv7"]
+[ext_resource type="Texture2D" uid="uid://641b4h8qe3jb" path="res://addons/gonzago/editor/icons/gonzago.svg" id="4_7tdju"]
 
 [sub_resource type="StyleBox" id="StyleBox_qludu"]
 resource_local_to_scene = false
@@ -52,6 +53,9 @@ item_count = 1
 popup/item_0/text = "Derp"
 popup/item_0/id = 0
 
+[node name="VSeparator" type="VSeparator" parent="Items"]
+layout_mode = 2
+
 [node name="OptionButton" type="OptionButton" parent="Items"]
 layout_mode = 2
 focus_mode = 0
@@ -59,4 +63,5 @@ flat = true
 item_count = 1
 selected = 0
 popup/item_0/text = "sadf"
+popup/item_0/icon = ExtResource("4_7tdju")
 popup/item_0/id = 0

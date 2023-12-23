@@ -32,7 +32,7 @@ signal disabled
 
 var _main_screen: GonzagoEditorMainScreen
 var _quickbar: GonzagoEditorQuickbar
-var _tool_menu: PopupMenu
+var _tool_menu: GonzagoEditorToolMenu
 
 
 func _init() -> void:
@@ -40,7 +40,7 @@ func _init() -> void:
 
 
 func _enter_tree() -> void:
-    _main_screen = preload("./editor/main/main_screen.tscn").instantiate() as GonzagoEditorMainScreen
+    _main_screen = preload("./editor/main_screen/main_screen.tscn").instantiate() as GonzagoEditorMainScreen
     EditorInterface.get_editor_main_screen().add_child(_main_screen)
     _make_visible(false)
 
@@ -49,8 +49,15 @@ func _enter_tree() -> void:
     var quickbar_parent := _quickbar.get_parent()
     quickbar_parent.move_child(_quickbar, quickbar_parent.get_child_count() - 2)
 
-    _tool_menu = PopupMenu.new()
-    add_tool_submenu_item("Gonzago", _tool_menu)
+    _tool_menu = GonzagoEditorToolMenu.new()
+    _tool_menu.menu_changed.connect(
+        func() -> void:
+            if _tool_menu.item_count > 0:
+                if not _tool_menu.is_inside_tree():
+                    add_tool_submenu_item("Gonzago", _tool_menu)
+            elif _tool_menu.is_inside_tree():
+                remove_tool_menu_item("Gonzago")
+    )
 
 
 func _exit_tree() -> void:
@@ -61,7 +68,11 @@ func _exit_tree() -> void:
         remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
         _quickbar.queue_free()
 
-    remove_tool_menu_item("Gonzago")
+    if _tool_menu:
+        if _tool_menu.is_inside_tree():
+            remove_tool_menu_item("Gonzago")
+        else:
+            _tool_menu.queue_free()
 
 
 func _has_main_screen() -> bool:
