@@ -406,6 +406,11 @@ class DependancyInfo extends RefCounted:
     var minor := -1
     var patch := -1
 
+
+class DependancyList extends RefCounted:
+    var dependancies: Array[DependancyInfo] = []
+
+
 enum Operator {
     EQUAL = OP_EQUAL,
     NOT_EQUAL = OP_NOT_EQUAL,
