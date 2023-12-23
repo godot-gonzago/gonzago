@@ -23,6 +23,7 @@ extends EditorPlugin
 ## Extentions can add new component types to data objects?
 
 var _main_screen: GonzagoEditorMainScreen
+var _quickbar: GonzagoEditorQuickbar
 var _tool_menu: PopupMenu
 
 
@@ -35,6 +36,11 @@ func _enter_tree() -> void:
     EditorInterface.get_editor_main_screen().add_child(_main_screen)
     _make_visible(false)
 
+    _quickbar = preload("./editor/quickbar/quickbar.tscn").instantiate() as GonzagoEditorQuickbar
+    add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
+    var quickbar_parent := _quickbar.get_parent()
+    quickbar_parent.move_child(_quickbar, quickbar_parent.get_child_count() - 2)
+
     _tool_menu = PopupMenu.new()
     add_tool_submenu_item("Gonzago", _tool_menu)
 
@@ -42,6 +48,10 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
     if _main_screen:
         _main_screen.queue_free()
+
+    if _quickbar:
+        remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
+        _quickbar.queue_free()
 
     remove_tool_menu_item("Gonzago")
 
