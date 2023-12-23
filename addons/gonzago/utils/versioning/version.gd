@@ -389,3 +389,29 @@ static func get_engine_version() -> Version:
 
 
 # add static direct conversion methods (string to dict and vice versa)
+
+# TODO: Don't make this util a resource. Make more util style.
+# Let other stuff handle this.
+class VersionInfo extends RefCounted:
+    pass
+
+
+# TODO:
+# Dependancy matching https://python-poetry.org/docs/dependency-specification/
+# https://docs.godotengine.org/en/latest/classes/class_engine.html#class-engine-method-get-version-info
+# https://getcomposer.org/doc/articles/versions.md
+class DependancyInfo extends RefCounted:
+    var operator := Operator.EQUAL
+    var major := 0
+    var minor := -1
+    var patch := -1
+
+enum Operator {
+    EQUAL = OP_EQUAL,
+    NOT_EQUAL = OP_NOT_EQUAL,
+    GREATER = OP_GREATER,
+    GREATER_EQUAL = OP_GREATER_EQUAL,
+    LESS = OP_LESS,
+    LESS_EQUAL = OP_LESS_EQUAL,
+    MIN = OP_BIT_NEGATE # Tilde, min until last specified segment
+}
