@@ -88,6 +88,7 @@ var build := "":
             emit_changed()
 
 
+@warning_ignore("shadowed_variable")
 func _init(
     major := 0, minor := 0, patch := 0,
     status := "", build := ""
@@ -101,7 +102,7 @@ func _init(
     self.build = build
 
 
-func _property_can_revert(property: StringName) -> bool:
+func _property_can_revert(_property: StringName) -> bool:
     return true
 
 
@@ -263,64 +264,64 @@ func to_bytes() -> PackedByteArray:
     return bytes
 
 
-static func is_valid(v: Variant) -> bool:
-    match typeof(v):
-        TYPE_OBJECT when v is Version:
+static func is_valid(value: Variant) -> bool:
+    match typeof(value):
+        TYPE_OBJECT when value is Version:
             return true
         TYPE_INT:
-            var hex := v as int
-            return hex >= 0 and hex <= 0xffffff
+            var h := value as int
+            return h >= 0 and h <= 0xffffff
         TYPE_STRING:
-            var str := v as String
-            var regex_match := _version_regex.search(str)
+            var s := value as String
+            var regex_match := _version_regex.search(s)
             return is_instance_valid(regex_match)
         TYPE_DICTIONARY:
-            var dict := v as Dictionary
+            var d := value as Dictionary
             return (
-                dict.has("hex") or
-                dict.has("major") or
-                dict.has("minor") or
-                dict.has("patch")
+                d.has("hex") or
+                d.has("major") or
+                d.has("minor") or
+                d.has("patch")
             )
         TYPE_PACKED_BYTE_ARRAY:
-            var bytes := v as PackedByteArray
-            return bytes.size() >= 12
+            var b := value as PackedByteArray
+            return b.size() >= 12
     return false
 
 
-static func create(v: Variant) -> Version:
-    match typeof(v):
-        TYPE_OBJECT when v is Version:
-            return v
+static func create(value: Variant) -> Version:
+    match typeof(value):
+        TYPE_OBJECT when value is Version:
+            return value
         TYPE_INT:
-            return from_hex(v)
+            return from_hex(value)
         TYPE_STRING:
-            return from_string(v)
+            return from_string(value)
         TYPE_DICTIONARY:
-            return from_dict(v)
+            return from_dict(value)
         TYPE_PACKED_BYTE_ARRAY:
-            return from_bytes(v)
+            return from_bytes(value)
     return Version.new()
 
 
-static func is_valid_hex(hex: int) -> bool:
-    return hex >= 0 and hex <= 0xffffff
+static func is_valid_hex(value: int) -> bool:
+    return value >= 0 and value <= 0xffffff
 
 
-static func from_hex(hex: int) -> Version:
+static func from_hex(value: int) -> Version:
     var version := Version.new()
-    version.hex = hex
+    version.hex = value
     return version
 
 
-static func is_valid_string(str: String) -> bool:
-    var regex_match := _version_regex.search(str)
+static func is_valid_string(value: String) -> bool:
+    var regex_match := _version_regex.search(value)
     return is_instance_valid(regex_match)
 
 
-static func from_string(str: String) -> Version:
+static func from_string(value: String) -> Version:
     var version := Version.new()
-    var regex_match := _version_regex.search(str)
+    var regex_match := _version_regex.search(value)
     if is_instance_valid(regex_match):
         version.major = int(regex_match.get_string("major"))
         version.minor = int(regex_match.get_string("minor"))
@@ -330,45 +331,45 @@ static func from_string(str: String) -> Version:
     return version
 
 
-static func is_valid_dict(dict: Dictionary) -> bool:
+static func is_valid_dict(value: Dictionary) -> bool:
     return (
-        dict.has("hex") or
-        dict.has("major") or
-        dict.has("minor") or
-        dict.has("patch")
+        value.has("hex") or
+        value.has("major") or
+        value.has("minor") or
+        value.has("patch")
     )
 
 
-static func from_dict(dict: Dictionary) -> Version:
+static func from_dict(value: Dictionary) -> Version:
     var version := Version.new()
-    if dict.has("hex"):
-        version.hex = dict.get("hex", 0)
+    if value.has("hex"):
+        version.hex = value.get("hex", 0)
     else:
-        version.major = dict.get("major", 0)
-        version.minor = dict.get("minor", 0)
-        version.patch = dict.get("patch", 0)
-    version.status = dict.get("status", "")
-    version.build = dict.get("build", "")
+        version.major = value.get("major", 0)
+        version.minor = value.get("minor", 0)
+        version.patch = value.get("patch", 0)
+    version.status = value.get("status", "")
+    version.build = value.get("build", "")
     return version
 
 
-static func from_bytes(bytes: PackedByteArray) -> Version:
+static func from_bytes(value: PackedByteArray) -> Version:
     var version := Version.new()
-    version.hex = bytes.decode_u32(0)
-    var status_length := bytes.decode_u32(4)
-    var build_length := bytes.decode_u32(8)
+    version.hex = value.decode_u32(0)
+    var status_length := value.decode_u32(4)
+    var build_length := value.decode_u32(8)
     var start := 12
     var end := start + status_length
-    version.status = bytes.slice(start, end).get_string_from_ascii()
+    version.status = value.slice(start, end).get_string_from_ascii()
     start = end
     end = start + build_length
-    version.build = bytes.slice(start, end).get_string_from_ascii()
+    version.build = value.slice(start, end).get_string_from_ascii()
     return version
 
 
 static func get_application_version() -> Version:
-    var str := str(ProjectSettings.get_setting("application/config/version"), "1.0.0")
-    return from_string(str)
+    var version_info := str(ProjectSettings.get_setting("application/config/version"), "1.0.0")
+    return from_string(version_info)
 
 
 # {
@@ -383,8 +384,8 @@ static func get_application_version() -> Version:
 #   "string": "4.2-stable (official)"
 # }
 static func get_engine_version() -> Version:
-    var dict := Engine.get_version_info()
-    return from_dict(dict)
+    var version_info := Engine.get_version_info()
+    return from_dict(version_info)
 
 
 # add static direct conversion methods (string to dict and vice versa)
