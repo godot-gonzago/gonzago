@@ -3,7 +3,7 @@ extends EditorPlugin
 
 
 const PluginRefresher := preload("./plugin_refresher.gd")
-const ThemeExplorer := preload("./theme_explorer.gd")
+const ThemeExplorer := preload("./theme_explorer/explorer.gd")
 
 
 var _plugin_refresher: PluginRefresher
