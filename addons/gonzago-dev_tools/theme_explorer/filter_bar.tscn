@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://ciod7ymryylf0"]
+
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_b26ag"]
+[ext_resource type="Script" path="res://addons/gonzago-dev_tools/theme_explorer/filter_bar.gd" id="2_a5u61"]
+
+[sub_resource type="Texture2D" id="Texture2D_u2n2b"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_b26ag")
+use_editor_theme = true
+icon_name = "Search"
+icon_type = "EditorIcons"
+
+[node name="FilterBar" type="LineEdit"]
+placeholder_text = "Filter..."
+clear_button_enabled = true
+right_icon = SubResource("Texture2D_u2n2b")
+select_all_on_focus = true
+script = ExtResource("2_a5u61")

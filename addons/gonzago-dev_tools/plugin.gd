@@ -3,18 +3,18 @@ extends EditorPlugin
 
 
 const PluginRefresher := preload("./plugin_refresher.gd")
-const ThemeExplorer := preload("./theme_explorer/explorer.gd")
+const ThemeExplorer := preload("./theme_explorer/explorer.tscn")
 
 
 var _plugin_refresher: PluginRefresher
-var _theme_explorer: ThemeExplorer
+var _theme_explorer: Control
 
 
 func _enter_tree() -> void:
     _plugin_refresher = PluginRefresher.new()
     add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, _plugin_refresher)
 
-    _theme_explorer = ThemeExplorer.new()
+    _theme_explorer = ThemeExplorer.instantiate() as Control
     add_control_to_bottom_panel(_theme_explorer, "Theme Explorer")
 
 

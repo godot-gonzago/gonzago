@@ -1,0 +1,62 @@
+[gd_scene load_steps=7 format=3 uid="uid://44a6t8fn4x8u"]
+
+[ext_resource type="Script" path="res://addons/gonzago-dev_tools/theme_explorer/file_bar.gd" id="1_8b14j"]
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_ikkxu"]
+
+[sub_resource type="Texture2D" id="Texture2D_yrw63"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "GuiVisibilityXray"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_3ujuc"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "GuiVisibilityXray"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_xkd8t"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "Theme"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_odyqb"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "GuiTabMenu"
+icon_type = "EditorIcons"
+
+[node name="FileBar" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 55.0
+grow_horizontal = 2
+script = ExtResource("1_8b14j")
+
+[node name="Tabs" type="TabBar" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+tab_count = 3
+tab_close_display_policy = 1
+tab_0/title = "Editor"
+tab_0/icon = SubResource("Texture2D_yrw63")
+tab_1/title = "Default"
+tab_1/icon = SubResource("Texture2D_3ujuc")
+tab_2/title = "Project"
+tab_2/icon = SubResource("Texture2D_xkd8t")
+tab_2/disabled = true
+
+[node name="Options" type="Button" parent="."]
+layout_mode = 2
+icon = SubResource("Texture2D_odyqb")
+flat = true
