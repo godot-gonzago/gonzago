@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqoxxt3r5k6qc"]
+
+[ext_resource type="PackedScene" uid="uid://mpanmyvqc6u5" path="res://addons/gonzago-dev_tools/theme_explorer/explorer.tscn" id="1_2kt22"]
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_rclss"]
+
+[sub_resource type="StyleBox" id="StyleBox_w5pj0"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+script = ExtResource("1_rclss")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "ProjectSettingsEditor"
+
+[node name="Window" type="AcceptDialog"]
+title = "Theme Explorer"
+size = Vector2i(688, 603)
+visible = true
+theme_override_styles/panel = SubResource("StyleBox_w5pj0")
+ok_button_text = "Close"
+
+[node name="Explorer" parent="." instance=ExtResource("1_2kt22")]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -99.0

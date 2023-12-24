@@ -1,0 +1,582 @@
+[gd_scene load_steps=27 format=3 uid="uid://mpanmyvqc6u5"]
+
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_x5rc1"]
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="2_cj8bl"]
+
+[sub_resource type="StyleBox" id="StyleBox_cgjbk"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "tabbar_background"
+stylebox_type = "TabContainer"
+
+[sub_resource type="Texture2D" id="Texture2D_odyqb"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Load"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_l0xkc"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 12.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "TabContainer"
+
+[sub_resource type="Texture2D" id="Texture2D_u2n2b"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Search"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_epip4"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="StyleBox" id="StyleBox_vcow5"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "title_button_normal"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_0wxp7"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Node"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_0t0c2"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Forward"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_nurjr"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "selected"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_lqbs7"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Color"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_uqytn"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "hover"
+stylebox_type = "Tree"
+
+[sub_resource type="StyleBox" id="StyleBox_6lhum"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_068hk"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "MemberConstant"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_7g1eo"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_x2wai"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Font"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_w2fyn"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_4mp8x"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "FontSize"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_xjeto"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_f12e3"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "Image"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_57oqj"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="Texture2D" id="Texture2D_1d7dm"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "File"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_1yxpk"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_x5rc1")
+use_editor_theme = true
+icon_name = "StyleBoxFlat"
+icon_type = "EditorIcons"
+
+[sub_resource type="StyleBox" id="StyleBox_xt6hp"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[sub_resource type="StyleBox" id="StyleBox_sbg0l"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
+script = ExtResource("2_cj8bl")
+use_editor_theme = true
+stylebox_name = "normal"
+stylebox_type = "Button"
+
+[node name="Layout" type="VBoxContainer"]
+custom_minimum_size = Vector2(640, 480)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_cgjbk")
+
+[node name="SelectionBar" type="HBoxContainer" parent="Header"]
+layout_mode = 2
+
+[node name="FileTabs" type="TabBar" parent="Header/SelectionBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_count = 2
+tab_close_display_policy = 1
+tab_0/title = "Editor"
+tab_1/title = "Default"
+
+[node name="OpenButton" type="Button" parent="Header/SelectionBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_odyqb")
+flat = true
+
+[node name="Content" type="PanelContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_l0xkc")
+
+[node name="Items" type="VBoxContainer" parent="Content"]
+layout_mode = 2
+
+[node name="ItemsFilter" type="LineEdit" parent="Content/Items"]
+layout_mode = 2
+placeholder_text = "Filter..."
+clear_button_enabled = true
+right_icon = SubResource("Texture2D_u2n2b")
+select_all_on_focus = true
+
+[node name="ItemsScroll" type="ScrollContainer" parent="Content/Items"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_epip4")
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ItemList" type="VBoxContainer" parent="Content/Items/ItemsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TypeGroup" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList"]
+layout_mode = 2
+
+[node name="TypeHeader" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_vcow5")
+
+[node name="TypeHeaderBar" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+layout_mode = 2
+texture = SubResource("Texture2D_0wxp7")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+layout_mode = 2
+text = "TypeLabel"
+
+[node name="VariationIcon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+modulate = Color(1, 1, 1, 0.372549)
+layout_mode = 2
+texture = SubResource("Texture2D_0t0c2")
+stretch_mode = 3
+
+[node name="VariationLabel" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+modulate = Color(1, 1, 1, 0.372549)
+layout_mode = 2
+text = "TypeLabel"
+
+[node name="ColorTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+layout_mode = 2
+texture = SubResource("Texture2D_lqbs7")
+
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer"]
+custom_minimum_size = Vector2(196, 196)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+
+[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item"]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_6lhum")
+
+[node name="ColorRect" type="ColorRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout/Preview"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3
+
+[node name="ConstantTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+layout_mode = 2
+texture = SubResource("Texture2D_068hk")
+
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer"]
+custom_minimum_size = Vector2(196, 196)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+
+[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item"]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_7g1eo")
+
+[node name="Constant" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout/Preview"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "20 (px)"
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3
+
+[node name="FontTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+layout_mode = 2
+texture = SubResource("Texture2D_x2wai")
+
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer"]
+custom_minimum_size = Vector2(196, 196)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+
+[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item"]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_w2fyn")
+
+[node name="Font" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout/Preview"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt ultricies neque, non convallis dui elementum ut. Vestibulum sed viverra massa. Proin massa ex, pellentesque a risus vel, vestibulum tincidunt quam. Quisque leo nulla, hendrerit non sapien vitae, commodo ullamcorper massa. Donec aliquam felis sed erat tincidunt fermentum."
+autowrap_mode = 1
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3
+
+[node name="FontSizeTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+layout_mode = 2
+texture = SubResource("Texture2D_4mp8x")
+
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer"]
+custom_minimum_size = Vector2(196, 196)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+
+[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item"]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_xjeto")
+
+[node name="FontSize" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout/Preview"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt ultricies neque, non convallis dui elementum ut. Vestibulum sed viverra massa. Proin massa ex, pellentesque a risus vel, vestibulum tincidunt quam. Quisque leo nulla, hendrerit non sapien vitae, commodo ullamcorper massa. Donec aliquam felis sed erat tincidunt fermentum."
+autowrap_mode = 1
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3
+
+[node name="IconTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+layout_mode = 2
+texture = SubResource("Texture2D_f12e3")
+
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer"]
+custom_minimum_size = Vector2(196, 196)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+
+[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item"]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_57oqj")
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout/Preview"]
+layout_mode = 2
+texture = SubResource("Texture2D_1d7dm")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3
+
+[node name="StyleboxTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+layout_mode = 2
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+layout_mode = 2
+texture = SubResource("Texture2D_1yxpk")
+
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer"]
+custom_minimum_size = Vector2(196, 196)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+
+[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item"]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_xt6hp")
+
+[node name="Stylebox" type="Panel" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout/Preview"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_sbg0l")
+
+[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3
