@@ -223,6 +223,7 @@ size_flags_vertical = 3
 [node name="TypesTree" type="Tree" parent="Split"]
 layout_mode = 2
 size_flags_horizontal = 3
+hide_root = true
 
 [node name="Split" type="HSplitContainer" parent="Split"]
 layout_mode = 2
