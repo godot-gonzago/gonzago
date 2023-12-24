@@ -13,6 +13,18 @@ func _init() -> void:
     add_child(_file_bar)
 
 
+func _notification(what: int) -> void:
+    match what:
+        NOTIFICATION_THEME_CHANGED:
+            var panel_stylebox := get_theme_stylebox("BottomPanel", "EditorStyles")
+            _file_bar.offset_left = -panel_stylebox.get_margin(SIDE_LEFT)
+            _file_bar.offset_right = panel_stylebox.get_margin(SIDE_RIGHT)
+            _file_bar.offset_top = -panel_stylebox.get_margin(SIDE_TOP)
+            #var panel_stylebox := get_theme_stylebox("BottomPanelDebuggerOverride", "EditorStyles")
+            #var panel_container := get_parent_control().get_parent_control()
+            #panel_container.add_theme_stylebox_override("panel", panel_stylebox)
+
+
 func _get_minimum_size() -> Vector2:
     return Vector2(640, 480)
 
@@ -80,7 +92,7 @@ class FileBar extends Control:
                 draw_style_box(_bg, rect)
 
     func _update_layout() -> void:
-        _open_button.set_offset(SIDE_TOP, _bg.get_margin(SIDE_TOP))
+        _open_button.set_offset(SIDE_TOP, -_bg.get_margin(SIDE_TOP))
         _open_button.set_offset(SIDE_BOTTOM, -_bg.get_margin(SIDE_BOTTOM))
         _open_button.set_offset(SIDE_LEFT, -(_bg.get_margin(SIDE_LEFT) + _open_button.size.x))
         _open_button.set_offset(SIDE_RIGHT, -_bg.get_margin(SIDE_RIGHT))
