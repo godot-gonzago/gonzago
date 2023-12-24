@@ -51,10 +51,12 @@ class TypesTree extends Tree:
             push_error("Theme was null!")
             return
 
+        #print(_theme.get_instance_id()) # Maybe useful for caching
+
         var root := create_item()
         var types := _theme.get_type_list()
         _build_types(root, types)
-        print(_tags.keys())
+        #print(_tags.keys())
 
     func _build_types(root: TreeItem, types: PackedStringArray) -> void:
 
