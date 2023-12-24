@@ -93,8 +93,6 @@ class TypesTree extends Tree:
         #print(_tags.keys())
 
     func _build_types(root: TreeItem, types: PackedStringArray) -> void:
-
-
         types.sort()
         for type in types:
             var item := root.create_child()
@@ -179,4 +177,4 @@ class TypesTree extends Tree:
             if has_theme_icon(type, "EditorIcons"):
                 icon = get_theme_icon(type, "EditorIcons")
             item.set_icon(0, icon)
-            _update_item_icons(item, icon)
+            _update_item_icons(item, root_icon)
