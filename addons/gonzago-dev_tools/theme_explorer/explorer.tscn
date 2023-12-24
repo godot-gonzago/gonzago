@@ -291,159 +291,173 @@ clear_button_enabled = true
 right_icon = SubResource("Texture2D_u2n2b")
 select_all_on_focus = true
 
-[node name="ItemsScroll" type="ScrollContainer" parent="Content/Items"]
+[node name="Split" type="HSplitContainer" parent="Content/Items"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="TypesTree" type="Tree" parent="Content/Items/Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Split" type="HSplitContainer" parent="Content/Items/Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="ItemsScroll" type="ScrollContainer" parent="Content/Items/Split/Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 theme_override_styles/panel = SubResource("StyleBox_epip4")
 follow_focus = true
 horizontal_scroll_mode = 0
 
-[node name="ItemList" type="VBoxContainer" parent="Content/Items/ItemsScroll"]
+[node name="ItemList" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TypeGroup" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList"]
+[node name="TypeGroup" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList"]
 layout_mode = 2
 
-[node name="TypeHeader" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="TypeHeader" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_vcow5")
 
-[node name="TypeHeaderBar" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader"]
+[node name="TypeHeaderBar" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/TypeHeader"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
 layout_mode = 2
 texture = SubResource("Texture2D_0wxp7")
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
 layout_mode = 2
 text = "TypeLabel"
 
-[node name="VariationIcon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+[node name="VariationIcon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
 modulate = Color(1, 1, 1, 0.372549)
 layout_mode = 2
 texture = SubResource("Texture2D_0t0c2")
 stretch_mode = 3
 
-[node name="VariationLabel" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
+[node name="VariationLabel" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/TypeHeader/TypeHeaderBar"]
 modulate = Color(1, 1, 1, 0.372549)
 layout_mode = 2
 text = "TypeLabel"
 
-[node name="ColorTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="ColorTypeGroup" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 
-[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup"]
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_nurjr")
 
-[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemTypeHeaderontainer"]
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemTypeHeaderontainer"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
 layout_mode = 2
 texture = SubResource("Texture2D_lqbs7")
 
-[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup"]
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer"]
+[node name="Item" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer"]
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_uqytn")
 
-[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item"]
+[node name="Layout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item"]
 layout_mode = 2
 
-[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Preview" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBox_6lhum")
 
-[node name="ColorRect" type="ColorRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout/Preview"]
+[node name="ColorRect" type="ColorRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout/Preview"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ColorTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 text = "Long Colorname"
 text_overrun_behavior = 3
 
-[node name="ConstantTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="ConstantTypeGroup" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 
-[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup"]
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_nurjr")
 
-[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemTypeHeaderontainer"]
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemTypeHeaderontainer"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
 layout_mode = 2
 texture = SubResource("Texture2D_068hk")
 
-[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup"]
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer"]
+[node name="Item" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer"]
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_uqytn")
 
-[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item"]
+[node name="Layout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item"]
 layout_mode = 2
 
-[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Preview" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBox_7g1eo")
 
-[node name="Constant" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout/Preview"]
+[node name="Constant" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout/Preview"]
 layout_mode = 2
 size_flags_vertical = 1
 text = "20 (px)"
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/ConstantTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 text = "Long Colorname"
 text_overrun_behavior = 3
 
-[node name="FontTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="FontTypeGroup" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 
-[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup"]
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_nurjr")
 
-[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemTypeHeaderontainer"]
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemTypeHeaderontainer"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
 layout_mode = 2
 texture = SubResource("Texture2D_x2wai")
 
-[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup"]
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer"]
+[node name="Item" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer"]
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_uqytn")
 
-[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item"]
+[node name="Layout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item"]
 layout_mode = 2
 
-[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Preview" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBox_w2fyn")
 
-[node name="Font" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout/Preview"]
+[node name="Font" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout/Preview"]
 layout_mode = 2
 size_flags_vertical = 1
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt ultricies neque, non convallis dui elementum ut. Vestibulum sed viverra massa. Proin massa ex, pellentesque a risus vel, vestibulum tincidunt quam. Quisque leo nulla, hendrerit non sapien vitae, commodo ullamcorper massa. Donec aliquam felis sed erat tincidunt fermentum."
@@ -451,43 +465,43 @@ autowrap_mode = 1
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 text = "Long Colorname"
 text_overrun_behavior = 3
 
-[node name="FontSizeTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="FontSizeTypeGroup" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 
-[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup"]
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_nurjr")
 
-[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemTypeHeaderontainer"]
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemTypeHeaderontainer"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
 layout_mode = 2
 texture = SubResource("Texture2D_4mp8x")
 
-[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup"]
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer"]
+[node name="Item" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer"]
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_uqytn")
 
-[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item"]
+[node name="Layout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item"]
 layout_mode = 2
 
-[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Preview" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBox_xjeto")
 
-[node name="FontSize" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout/Preview"]
+[node name="FontSize" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout/Preview"]
 layout_mode = 2
 size_flags_vertical = 1
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt ultricies neque, non convallis dui elementum ut. Vestibulum sed viverra massa. Proin massa ex, pellentesque a risus vel, vestibulum tincidunt quam. Quisque leo nulla, hendrerit non sapien vitae, commodo ullamcorper massa. Donec aliquam felis sed erat tincidunt fermentum."
@@ -495,88 +509,92 @@ autowrap_mode = 1
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/FontSizeTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 text = "Long Colorname"
 text_overrun_behavior = 3
 
-[node name="IconTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="IconTypeGroup" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 
-[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup"]
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_nurjr")
 
-[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemTypeHeaderontainer"]
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemTypeHeaderontainer"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
 layout_mode = 2
 texture = SubResource("Texture2D_f12e3")
 
-[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup"]
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer"]
+[node name="Item" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer"]
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_uqytn")
 
-[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item"]
+[node name="Layout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item"]
 layout_mode = 2
 
-[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Preview" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBox_57oqj")
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout/Preview"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout/Preview"]
 layout_mode = 2
 texture = SubResource("Texture2D_1d7dm")
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/IconTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 text = "Long Colorname"
 text_overrun_behavior = 3
 
-[node name="StyleboxTypeGroup" type="HBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup"]
+[node name="StyleboxTypeGroup" type="HBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup"]
 layout_mode = 2
 
-[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup"]
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_nurjr")
 
-[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemTypeHeaderontainer"]
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemTypeHeaderontainer"]
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+[node name="Icon" type="TextureRect" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
 layout_mode = 2
 texture = SubResource("Texture2D_1yxpk")
 
-[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup"]
+[node name="ItemsContainer" type="HFlowContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Item" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer"]
+[node name="Item" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer"]
 custom_minimum_size = Vector2(196, 196)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_uqytn")
 
-[node name="Layout" type="VBoxContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item"]
+[node name="Layout" type="VBoxContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item"]
 layout_mode = 2
 
-[node name="Preview" type="PanelContainer" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Preview" type="PanelContainer" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBox_xt6hp")
 
-[node name="Stylebox" type="Panel" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout/Preview"]
+[node name="Stylebox" type="Panel" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout/Preview"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_sbg0l")
 
-[node name="Label" type="Label" parent="Content/Items/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout"]
+[node name="Label" type="Label" parent="Content/Items/Split/Split/ItemsScroll/ItemList/TypeGroup/StyleboxTypeGroup/ItemsContainer/Item/Layout"]
 layout_mode = 2
 text = "Long Colorname"
 text_overrun_behavior = 3
+
+[node name="DetailView" type="PanelContainer" parent="Content/Items/Split/Split"]
+layout_mode = 2
+size_flags_horizontal = 3
