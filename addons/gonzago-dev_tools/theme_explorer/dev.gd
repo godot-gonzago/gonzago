@@ -24,7 +24,7 @@ class TypesTree extends Tree:
     var _theme: Theme
 
     var _tags_regex := RegEx.create_from_string(
-        r"([A-Z]?[a-z]+|[A-Z]+(?![a-z]+)|\d+[a-zA-Z]?)"
+        r"([A-Z]?[a-z]+|[A-Z]+(?![a-z]+)|\d+[a-zA-Z]?(?![a-z]+))"
     )
     var _tags: Dictionary = {}
 
