@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvp7aqcgktsja"]
+
+[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_jhkbs"]
+[ext_resource type="Script" path="res://addons/gonzago-dev_tools/theme_explorer/item.gd" id="2_n6pnk"]
+
+[sub_resource type="StyleBox" id="StyleBox_uqytn"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("1_jhkbs")
+use_editor_theme = true
+stylebox_name = "hover"
+stylebox_type = "Tree"
+
+[sub_resource type="StyleBox" id="StyleBox_6lhum"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("1_jhkbs")
+use_editor_theme = true
+stylebox_name = "panel"
+stylebox_type = "Tree"
+
+[node name="Item" type="PanelContainer"]
+custom_minimum_size = Vector2(196, 196)
+theme_override_styles/panel = SubResource("StyleBox_uqytn")
+script = ExtResource("2_n6pnk")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Preview" type="PanelContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_6lhum")
+
+[node name="ColorRect" type="ColorRect" parent="Layout/Preview"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Long Colorname"
+text_overrun_behavior = 3

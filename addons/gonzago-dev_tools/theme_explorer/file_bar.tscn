@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://44a6t8fn4x8u"]
+[gd_scene load_steps=11 format=3 uid="uid://44a6t8fn4x8u"]
 
 [ext_resource type="Script" path="res://addons/gonzago-dev_tools/theme_explorer/file_bar.gd" id="1_8b14j"]
 [ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_ikkxu"]
@@ -27,12 +27,44 @@ use_editor_theme = true
 icon_name = "Theme"
 icon_type = "EditorIcons"
 
+[sub_resource type="Texture2D" id="Texture2D_81rjy"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "New"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_5ixrl"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "Load"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_tjm3w"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "Save"
+icon_type = "EditorIcons"
+
+[sub_resource type="Texture2D" id="Texture2D_b7mer"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ikkxu")
+use_editor_theme = true
+icon_name = "Tools"
+icon_type = "EditorIcons"
+
 [sub_resource type="Texture2D" id="Texture2D_odyqb"]
 resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("1_ikkxu")
 use_editor_theme = true
-icon_name = "GuiTabMenu"
+icon_name = "GuiTabMenuHl"
 icon_type = "EditorIcons"
 
 [node name="FileBar" type="HBoxContainer"]
@@ -55,6 +87,30 @@ tab_1/icon = SubResource("Texture2D_3ujuc")
 tab_2/title = "Project"
 tab_2/icon = SubResource("Texture2D_xkd8t")
 tab_2/disabled = true
+
+[node name="New" type="Button" parent="."]
+layout_mode = 2
+icon = SubResource("Texture2D_81rjy")
+flat = true
+
+[node name="Open" type="Button" parent="."]
+layout_mode = 2
+icon = SubResource("Texture2D_5ixrl")
+flat = true
+
+[node name="Save" type="Button" parent="."]
+layout_mode = 2
+disabled = true
+icon = SubResource("Texture2D_tjm3w")
+flat = true
+
+[node name="Tools" type="Button" parent="."]
+layout_mode = 2
+icon = SubResource("Texture2D_b7mer")
+flat = true
+
+[node name="Separator" type="VSeparator" parent="."]
+layout_mode = 2
 
 [node name="Options" type="Button" parent="."]
 layout_mode = 2
