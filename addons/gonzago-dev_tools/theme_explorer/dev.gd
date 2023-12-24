@@ -23,6 +23,11 @@ func _run() -> void:
 class TypesTree extends Tree:
     var _theme: Theme
 
+    var _tags_regex := RegEx.create_from_string(
+        r"([A-Z]?[a-z]+|[A-Z]+(?![a-z]+)|\d+[a-zA-Z]?)"
+    )
+    var _tags: Dictionary = {}
+
     func _init() -> void:
         hide_root = true
         columns = Theme.DATA_TYPE_MAX + 1
@@ -41,6 +46,7 @@ class TypesTree extends Tree:
 
         _theme = t
         clear()
+        _tags.clear()
         if not _theme:
             push_error("Theme was null!")
             return
@@ -48,11 +54,10 @@ class TypesTree extends Tree:
         var root := create_item()
         var types := _theme.get_type_list()
         _build_types(root, types)
+        print(_tags.keys())
 
     func _build_types(root: TreeItem, types: PackedStringArray) -> void:
-        var words_regex := RegEx.create_from_string(
-            r"([A-Z]?[a-z]+|[A-Z]+(?![a-z]+)|\d+[a-zA-Z]?)"
-        )
+
 
         types.sort()
         for type in types:
@@ -60,40 +65,30 @@ class TypesTree extends Tree:
             item.set_text(0, type)
             for data_type in Theme.DATA_TYPE_MAX:
                 var data_type_entries := _theme.get_theme_item_list(data_type, type)
-                # TODO: Build searchable StringName?
+                # TODO: Build searchable StringName? eg. tags
                 # https://gist.github.com/SuppieRK/a6fb471cf600271230c8c7e532bdae4b
                 # Normalize to lower case separated by space?
                 # Use theme item path as StringName: eg: icon/EditorIcons/Search?
-                # Indexing by list of words that has list of paths?
-                # https://docs.godotengine.org/en/stable/classes/class_stringname.html#class-stringname-method-capitalize
-                # https://docs.godotengine.org/en/stable/classes/class_stringname.html#class-stringname-method-contains
-                # https://docs.godotengine.org/en/stable/classes/class_stringname.html#class-stringname-method-split
-                # https://docs.godotengine.org/en/stable/classes/class_regex.html#class-regex-method-search-all
+                # Indexing by list of words that has list of paths? already excluded etc. can be ignored...
                 # This should work
                 # (?<word>[A-Z]{2,}|[A-Z]?[a-z]+|\d+)
-                # flatcase
-                # UPPERCASE, SCREAMINGCAMELCASE
-                # (lower) camelCase, dromedaryCase
-                # PascalCase, UpperCamelCase, StudlyCase
-                # snake_case, snail_case, pothole_case
-                # ALL_CAPS, SCREAMING_SNAKE_CASE,[16] MACRO_CASE, CONSTANT_CASE
-                # camel_Snake_Case
-                # Pascal_Snake_Case, Title_Case
-                # kebab-case, dash-case, lisp-case, spinal-case
-                # TRAIN-CASE, COBOL-CASE, SCREAMING-KEBAB-CASE
-                # Train-Case,[13] HTTP-Header-Case[17]
-                var words := PackedStringArray()
-                for regex_match in words_regex.search_all(type):
-                    var word := StringName(regex_match.get_string().to_lower())
-                    if not word in words:
-                        words.append(word)
+
+                #var type_path := StringName("%d/%s" % [data_type, type])
+                for regex_match in _tags_regex.search_all(type):
+                    var tag := StringName(regex_match.get_string().to_lower())
+                    if not _tags.has(tag):
+                        _tags[tag] = PackedStringArray()
+                    #var tag_holders: PackedStringArray = _tags.get(tag)
+                    #tag_holders.append(type_path)
                 for data_type_entry in data_type_entries:
-                    #print(data_type_entry)
-                    for regex_match in words_regex.search_all(data_type_entry):
-                        var word := StringName(regex_match.get_string().to_lower())
-                        if not word in words:
-                            words.append(word)
-                print(words)
+                    #print(data_type_entry) # Used to get list of names to test regex
+                    #var data_type_entry_path := StringName("%d/%s/%s" % [data_type, type, data_type_entry])
+                    for regex_match in _tags_regex.search_all(data_type_entry):
+                        var tag := StringName(regex_match.get_string().to_lower())
+                        if not _tags.has(tag):
+                            _tags[tag] = PackedStringArray()
+                        #var tag_holders: PackedStringArray = _tags.get(tag)
+                        #tag_holders.append(data_type_entry_path)
 
                 var count := data_type_entries.size()
                 item.set_text(data_type + 1, str(count))
