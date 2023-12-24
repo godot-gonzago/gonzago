@@ -33,9 +33,6 @@ class TypesTree extends Tree:
 
     func _init() -> void:
         hide_root = true
-        columns = Theme.DATA_TYPE_MAX + 1
-        for data_type in Theme.DATA_TYPE_MAX:
-            set_column_expand(data_type + 1, false)
 
     func _notification(what: int) -> void:
         match what:
@@ -57,8 +54,42 @@ class TypesTree extends Tree:
         #print(_theme.get_instance_id()) # Maybe useful for caching
 
         var root := create_item()
+
+        # https://github.com/godotengine/godot/blob/master/editor/connections_dialog.cpp#L837
+        var theme_root := root.create_child()
+        theme_root.set_text(0, tr("Theme"))
+        theme_root.set_selectable(0, false)
+        theme_root.set_editable(0, false)
+        # TODO: Add theme properties list
+        # TODO: Add readonly/files statistics
+        # TODO: Add resource files statistics like shared styleboxes etc?
+        theme_root.create_child().set_text(0, tr("Properties"))
+        theme_root.create_child().set_text(0, tr("Statistics"))
+        theme_root.create_child().set_text(0, tr("Resources"))
+
+        var data_type_text: Array[String] = [
+            tr("Color"),
+            tr("MemberConstants"),
+            tr("Fonts"),
+            tr("FontSizes"),
+            tr("Images"),
+            tr("StyleBoxes")
+        ]
+        var data_root := root.create_child()
+        data_root.set_text(0, tr("Data"))
+        data_root.set_selectable(0, false)
+        data_root.set_editable(0, false)
+        for data_type in Theme.DATA_TYPE_MAX:
+            var item := data_root.create_child()
+            item.set_text(0, data_type_text[data_type])
+
+        # TODO: Add inherited types (eg. from default theme for non static themes), same for items list
+        var types_root := root.create_child()
+        types_root.set_text(0, tr("Types"))
+        types_root.set_selectable(0, false)
+        types_root.set_editable(0, false)
         var types := _theme.get_type_list()
-        _build_types(root, types)
+        _build_types(types_root, types)
         #print(_tags.keys())
 
     func _build_types(root: TreeItem, types: PackedStringArray) -> void:
@@ -94,9 +125,6 @@ class TypesTree extends Tree:
                             _tags[tag] = PackedStringArray()
                         #var tag_holders: PackedStringArray = _tags.get(tag)
                         #tag_holders.append(data_type_entry_path)
-
-                var count := data_type_entries.size()
-                item.set_text(data_type + 1, str(count))
             var variations := _theme.get_type_variation_list(type)
             _build_types(item, variations)
 
@@ -109,24 +137,46 @@ class TypesTree extends Tree:
         if not root:
             push_error("Tree has not been built!")
             return
+
         var data_type_icons: Array[Texture2D] = [
             get_theme_icon("Color", "EditorIcons"),
             get_theme_icon("MemberConstant", "EditorIcons"),
-            get_theme_icon("Font", "EditorIcons"),
+            get_theme_icon("FontItem", "EditorIcons"),
             get_theme_icon("FontSize", "EditorIcons"),
             get_theme_icon("Image", "EditorIcons"),
             get_theme_icon("StyleBoxFlat", "EditorIcons")
         ]
-        var root_icon := get_theme_icon("NodeDisabled", "EditorIcons")
-        _update_item_icons(root, root_icon, data_type_icons)
 
-    func _update_item_icons(root: TreeItem, root_icon: Texture2D, data_type_icons: Array[Texture2D]) -> void:
+        var section_color := get_theme_color("prop_subsection", "Editor")
+
+        var theme_icon := get_theme_icon("Theme", "EditorIcons")
+        var theme_root := root.get_child(0)
+        theme_root.set_icon(0, theme_icon)
+        theme_root.set_custom_bg_color(0, section_color)
+        theme_root.get_child(0).set_icon(0, get_theme_icon("Tools", "EditorIcons"))
+        theme_root.get_child(1).set_icon(0, get_theme_icon("NodeInfo", "EditorIcons"))
+        theme_root.get_child(2).set_icon(0, get_theme_icon("Object", "EditorIcons"))
+
+        var data_icon := get_theme_icon("Groups", "EditorIcons")
+        var data_root := root.get_child(1)
+        data_root.set_icon(0, data_icon)
+        data_root.set_custom_bg_color(0, section_color)
+        for data_type in Theme.DATA_TYPE_MAX:
+            var item := data_root.get_child(data_type)
+            item.set_icon(0, data_type_icons[data_type])
+
+        var types_icon := get_theme_icon("ClassList", "EditorIcons")
+        var types_root := root.get_child(2)
+        types_root.set_icon(0, types_icon)
+        types_root.set_custom_bg_color(0, section_color)
+        var types_fallback_icon := get_theme_icon("NodeDisabled", "EditorIcons")
+        _update_item_icons(types_root, types_fallback_icon)
+
+    func _update_item_icons(root: TreeItem, root_icon: Texture2D) -> void:
         for item in root.get_children():
             var type := item.get_text(0)
             var icon := root_icon
             if has_theme_icon(type, "EditorIcons"):
                 icon = get_theme_icon(type, "EditorIcons")
             item.set_icon(0, icon)
-            for data_type in Theme.DATA_TYPE_MAX:
-                item.set_icon(data_type + 1, data_type_icons[data_type])
-            _update_item_icons(item, icon, data_type_icons)
+            _update_item_icons(item, icon)
