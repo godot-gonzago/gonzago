@@ -2,6 +2,9 @@
 extends EditorScript
 
 
+# https://github.com/godotengine/godot/blob/master/editor/plugins/theme_editor_plugin.cpp
+
+
 func _run() -> void:
     var theme := EditorInterface.get_editor_theme()
     if not theme:

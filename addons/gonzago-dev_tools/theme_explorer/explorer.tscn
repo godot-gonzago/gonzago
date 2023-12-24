@@ -152,7 +152,7 @@ resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("1_x5rc1")
 use_editor_theme = true
-icon_name = "Font"
+icon_name = "FontItem"
 icon_type = "EditorIcons"
 
 [sub_resource type="StyleBox" id="StyleBox_w2fyn"]
@@ -192,7 +192,7 @@ resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("1_x5rc1")
 use_editor_theme = true
-icon_name = "Image"
+icon_name = "ImageTexture"
 icon_type = "EditorIcons"
 
 [sub_resource type="StyleBox" id="StyleBox_57oqj"]
