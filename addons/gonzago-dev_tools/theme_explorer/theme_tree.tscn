@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://baapywium5evd"]
+
+[ext_resource type="Script" path="res://addons/gonzago-dev_tools/theme_explorer/theme_tree.gd" id="1_iv3el"]
+
+[node name="ThemeTree" type="Tree"]
+size_flags_horizontal = 3
+hide_root = true
+script = ExtResource("1_iv3el")
