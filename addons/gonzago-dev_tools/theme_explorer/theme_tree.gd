@@ -67,6 +67,7 @@ func _build_types(root: TreeItem, types: PackedStringArray) -> void:
     for type in types:
         var type_item := root.create_child()
         type_item.set_text(0, type)
+        type_item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
         var variations := _theme.get_type_variation_list(type)
         _build_types(type_item, variations)
 
