@@ -146,11 +146,15 @@ func _get_property_list() -> Array[Dictionary]:
         },
         {
             "name": "status",
-            "type": TYPE_STRING
+            "type": TYPE_STRING,
+            "hint": PROPERTY_HINT_ENUM_SUGGESTION,
+            "hint_string": "alpha,beta,rc,stable"
         },
         {
             "name": "build",
-            "type": TYPE_STRING
+            "type": TYPE_STRING,
+            "hint": PROPERTY_HINT_ENUM_SUGGESTION,
+            "hint_string": "debug,release"
         }
     ]
 
@@ -365,6 +369,19 @@ static func from_bytes(value: PackedByteArray) -> Version:
     end = start + build_length
     version.build = value.slice(start, end).get_string_from_ascii()
     return version
+
+
+static func has_encoded_bytes(bytes: PackedByteArray, byte_offset: int = 0) -> bool:
+    # Use magic byte(s)?
+    return false
+
+static func encode_bytes(version: Version, bytes: PackedByteArray, byte_offset: int = 0) -> void:
+    # Use magic byte(s)?
+    pass
+
+static func decode_bytes(bytes: PackedByteArray, byte_offset: int = 0) -> Version:
+    # Use magic byte(s)?
+    return null
 
 
 static func get_application_version() -> Version:
