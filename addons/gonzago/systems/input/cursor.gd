@@ -10,12 +10,13 @@ func _ready() -> void:
     if Engine.is_editor_hint():
         return
 
-    position.position = position.get_global_mouse_position()
+    position.global_position = position.get_global_mouse_position()
 
 
 func _input(event: InputEvent) -> void:
     if Engine.is_editor_hint():
         return
 
-    if event is InputEventMouseMotion:
-        position.position = event.position
+    var mouse := event as InputEventMouseMotion
+    if mouse:
+        position.global_position = mouse.global_position
