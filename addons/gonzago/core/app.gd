@@ -6,6 +6,25 @@ extends Node
 ## Main entry point of the application.
 
 
+# - ApplicationDomain
+#   - Initialization
+#       (Systems get booted up)
+#     - Splash, Intro etc.
+#   - ConfigurationDomain
+#       (Sets context for gameplay like loading or matchmaking etc.)
+#       (App config = input, display settings. etc.)
+#       (Can exit completely)
+#     - StartScreen, Menu etc.
+#   - GameplayDomain (Based on config)
+#     - Gameplay
+#       (Can block context change? eg. GameplayMenus like craftig, might pause or might not)
+#     - Pause
+#       (Can set context for gameplay like loading)
+#       (App config = input, display settings. etc.)
+#       (Can exit back to ConfigurationDomain or exit completely
+#   - Cleanup
+#       (Systems get shut down)
+#
 # MainAppStatess:
 # - Transitional
 # - Splash? Initialization?
