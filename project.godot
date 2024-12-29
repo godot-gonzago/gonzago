@@ -22,6 +22,7 @@ config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/show_image=false
 config/icon="res://addons/gonzago/assets/gonzago-icon.svg"
+boot_splash/screens=["res://addons/gonzago/assets/godot-logo.svg", "res://addons/gonzago/assets/gonzago-logo.svg"]
 
 [audio]
 

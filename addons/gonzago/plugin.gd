@@ -59,6 +59,25 @@ func _enter_tree() -> void:
                 remove_tool_menu_item("Gonzago")
     )
 
+    if not ProjectSettings.has_setting("application/boot_splash/screens"):
+        ProjectSettings.set("application/boot_splash/screens", [
+            "res://addons/gonzago/assets/godot-logo.svg",
+            "res://addons/gonzago/assets/gonzago-logo.svg"
+        ])
+        ProjectSettings.set_as_basic("application/boot_splash/screens", true)
+        ProjectSettings.add_property_info({
+            "name": "application/boot_splash/screens",
+            "type": TYPE_PACKED_STRING_ARRAY ,
+            "hint": PROPERTY_HINT_TYPE_STRING,
+            "hint_string": "%d/%d:%s" % [
+                TYPE_STRING,
+                PROPERTY_HINT_FILE,
+                "*."+",*.".join(ResourceLoader.get_recognized_extensions_for_type("Texture2D"))
+            ]
+        })
+        ProjectSettings.set_initial_value("application/boot_splash/screens", [])
+        ProjectSettings.save()
+
 
 func _exit_tree() -> void:
     if _main_screen:
