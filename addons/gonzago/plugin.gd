@@ -89,4 +89,4 @@ func _get_plugin_name() -> String:
 
 
 func _get_plugin_icon() -> Texture2D:
-    return preload("res://addons/gonzago/editor/icons/gonzago.svg") # ./editor/icons/gonzago.svg
+    return load("res://addons/gonzago/editor/icons/gonzago.svg") as Texture2D # ./editor/icons/gonzago.svg
