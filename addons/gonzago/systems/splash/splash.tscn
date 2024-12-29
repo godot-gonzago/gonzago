@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dot2oyoe55qju"]
 
-[ext_resource type="Script" path="res://addons/gonzago/systems/boot/boot.gd" id="1_ek2mg"]
+[ext_resource type="Script" path="res://addons/gonzago/systems/splash/splash.gd" id="1_ek2mg"]
 [ext_resource type="Texture2D" uid="uid://cva8q8h421dtk" path="res://addons/gonzago/assets/gonzago-splash.png" id="1_xikcr"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sgt4f"]

@@ -17,9 +17,10 @@ run/main_scene="res://addons/gonzago/core/app.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Gonzago"
 config/project_settings_override="user://settings.cfg"
+run/main_loop_type="GonzagoBoot"
 config/features=PackedStringArray("4.3", "Forward Plus")
-boot_splash/bg_color=Color(0.6, 0.835294, 0.584314, 1)
-boot_splash/image="res://addons/gonzago/assets/gonzago-splash.png"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
 config/icon="res://addons/gonzago/assets/gonzago-icon.svg"
 
 [audio]

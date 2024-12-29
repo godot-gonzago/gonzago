@@ -1,3 +1,3 @@
 @tool
-class_name GonzagoBoot
+class_name GonzagoSplash
 extends CanvasLayer
