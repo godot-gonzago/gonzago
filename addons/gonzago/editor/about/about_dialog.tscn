@@ -1,16 +1,16 @@
 [gd_scene load_steps=9 format=3 uid="uid://oi77wsyiytwx"]
 
 [ext_resource type="Texture2D" uid="uid://b813k2vpmbb6m" path="res://addons/gonzago/assets/gonzago-logo.svg" id="1_knspl"]
-[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="3_00hbb"]
-[ext_resource type="Script" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="3_y4vjp"]
+[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="3_00hbb"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="3_y4vjp"]
 
 [sub_resource type="StyleBox" id="StyleBox_etlpf"]
 resource_local_to_scene = false
 resource_name = ""
-content_margin_left = 24.0
-content_margin_top = 24.0
-content_margin_right = 24.0
-content_margin_bottom = 24.0
+content_margin_left = 9.0
+content_margin_top = 9.0
+content_margin_right = 9.0
+content_margin_bottom = 9.0
 script = ExtResource("3_00hbb")
 use_editor_theme = true
 stylebox_name = "panel"
