@@ -1,64 +1,61 @@
 @tool
 class_name GonzagoEditorQuickbar
-extends PanelContainer
-
-# https://github.com/godotengine/godot/blob/master/scene/gui/box_container.cpp
-# https://github.com/godotengine/godot/blob/master/scene/gui/panel_container.cpp
-
-#var _items: HBoxContainer
+extends HBoxContainer
 
 
-#func _init() -> void:
-#    _items = HBoxContainer.new()
+var _stylebox: StyleBox
+var _menu: MenuButton
+
+
+func _init() -> void:
+    _menu = MenuButton.new()
+    _menu.tooltip_text = "Gonzago"
+    _menu.icon = load("res://addons/gonzago/editor/icons/gonzago.svg") as Texture2D
+    add_child(_menu, false, Node.INTERNAL_MODE_BACK)
+    
+    var popup := _menu.get_popup()
+    popup.menu_changed.connect(
+        func() -> void:
+            _menu.visible = _menu.item_count > 0
+    )
+
+
+func _get_minimum_size() -> Vector2:
+    var min := get_combined_minimum_size()
+    min += _stylebox.get_minimum_size()
+    return min
 
 
 func _notification(what: int) -> void:
     match what:
-#        NOTIFICATION_THEME_CHANGED:
-#            add_theme_stylebox_override("panel", get_theme_stylebox("LaunchPadNormal", "EditorStyles"))
+        NOTIFICATION_THEME_CHANGED:
+            _stylebox = get_theme_stylebox("LaunchPadNormal", "EditorStyles")
+            update_minimum_size()
+        NOTIFICATION_DRAW:
+            _stylebox.draw(
+                get_canvas_item(),
+                Rect2(Vector2.ZERO, size)
+            )
         NOTIFICATION_SORT_CHILDREN:
             var has_visible_children := false
-            var items = get_node("Items") as Control
-            for child in items.get_children():
-                if child is Control and not child is Separator and child.visible:
+            
+            for child in get_children(true):
+                var control := child as Control
+                if control and not control.top_level and control.visible:
                     has_visible_children = true
                     break
+            
             visible = has_visible_children
 
 
-func add_item(item: Control) -> void:
-    var items = get_node("Items") as Control
-    items.add_child(item)
+func get_gonzago_popup() -> PopupMenu:
+    return _menu.get_popup()
 
 
-func remove_item(item: Control) -> void:
-    var items = get_node("Items") as Control
-    items.remove_child(item)
+func add_item(item: Control, group := "") -> void:
+    focus_mode = Control.FOCUS_NONE
+    add_child(item)
 
 
-func add_separator() -> VSeparator:
-    var separator := VSeparator.new()
-    add_item(separator)
-    return separator
-
-
-func add_icon_button() -> Button:
-    var button := Button.new()
-    button.flat = true
-    button.focus_mode = Control.FOCUS_NONE
-    add_item(button)
-    return button
-
-
-func add_menu_button() -> MenuButton:
-    var menu_button := MenuButton.new()
-    add_item(menu_button)
-    return menu_button
-
-
-func add_option_button() -> OptionButton:
-    var option_button := OptionButton.new()
-    option_button.flat = true
-    option_button.focus_mode = Control.FOCUS_NONE
-    add_item(option_button)
-    return option_button
+func remove_item(item: Control, group := "") -> void:
+    remove_child(item)

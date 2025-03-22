@@ -39,7 +39,7 @@ static func get_quickbar() -> GonzagoEditorQuickbar:
     var owner := EditorInterface.get_base_control()
     _quickbar = owner.get_node_or_null("%GonzagoEditorQuickbar") as GonzagoEditorQuickbar
     if not _quickbar:
-        _quickbar = preload("./quickbar/quickbar.tscn").instantiate() as GonzagoEditorQuickbar
+        _quickbar = GonzagoEditorQuickbar.new()
         _quickbar.name = "GonzagoEditorQuickbar"
         _quickbar.unique_name_in_owner = true
         
