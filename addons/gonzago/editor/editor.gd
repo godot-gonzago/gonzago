@@ -8,29 +8,28 @@ extends RefCounted
 #region Plugins
 
 class PluginInfo extends RefCounted:
-    var name: String
-    var description: String
-    var author: String
-    var version: String
-    var plugin_script: String
-    
-    var plugin_id: String
+    var config_path: String
+    var plugin_id: StringName # TODO: Get by plugin id
     var is_root: bool
     
     var parent: PluginInfo
     var children: Array[PluginInfo] = []
     
-    #func add_child(info: PluginInfo) -> void:
-    #    children.push_back(info)
+    var name: String
+    var description: String
+    var author: String
+    var version: String
+    var script_path: String # TODO: Get by script (or script path). (Useful for activating subplugins?)
     
     func _to_string() -> String:
         return (
+            "config_path: %s\n" % config_path +
+            "plugin_id: %s\n" % plugin_id +
             "name: %s\n" % name +
             "description: %s\n" % description +
             "author: %s\n" % author +
             "version: %s\n" % version +
-            "plugin_script: %s\n" % plugin_script +
-            "plugin_id: %s\n" % plugin_id +
+            "script_path: %s\n" % script_path +
             "is_root: %s\n" % is_root +
             "parent: %s\n" % (parent.plugin_id if parent else "none") +
             "children: %d [%s]\n" % [
@@ -68,12 +67,14 @@ const PLUGINS_ROOT := "res://addons/"
 const CONFIG_FILE_NAME := "plugin.cfg"
 
 static var _plugins_cache_dirty := true
-static var _plugins_cache: Array[PluginInfo] = []
+
+static var _plugins_map: Dictionary[StringName, PluginInfo] = {}
+static var _plugins_root_cache: Array[PluginInfo] = []
 
 
 static func _build_plugins_cache() -> void:
-    _plugins_cache.clear()
-    var plugins_id_map: Dictionary[String, PluginInfo] = {}
+    _plugins_map.clear()
+    _plugins_root_cache.clear()
     
     var fs := EditorInterface.get_resource_filesystem()
     var root := fs.get_filesystem_path(PLUGINS_ROOT)
@@ -100,28 +101,35 @@ static func _build_plugins_cache() -> void:
         if not config.load(config_path) == OK or not config.has_section("plugin"):
             continue
         
+        var plugin_id := dir.get_path().trim_prefix(PLUGINS_ROOT).simplify_path()
+        var is_root_plugin := not plugin_id.contains("/")
+        
         var info := PluginInfo.new()
-        info.plugin_id = dir.get_path().trim_prefix(PLUGINS_ROOT).simplify_path()
+        info.config_path = config_path
+        info.plugin_id = plugin_id
+        info.is_root = is_root_plugin
+        
         info.name = str(config.get_value("plugin", "name", ""))
         info.description = str(config.get_value("plugin", "description", ""))
         info.author = str(config.get_value("plugin", "author", ""))
         info.version = str(config.get_value("plugin", "version", ""))
-        info.plugin_script = str(config.get_value("plugin", "script", ""))
+        info.script_path = dir.get_path().path_join(str(config.get_value("plugin", "script", "")))
         
-        info.is_root = not info.plugin_id.contains("/")
-        var parent_id := info.plugin_id
+        _plugins_map[plugin_id] = info
+        if is_root_plugin:
+            _plugins_root_cache.append(info)
+            continue
+        
+        var parent_id := plugin_id
         while parent_id.contains("/"):
             parent_id = parent_id.rsplit("/", false, 1)[0]
-            if plugins_id_map.has(parent_id):
-                var parent := plugins_id_map[parent_id] as PluginInfo
+            if _plugins_map.has(parent_id):
+                var parent := _plugins_map[parent_id] as PluginInfo
                 info.parent = parent
                 parent.children.push_back(info)
                 break
-            
-        _plugins_cache.append(info)
-        plugins_id_map[info.plugin_id] = info
     
-    for info in _plugins_cache:
+    for info in _plugins_root_cache:
         print(info)
         
     _plugins_cache_dirty = false
@@ -134,6 +142,6 @@ static func _build_plugins_cache() -> void:
 static func get_plugins() -> Array[PluginInfo]:
     if _plugins_cache_dirty:
         _build_plugins_cache()
-    return _plugins_cache
+    return _plugins_root_cache
 
 #endregion
