@@ -6,6 +6,11 @@ var _theme: Theme = null
 
 
 func _init() -> void:
+    # Setup control
+    hide_root = true
+    size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    
+    # Setup initial tree
     var root := create_item()
 
     var theme_root := root.create_child()
