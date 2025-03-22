@@ -17,8 +17,12 @@ func _init() -> void:
     action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
     focus_mode = Control.FOCUS_NONE
     
-    #_tree.custom_minimum_size = Vector2(100, 100)
+    # TODO:
+    _tree.custom_minimum_size = Vector2(400, 600)
+    _tree.hide_root = true
     _popup.add_child(_tree)
+    _popup.about_to_popup.connect(_build_plugin_list)
+    _tree.item_edited.connect(_toggle_plugin_enabled)
     
     add_child(_popup)
     pressed.connect(_on_button_pressed)
@@ -45,39 +49,43 @@ func _notification(what: int) -> void:
 
 
 func _build_plugin_list() -> void:
-    pass
-    #var popup := get_popup()
-    #popup.clear(true)
-    #_build_children(popup, GonzagoEditorPluginRegistry.get_plugins(), true)
+    _tree.clear()
+    var root := _tree.create_item()
+    var plugins := GonzagoEditorPluginRegistry.get_plugins()
+    _build_children(root, plugins, true)
 
 
-func _build_children(menu: PopupMenu, children: Array[GonzagoEditorPluginRegistry.PluginInfo], root := false) -> void:
-    for info in children:
-        var index := menu.item_count
-        menu.add_item(info.get_display_name())
+func _build_children(parent: TreeItem, entries: Array[GonzagoEditorPluginRegistry.PluginInfo], root := false) -> void:
+    for info in entries:
+        var item := _tree.create_item(parent)
+        item.set_cell_mode(0, TreeItem.CELL_MODE_CHECK)
+        item.set_checked(0, info.is_enabled())
+        item.set_text(0, info.get_display_name())
+        item.set_editable(0, root)
+        item.set_metadata(0, info)
+        
         if info.children.size() > 0:
-            var submenu := PopupMenu.new()
-            menu.set_item_submenu_node(index, submenu)
-            _build_children(submenu, info.children)
+            _build_children(item, info.children)
             
         if info.plugin_id == DEV_TOOLS_PLUGIN:
-            var icon := menu.get_theme_icon("Reload", "EditorIcons")
-            menu.set_item_icon(index, icon)
+            pass
+            #var icon := menu.get_theme_icon("Reload", "EditorIcons")
+            #menu.set_item_icon(index, icon)
         else:
-            menu.set_item_as_checkable(index, true)
-            menu.set_item_checked(index, info.is_enabled())
-        menu.set_item_metadata(index, info)
-        menu.set_item_disabled(index, not root)
+            pass
+            #menu.set_item_as_checkable(index, true)
+            #menu.set_item_checked(index, info.is_enabled())
+        #menu.set_item_metadata(index, info)
+        #menu.set_item_disabled(index, not root)
 
 
-func _toggle_plugin_enabled(index: int) -> void:
-    pass
-    #var popup := get_popup()
-    #var info := popup.get_item_metadata(index) as GonzagoEditorPluginRegistry.PluginInfo
-#
-    #if info.plugin_id == DEV_TOOLS_PLUGIN:
-        #info.reload_deffered()
-        #return
-    #
-    #info.toggle()
-    #popup.set_item_checked(index, info.is_enabled())
+func _toggle_plugin_enabled() -> void:
+    var item := _tree.get_edited()
+    var info := item.get_metadata(0) as GonzagoEditorPluginRegistry.PluginInfo
+    
+    if info.plugin_id == DEV_TOOLS_PLUGIN:
+        info.reload_deffered()
+        return
+        
+    info.toggle()
+    item.set_checked(0, info.is_enabled())
