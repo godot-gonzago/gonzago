@@ -11,6 +11,7 @@ func _init() -> void:
     _menu = MenuButton.new()
     _menu.tooltip_text = "Gonzago"
     _menu.icon = load("res://addons/gonzago/editor/icons/gonzago.svg") as Texture2D
+    _menu.flat = false
     add_child(_menu, false, Node.INTERNAL_MODE_BACK)
     
     var popup := _menu.get_popup()
@@ -53,7 +54,10 @@ func get_gonzago_popup() -> PopupMenu:
 
 
 func add_item(item: Control, group := "") -> void:
-    focus_mode = Control.FOCUS_NONE
+    item.focus_mode = Control.FOCUS_NONE
+    var button := item as Button
+    if button:
+        button.flat = false
     add_child(item)
 
 
