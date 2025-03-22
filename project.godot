@@ -41,7 +41,7 @@ window/size/window_height_override=720
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gonzago-dev_tools/plugin.cfg", "res://addons/gonzago/plugin.cfg")
+enabled=PackedStringArray("res://addons/gonzago-dev_tools/plugin.cfg", "res://addons/gonzago-dev_tools/plugin_refresher/plugin.cfg", "res://addons/gonzago-dev_tools/theme_explorer/plugin.cfg", "res://addons/gonzago/plugin.cfg")
 
 [input]
 

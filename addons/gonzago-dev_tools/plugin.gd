@@ -2,27 +2,26 @@
 extends GonzagoEditorPlugin
 
 
-const PluginRefresher := preload("./plugin_refresher.gd")
-const ThemeExplorer := preload("./theme_explorer/explorer.tscn")
+const CONFIG_FILE_NAME := "plugin.cfg"
+const DEV_TOOLS_PLUGIN := "gonzago-dev_tools"
+const DEV_TOOLS_ROOT := "res://addons/gonzago-dev_tools"
 
 
-var _plugin_refresher: PluginRefresher
-var _theme_explorer: Control
+func _enable_plugin() -> void:
+    for plugin_name in DirAccess.get_directories_at(DEV_TOOLS_ROOT):
+        var plugin_path := DEV_TOOLS_ROOT.path_join(plugin_name)
+        var config_path := plugin_path.path_join(CONFIG_FILE_NAME)
+        if not FileAccess.file_exists(config_path):
+            continue
+        
+        EditorInterface.set_plugin_enabled(DEV_TOOLS_PLUGIN.path_join(plugin_name), true)
 
 
-func _enter_tree() -> void:
-    _plugin_refresher = PluginRefresher.new()
-    GonzagoEditor.get_quickbar().add_item(_plugin_refresher)
-
-    _theme_explorer = ThemeExplorer.instantiate() as Control
-    add_control_to_bottom_panel(_theme_explorer, "Theme Explorer")
-
-
-func _exit_tree() -> void:
-    if _plugin_refresher:
-        GonzagoEditor.get_quickbar().remove_item(_plugin_refresher)
-        _plugin_refresher.queue_free()
-
-    if _theme_explorer:
-        remove_control_from_bottom_panel(_theme_explorer)
-        _theme_explorer.queue_free()
+func _disable_plugin() -> void:
+    for plugin_name in DirAccess.get_directories_at(DEV_TOOLS_ROOT):
+        var plugin_path := DEV_TOOLS_ROOT.path_join(plugin_name)
+        var config_path := plugin_path.path_join(CONFIG_FILE_NAME)
+        if not FileAccess.file_exists(config_path):
+            continue
+    
+        EditorInterface.set_plugin_enabled(DEV_TOOLS_PLUGIN.path_join(plugin_name), false)
