@@ -38,7 +38,7 @@ func _build_plugin_list() -> void:
             popup.set_item_checked(index, info.is_enabled())
         popup.set_item_metadata(index, info)
         #popup.set_item_disabled(index, info.plugin_id == DEV_TOOLS_PLUGIN)
-        
+
 
 func _toggle_plugin_enabled(index: int) -> void:
     var popup := get_popup()
