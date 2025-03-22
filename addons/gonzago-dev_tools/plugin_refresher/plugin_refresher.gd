@@ -63,11 +63,13 @@ func _build_children(parent: TreeItem, entries: Array[GonzagoEditorPluginRegistr
         var item := _tree.create_item(parent)
         item.set_cell_mode(0, TreeItem.CELL_MODE_CHECK)
         item.set_checked(0, info.is_enabled())
+        
         item.set_text(0, info.get_display_name())
-        item.set_editable(0, root)
+        item.set_editable(0, root and info.plugin_id != DEV_TOOLS_PLUGIN)
         item.set_metadata(0, info)
         
         item.add_button(0, get_theme_icon("Reload", "EditorIcons"))
+        item.set_button_disabled(0, 0, not info.is_enabled())
         item.add_button(0, get_theme_icon("Edit", "EditorIcons"))
         
         if info.children.size() > 0:
