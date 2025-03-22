@@ -20,6 +20,9 @@ func _init() -> void:
     # TODO:
     _tree.custom_minimum_size = Vector2(400, 600)
     _tree.hide_root = true
+    #_tree.columns = 2
+    #_tree.set_column_expand(0, true)
+    #_tree.set_column_expand(1, false)
     _popup.add_child(_tree)
     _popup.about_to_popup.connect(_build_plugin_list)
     _tree.item_edited.connect(_toggle_plugin_enabled)
@@ -63,6 +66,9 @@ func _build_children(parent: TreeItem, entries: Array[GonzagoEditorPluginRegistr
         item.set_text(0, info.get_display_name())
         item.set_editable(0, root)
         item.set_metadata(0, info)
+        
+        item.add_button(0, get_theme_icon("Reload", "EditorIcons"))
+        item.add_button(0, get_theme_icon("Edit", "EditorIcons"))
         
         if info.children.size() > 0:
             _build_children(item, info.children)

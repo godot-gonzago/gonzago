@@ -44,6 +44,8 @@ func _init() -> void:
 
 
 func _enter_tree() -> void:
+    print("Enter tree GonzagoMainEditorPlugin")
+    
     var root := get_tree().root
     owner = root
     
@@ -68,14 +70,17 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+    print("Exit tree GonzagoMainEditorPlugin")
     pass
     
     
 func _enable_plugin() -> void:
+    print("Enabled GonzagoMainEditorPlugin")
     EditorInterface.set_plugin_enabled("gonzago/editor/plugins", true)
     EditorInterface.set_plugin_enabled("gonzago/editor/interfaces", true)
 
 
 func _disable_plugin() -> void:
+    print("Disabled GonzagoMainEditorPlugin")
     EditorInterface.set_plugin_enabled("gonzago/editor/interfaces", false)
     EditorInterface.set_plugin_enabled("gonzago/editor/plugins", false)
