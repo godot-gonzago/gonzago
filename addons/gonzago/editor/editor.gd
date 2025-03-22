@@ -15,7 +15,33 @@ class PluginInfo extends RefCounted:
     var plugin_script: String
     
     var plugin_id: String
+    var is_root: bool
+    
     var parent: PluginInfo
+    var children: Array[PluginInfo] = []
+    
+    #func add_child(info: PluginInfo) -> void:
+    #    children.push_back(info)
+    
+    func _to_string() -> String:
+        return (
+            "name: %s\n" % name +
+            "description: %s\n" % description +
+            "author: %s\n" % author +
+            "version: %s\n" % version +
+            "plugin_script: %s\n" % plugin_script +
+            "plugin_id: %s\n" % plugin_id +
+            "is_root: %s\n" % is_root +
+            "parent: %s\n" % (parent.plugin_id if parent else "none") +
+            "children: %d [%s]\n" % [
+                children.size(),
+                ", ".join(
+                    children.map(
+                        func(child): return child.plugin_id
+                    )
+                )
+            ]
+        )
     
     func get_display_name() -> String:
         if not name.is_empty():
@@ -47,6 +73,7 @@ static var _plugins_cache: Array[PluginInfo] = []
 
 static func _build_plugins_cache() -> void:
     _plugins_cache.clear()
+    var plugins_id_map: Dictionary[String, PluginInfo] = {}
     
     var fs := EditorInterface.get_resource_filesystem()
     var root := fs.get_filesystem_path(PLUGINS_ROOT)
@@ -81,8 +108,22 @@ static func _build_plugins_cache() -> void:
         info.version = str(config.get_value("plugin", "version", ""))
         info.plugin_script = str(config.get_value("plugin", "script", ""))
         
+        info.is_root = not info.plugin_id.contains("/")
+        var parent_id := info.plugin_id
+        while parent_id.contains("/"):
+            parent_id = parent_id.rsplit("/", false, 1)[0]
+            if plugins_id_map.has(parent_id):
+                var parent := plugins_id_map[parent_id] as PluginInfo
+                info.parent = parent
+                parent.children.push_back(info)
+                break
+            
         _plugins_cache.append(info)
+        plugins_id_map[info.plugin_id] = info
     
+    for info in _plugins_cache:
+        print(info)
+        
     _plugins_cache_dirty = false
     EditorInterface.get_resource_filesystem().filesystem_changed.connect(
         func() -> void:
