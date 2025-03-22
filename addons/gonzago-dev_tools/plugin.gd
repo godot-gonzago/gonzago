@@ -1,5 +1,5 @@
 @tool
-extends EditorPlugin
+extends GonzagoEditorPlugin
 
 
 const PluginRefresher := preload("./plugin_refresher.gd")
@@ -12,7 +12,7 @@ var _theme_explorer: Control
 
 func _enter_tree() -> void:
     _plugin_refresher = PluginRefresher.new()
-    add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, _plugin_refresher)
+    GonzagoEditor.get_quickbar().add_item(_plugin_refresher)
 
     _theme_explorer = ThemeExplorer.instantiate() as Control
     add_control_to_bottom_panel(_theme_explorer, "Theme Explorer")
@@ -20,7 +20,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
     if _plugin_refresher:
-        remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, _plugin_refresher)
+        GonzagoEditor.get_quickbar().remove_item(_plugin_refresher)
         _plugin_refresher.queue_free()
 
     if _theme_explorer:

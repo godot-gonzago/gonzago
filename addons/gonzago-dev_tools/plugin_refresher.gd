@@ -11,14 +11,17 @@ const CONFIG_FILE_NAME := "plugin.cfg"
 const DEV_TOOLS_PLUGIN := "gonzago-dev_tools"
 
 
-func _ready() -> void:
-    var popup := get_popup()
-    popup.hide_on_checkable_item_selection = false
-    popup.about_to_popup.connect(_build_plugin_list)
-    popup.index_pressed.connect(_toggle_plugin_enabled)
-
-    icon = get_theme_icon("EditorPlugin", "EditorIcons")
-    tooltip_text = tr("Plugins")
+func _notification(what: int) -> void:
+    match what:
+        NOTIFICATION_READY:
+            var popup := get_popup()
+            popup.hide_on_checkable_item_selection = false
+            popup.about_to_popup.connect(_build_plugin_list)
+            popup.index_pressed.connect(_toggle_plugin_enabled)
+        NOTIFICATION_THEME_CHANGED:
+            icon = get_theme_icon("EditorPlugin", "EditorIcons")
+        NOTIFICATION_TRANSLATION_CHANGED:
+            tooltip_text = tr("Plugins")
 
 
 func _build_plugin_list() -> void:

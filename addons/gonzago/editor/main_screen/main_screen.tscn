@@ -19,7 +19,7 @@ use_editor_theme = true
 icon_name = "VisualShaderPort"
 icon_type = "EditorIcons"
 
-[node name="MainScreen" type="MarginContainer"]
+[node name="GonzagoEditorMainScreen" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

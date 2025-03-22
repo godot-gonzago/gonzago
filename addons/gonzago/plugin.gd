@@ -1,6 +1,7 @@
 @tool
 class_name GonzagoMainEditorPlugin
 extends EditorPlugin
+
 ## Gonzago core editor plugin.
 ##
 ## Gonzago Core Framework
@@ -36,25 +37,32 @@ var _tool_menu: GonzagoEditorToolMenu
 
 
 func _init() -> void:
-    name = "GonzagoCorePlugin"
+    name = "GonzagoMainEditorPlugin"
+    unique_name_in_owner = true
 
 
 func _enter_tree() -> void:
-    _main_screen = preload("./editor/main_screen/main_screen.tscn").instantiate() as GonzagoEditorMainScreen
-    EditorInterface.get_editor_main_screen().add_child(_main_screen)
+    var root := get_tree().root
+    owner = root
+    
+    var editor_main_screen := EditorInterface.get_editor_main_screen()
+    _main_screen = GonzagoEditor.get_main_screen()
+    editor_main_screen.add_child(_main_screen)
+    _main_screen.owner = editor_main_screen
     _make_visible(false)
 
-    _quickbar = preload("./editor/quickbar/quickbar.tscn").instantiate() as GonzagoEditorQuickbar
+    var editor_base_control := EditorInterface.get_base_control()
+    _quickbar = GonzagoEditor.get_quickbar()
     add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
-    var quickbar_parent := _quickbar.get_parent()
-    quickbar_parent.move_child(_quickbar, quickbar_parent.get_child_count() - 2)
+    _quickbar.owner = editor_base_control
 
-    _tool_menu = GonzagoEditorToolMenu.new()
+    _tool_menu = GonzagoEditor.get_tool_menu()
     _tool_menu.menu_changed.connect(
         func() -> void:
             if _tool_menu.item_count > 0:
                 if not _tool_menu.is_inside_tree():
                     add_tool_submenu_item("Gonzago", _tool_menu)
+                    _tool_menu.owner = editor_base_control
             elif _tool_menu.is_inside_tree():
                 remove_tool_menu_item("Gonzago")
     )
@@ -81,17 +89,21 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
     if _main_screen:
-        _main_screen.queue_free()
+        EditorInterface.get_editor_main_screen().remove_child(_main_screen)
+        # TODO: Handle deregistration
+        #_main_screen.queue_free()
 
     if _quickbar:
         remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
-        _quickbar.queue_free()
+        # TODO: Handle deregistration
+        #_quickbar.queue_free()
 
     if _tool_menu:
         if _tool_menu.is_inside_tree():
             remove_tool_menu_item("Gonzago")
-        else:
-            _tool_menu.queue_free()
+        # TODO: Handle deregistration
+        #else:
+        #    _tool_menu.queue_free()
 
 
 func _has_main_screen() -> bool:

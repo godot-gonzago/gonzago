@@ -48,8 +48,9 @@ use_editor_theme = true
 icon_name = "Heart"
 icon_type = "EditorIcons"
 
-[node name="AboutDialog" type="AcceptDialog"]
+[node name="GonzagoEditorAboutDialog" type="AcceptDialog"]
 title = "Thanks from the Gonzago community!"
+position = Vector2i(0, 36)
 size = Vector2i(800, 747)
 visible = true
 popup_window = true
