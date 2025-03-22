@@ -11,6 +11,13 @@ static var _quickbar: GonzagoEditorQuickbar
 static var _tool_menu: GonzagoEditorToolMenu
 
 
+static func get_main_plugin() -> GonzagoMainEditorPlugin:
+    var tree := Engine.get_main_loop() as SceneTree
+    var owner := tree.root
+    var plugin := owner.get_node_or_null("%GonzagoMainEditorPlugin") as GonzagoMainEditorPlugin
+    return plugin
+
+
 static func get_main_screen() -> GonzagoEditorMainScreen:
     if _main_screen:
         return _main_screen

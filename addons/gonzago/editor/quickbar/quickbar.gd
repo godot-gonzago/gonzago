@@ -2,6 +2,8 @@
 class_name GonzagoEditorQuickbar
 extends PanelContainer
 
+# https://github.com/godotengine/godot/blob/master/scene/gui/box_container.cpp
+# https://github.com/godotengine/godot/blob/master/scene/gui/panel_container.cpp
 
 #var _items: HBoxContainer
 
