@@ -1,7 +1,64 @@
 @tool
 extends EditorScript
 
+#[plugin]
+#
+#name="Gonzago"
+#description="Gonzago Framework - 2D/3D Adventure game addon for the Godot game engine"
+#author="David Krummenacher & Gonzago Framework contributors"
+#version="0.0.1"
+#script="plugin.gd"
 
+
+class PluginInfo extends RefCounted:
+    var name: String
+    var description: String
+    var author: String
+    var version: String
+    var plugin_script: String
+    
+    var plugin_name: String
+    
+    func is_enabled() -> bool:
+        return EditorInterface.is_plugin_enabled(plugin_name)
+        
+    func set_enabled(enabled: bool) -> void:
+        EditorInterface.set_plugin_enabled(plugin_name, enabled)
+        
+    func reload_deffered() -> void:
+        if EditorInterface.is_plugin_enabled(plugin_name):
+            EditorInterface.call_deferred("set_plugin_enabled", plugin_name, false)
+            EditorInterface.call_deferred("set_plugin_enabled", plugin_name, true)
+        
+    static func from_config_file(config_path: String) -> PluginInfo:
+        if not FileAccess.file_exists(config_path):
+            return null
+            
+        var config := ConfigFile.new()
+        if not config.load(config_path) == OK or not config.has_section("plugin"):
+            return null
+        
+        var info := PluginInfo.new()
+        
+        if config.has_section_key("plugin", "name"):
+            info.name = str(config.get_value("plugin", "name", ""))
+        if info.name.is_empty():
+            var plugin_name := config_path.get_base_dir().get_file()
+            info.name = plugin_name
+            
+        info.description = str(config.get_value("plugin", "description", ""))
+        info.author = str(config.get_value("plugin", "author", ""))
+        info.version = str(config.get_value("plugin", "version", ""))
+        
+        info.plugin_script = str(config.get_value("plugin", "script", ""))
+        if info.plugin_script.is_empty():
+            var plugin_name := config_path.get_base_dir().get_file()
+            info.plugin_script = plugin_name + ".gd"
+            
+        return info
+
+
+# https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
 class EditorFileSystemIterator extends RefCounted:
     var _root_folder: String
     var _stack: Array[EditorFileSystemDirectory] = []
