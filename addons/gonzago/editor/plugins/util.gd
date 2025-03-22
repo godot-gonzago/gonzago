@@ -1,6 +1,9 @@
 @tool
 extends EditorScript
 
+# THIS IS UNUSED!!! ONLY FOR REFERENCE!
+
+
 #[plugin]
 #
 #name="Gonzago"

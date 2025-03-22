@@ -31,9 +31,11 @@ signal enabled
 signal disabled
 
 
-var _main_screen: GonzagoEditorMainScreen
-var _quickbar: GonzagoEditorQuickbar
-var _tool_menu: GonzagoEditorToolMenu
+static func get_plugin_instance_or_null() -> GonzagoMainEditorPlugin:
+    var tree := Engine.get_main_loop() as SceneTree
+    var owner := tree.root
+    var plugin := owner.get_node_or_null("%GonzagoMainEditorPlugin") as GonzagoMainEditorPlugin
+    return plugin
 
 
 func _init() -> void:
@@ -45,28 +47,6 @@ func _enter_tree() -> void:
     var root := get_tree().root
     owner = root
     
-    var editor_main_screen := EditorInterface.get_editor_main_screen()
-    _main_screen = GonzagoEditor.get_main_screen()
-    editor_main_screen.add_child(_main_screen)
-    _main_screen.owner = editor_main_screen
-    _make_visible(false)
-
-    var editor_base_control := EditorInterface.get_base_control()
-    _quickbar = GonzagoEditor.get_quickbar()
-    add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
-    _quickbar.owner = editor_base_control
-
-    _tool_menu = GonzagoEditor.get_tool_menu()
-    _tool_menu.menu_changed.connect(
-        func() -> void:
-            if _tool_menu.item_count > 0:
-                if not _tool_menu.is_inside_tree():
-                    add_tool_submenu_item("Gonzago", _tool_menu)
-                    _tool_menu.owner = editor_base_control
-            elif _tool_menu.is_inside_tree():
-                remove_tool_menu_item("Gonzago")
-    )
-
     if not ProjectSettings.has_setting("application/boot_splash/screens"):
         ProjectSettings.set("application/boot_splash/screens", [
             "res://addons/gonzago/assets/godot-logo.svg",
@@ -88,36 +68,14 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
-    if _main_screen:
-        EditorInterface.get_editor_main_screen().remove_child(_main_screen)
-        # TODO: Handle deregistration
-        #_main_screen.queue_free()
-
-    if _quickbar:
-        remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, _quickbar)
-        # TODO: Handle deregistration
-        #_quickbar.queue_free()
-
-    if _tool_menu:
-        if _tool_menu.is_inside_tree():
-            remove_tool_menu_item("Gonzago")
-        # TODO: Handle deregistration
-        #else:
-        #    _tool_menu.queue_free()
+    pass
+    
+    
+func _enable_plugin() -> void:
+    EditorInterface.set_plugin_enabled("gonzago/editor/plugins", true)
+    EditorInterface.set_plugin_enabled("gonzago/editor/interfaces", true)
 
 
-func _has_main_screen() -> bool:
-    return true
-
-
-func _make_visible(visible: bool) -> void:
-    if _main_screen:
-        _main_screen.visible = visible
-
-
-func _get_plugin_name() -> String:
-    return "Gonzago"
-
-
-func _get_plugin_icon() -> Texture2D:
-    return load("res://addons/gonzago/editor/icons/gonzago.svg") as Texture2D # ./editor/icons/gonzago.svg
+func _disable_plugin() -> void:
+    EditorInterface.set_plugin_enabled("gonzago/editor/interfaces", false)
+    EditorInterface.set_plugin_enabled("gonzago/editor/plugins", false)
