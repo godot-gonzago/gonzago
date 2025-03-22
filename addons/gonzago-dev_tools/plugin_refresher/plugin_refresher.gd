@@ -6,8 +6,6 @@ extends MenuButton
 ## see https://github.com/godot-extended-libraries/godot-plugin-refresher
 
 
-const PLUGINS_ROOT := "res://addons/"
-const CONFIG_FILE_NAME := "plugin.cfg"
 const DEV_TOOLS_PLUGIN := "gonzago-dev_tools"
 
 
@@ -26,23 +24,33 @@ func _notification(what: int) -> void:
 
 func _build_plugin_list() -> void:
     var popup := get_popup()
-    popup.clear()
+    popup.clear(true)
+    _build_children(popup, GonzagoEditorPluginRegistry.get_plugins(), true)
 
-    for info in GonzagoEditor.get_plugins():
-        var index := popup.get_item_count()
+
+func _build_children(menu: PopupMenu, children: Array[GonzagoEditorPluginRegistry.PluginInfo], root := false) -> void:
+    for info in children:
+        var index := menu.item_count
+        menu.add_item(info.get_display_name())
+        if info.children.size() > 0:
+            var submenu := PopupMenu.new()
+            menu.set_item_submenu_node(index, submenu)
+            _build_children(submenu, info.children)
+            
         if info.plugin_id == DEV_TOOLS_PLUGIN:
-            var icon := popup.get_theme_icon("Reload", "EditorIcons")
-            popup.add_icon_item(icon, info.get_display_name())
+            var icon := menu.get_theme_icon("Reload", "EditorIcons")
+            menu.set_item_icon(index, icon)
         else:
-            popup.add_check_item(info.get_display_name())
-            popup.set_item_checked(index, info.is_enabled())
-        popup.set_item_metadata(index, info)
-        #popup.set_item_disabled(index, info.plugin_id == DEV_TOOLS_PLUGIN)
+            menu.set_item_as_checkable(index, true)
+            menu.set_item_checked(index, info.is_enabled())
+        
+        menu.set_item_metadata(index, info)
+        menu.set_item_disabled(index, not root)
 
 
 func _toggle_plugin_enabled(index: int) -> void:
     var popup := get_popup()
-    var info := popup.get_item_metadata(index) as GonzagoEditor.PluginInfo
+    var info := popup.get_item_metadata(index) as GonzagoEditorPluginRegistry.PluginInfo
 
     if info.plugin_id == DEV_TOOLS_PLUGIN:
         info.reload_deffered()
