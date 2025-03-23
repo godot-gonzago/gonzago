@@ -8,8 +8,13 @@ func inspect(t: Theme, type: StringName, name: StringName) -> void:
 
 
 var _is_hovered := false
-var _hover_stylebox: StyleBox
 
+var _normal_stylebox: StyleBox
+var _hover_stylebox: StyleBox
+var _focus_stylebox: StyleBox
+var _pressed_stylebox: StyleBox
+
+# https://docs.godotengine.org/en/latest/tutorials/ui/custom_gui_controls.html
 
 func _notification(what):
     match what:
@@ -26,7 +31,10 @@ func _notification(what):
         NOTIFICATION_FOCUS_EXIT:
             pass # Control lost focus.
         NOTIFICATION_THEME_CHANGED:
-            _hover_stylebox = get_theme_stylebox("hover", "Button")
+            _normal_stylebox = get_theme_stylebox(&"normal", &"Button")
+            _hover_stylebox = get_theme_stylebox(&"hover", &"Button")
+            _focus_stylebox = get_theme_stylebox(&"focus", &"Button")
+            _pressed_stylebox = get_theme_stylebox(&"pressed", &"Button")
             pass # Theme used to draw the control changed; update and redraw is recommended if using a theme.
         NOTIFICATION_VISIBILITY_CHANGED:
             pass # Control became visible/invisible; check new status with is_visible().
@@ -35,6 +43,11 @@ func _notification(what):
         NOTIFICATION_DRAW:
             if _is_hovered:
                 _hover_stylebox.draw(
+                    get_canvas_item(),
+                    Rect2(Vector2.ZERO, size)
+                )
+            if has_focus():
+                _focus_stylebox.draw(
                     get_canvas_item(),
                     Rect2(Vector2.ZERO, size)
                 )

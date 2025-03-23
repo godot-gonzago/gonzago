@@ -1,6 +1,8 @@
 @tool
 extends HBoxContainer
 
+# TODO: https://docs.godotengine.org/en/stable/classes/class_projectsettings.html#class-projectsettings-property-gui-theme-custom
+
 #var _tabs := TabBar.new()
 #var _new := Button.new()
 #var _open := Button.new()

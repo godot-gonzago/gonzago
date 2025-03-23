@@ -34,6 +34,7 @@ expand_margin_right = 4.0
 offset_right = 56.0
 offset_bottom = 83.0
 size_flags_vertical = 0
+focus_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fl8yr")
 script = ExtResource("2_n6pnk")
 
