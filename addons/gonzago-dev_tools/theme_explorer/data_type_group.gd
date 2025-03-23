@@ -18,8 +18,32 @@ var data_type: Theme.DataType
 @export
 var item_scene: PackedScene
 
+
+#var _scale_factors := {
+    #Theme.DATA_TYPE_COLOR: 3,
+    #Theme.DATA_TYPE_CONSTANT: 2,
+    #Theme.DATA_TYPE_FONT: 1,
+    #Theme.DATA_TYPE_FONT_SIZE: 1,
+    #Theme.DATA_TYPE_ICON: 3,
+    #Theme.DATA_TYPE_STYLEBOX: 2,
+#}
+#
+#func _ready() -> void:
+    #var items_container := get_node("%ItemsContainer") as GridContainer
+    #items_container.resized.connect(
+        #func():
+            #var h_separation := items_container.get_theme_constant("h_separatation")
+            #var items_container_width := items_container.get_rect().size.x + h_separation
+            #var min_width := 288 * EditorInterface.get_editor_scale() + h_separation
+            #var columns := maxi(floori(items_container.get_rect().size.x / min_width), 1)
+            #columns = columns * _scale_factors[data_type]
+            #items_container.set_deferred("columns", columns),
+        #CONNECT_DEFERRED
+    #)
+
+
 func inspect(t: Theme, type: StringName) -> void:
-    var items_container := get_node("%ItemsContainer") as HFlowContainer
+    var items_container := get_node("%ItemsContainer") as HFlowContainer # GridContainer
     var items := t.get_theme_item_list(data_type, type)
     items.sort()
     
@@ -46,7 +70,6 @@ func inspect(t: Theme, type: StringName) -> void:
             
     queue_sort()
 
-
 func _notification(what: int) -> void:
     if NodeUtil.is_node_being_edited(self):
         return
@@ -56,7 +79,7 @@ func _notification(what: int) -> void:
             if NodeUtil.is_node_being_edited(self):
                 return
                 
-            var items_container := get_node("%ItemsContainer") as HFlowContainer
+            var items_container := get_node("%ItemsContainer") as HFlowContainer # GridContainer
             var has_visible_children := false
             for idx in range(0, items_container.get_child_count()):
                 var child := items_container.get_child(idx) as Item
