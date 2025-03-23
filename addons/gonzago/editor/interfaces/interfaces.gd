@@ -9,6 +9,7 @@ extends RefCounted
 const MainScreen := preload("./main_screen.gd")
 const Quickbar := preload("./quickbar.gd")
 const ToolMenu := preload("./tool_menu.gd")
+const AboutDialog := preload("./about_dialog.gd")
 
 
 static var _main_screen: MainScreen
