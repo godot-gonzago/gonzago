@@ -15,22 +15,28 @@ func _init() -> void:
 
     var theme_root := root.create_child()
     theme_root.set_text(0, tr("Theme"))
+    theme_root.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
     theme_root.set_selectable(0, false)
     theme_root.set_editable(0, false)
-    theme_root.create_child().set_text(0, tr("Properties"))
-    theme_root.create_child().set_text(0, tr("Statistics"))
-    theme_root.create_child().set_text(0, tr("Resources"))
+    var theme_items: PackedStringArray = ["Properties", "Statistics", "Resources"]
+    for theme_item in theme_items:
+        var item := theme_root.create_child()
+        item.set_text(0, tr(theme_item))
+        item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
 
     var data_root := root.create_child()
     data_root.set_text(0, tr("Data"))
+    data_root.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
     data_root.set_selectable(0, false)
     data_root.set_editable(0, false)
     for data_type in Theme.DATA_TYPE_MAX:
         var item := data_root.create_child()
         item.set_text(0, ThemeUtil.get_data_type_name(data_type))
+        item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
 
     var types_root := root.create_child()
     types_root.set_text(0, tr("Types"))
+    types_root.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
     types_root.set_selectable(0, false)
     types_root.set_editable(0, false)
 

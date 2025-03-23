@@ -1,26 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://csecd3oq5veba"]
+[gd_scene load_steps=3 format=3 uid="uid://csecd3oq5veba"]
 
-[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_wo7ni"]
 [ext_resource type="Script" uid="uid://b12t18ypjfwyh" path="res://addons/gonzago-dev_tools/theme_explorer/data_type_group.gd" id="1_xw3pr"]
 
-[sub_resource type="StyleBox" id="StyleBox_nurjr"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbf7a"]
+content_margin_left = 6.0
+content_margin_top = 12.0
+content_margin_right = 6.0
 content_margin_bottom = 8.0
-script = ExtResource("1_wo7ni")
-use_editor_theme = true
-stylebox_name = "selected"
-stylebox_type = "Tree"
+bg_color = Color(0.145098, 0.168627, 0.203922, 1)
+border_color = Color(0.211765, 0.239216, 0.290196, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="DataTypeGroup" type="HBoxContainer"]
 script = ExtResource("1_xw3pr")
 
 [node name="ItemTypeHeaderontainer" type="PanelContainer" parent="."]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBox_nurjr")
+theme_override_styles/panel = SubResource("StyleBoxFlat_qbf7a")
 
 [node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="ItemTypeHeaderontainer"]
 layout_mode = 2

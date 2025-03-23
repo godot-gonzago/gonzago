@@ -4,14 +4,15 @@ extends VBoxContainer
 const DataTypeGroup := preload("./data_type_group.gd")
 
 func inspect(t: Theme, type: StringName, base_type: StringName) -> void:
-    # TODO: Get icon for type
-    #var types_fallback_icon := get_theme_icon("NodeDisabled", "EditorIcons")
-    #var type_icon := types_fallback_icon
-    #if has_theme_icon(type, "EditorIcons"):
-        #type_icon = get_theme_icon(type, "EditorIcons")
+    # TODO: Get icon for type in a better way
+    var editor_theme := EditorInterface.get_editor_theme()
+    var types_fallback_icon := editor_theme.get_icon("NodeDisabled", "EditorIcons")
+    var type_icon := types_fallback_icon
+    if editor_theme.has_icon(type, "EditorIcons"):
+        type_icon = editor_theme.get_icon(type, "EditorIcons")
     
     var icon := get_node("%Icon") as TextureRect
-    icon.texture = ThemeDB.fallback_icon
+    icon.texture = type_icon
     
     var label := get_node("%Label") as Label
     label.text = type

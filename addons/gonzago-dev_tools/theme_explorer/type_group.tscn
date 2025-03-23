@@ -1,6 +1,5 @@
-[gd_scene load_steps=20 format=3 uid="uid://c8f5ktsgc5sbh"]
+[gd_scene load_steps=19 format=3 uid="uid://c8f5ktsgc5sbh"]
 
-[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_260my"]
 [ext_resource type="Script" uid="uid://c4yptv0vcidky" path="res://addons/gonzago-dev_tools/theme_explorer/type_group.gd" id="1_la0us"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_la0us"]
 [ext_resource type="PackedScene" uid="uid://csecd3oq5veba" path="res://addons/gonzago-dev_tools/theme_explorer/data_type_group.tscn" id="3_tye8e"]
@@ -11,17 +10,15 @@
 [ext_resource type="PackedScene" uid="uid://0rwubfyjua0c" path="res://addons/gonzago-dev_tools/theme_explorer/item_icon.tscn" id="8_4p6j0"]
 [ext_resource type="PackedScene" uid="uid://1uloa1c44nl7" path="res://addons/gonzago-dev_tools/theme_explorer/item_stylebox.tscn" id="9_82tc7"]
 
-[sub_resource type="StyleBox" id="StyleBox_vcow5"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-script = ExtResource("1_260my")
-use_editor_theme = true
-stylebox_name = "title_button_normal"
-stylebox_type = "Tree"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_260my"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.145098, 0.168627, 0.203922, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
 
 [sub_resource type="Texture2D" id="Texture2D_0wxp7"]
 resource_local_to_scene = false
@@ -92,7 +89,7 @@ script = ExtResource("1_la0us")
 
 [node name="TypeHeader" type="PanelContainer" parent="."]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBox_vcow5")
+theme_override_styles/panel = SubResource("StyleBoxFlat_260my")
 
 [node name="TypeHeaderBar" type="HBoxContainer" parent="TypeHeader"]
 layout_mode = 2
@@ -107,6 +104,7 @@ stretch_mode = 3
 unique_name_in_owner = true
 layout_mode = 2
 text = "TypeLabel"
+vertical_alignment = 1
 
 [node name="VariationIcon" type="TextureRect" parent="TypeHeader/TypeHeaderBar"]
 unique_name_in_owner = true

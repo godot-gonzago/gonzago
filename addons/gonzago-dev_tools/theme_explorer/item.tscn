@@ -1,47 +1,52 @@
-[gd_scene load_steps=5 format=3 uid="uid://dvp7aqcgktsja"]
+[gd_scene load_steps=4 format=3 uid="uid://dvp7aqcgktsja"]
 
-[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_jhkbs"]
 [ext_resource type="Script" uid="uid://di7kjwc4di3jr" path="res://addons/gonzago-dev_tools/theme_explorer/item.gd" id="2_n6pnk"]
 
-[sub_resource type="StyleBox" id="StyleBox_uqytn"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-script = ExtResource("1_jhkbs")
-use_editor_theme = true
-stylebox_name = "hovered"
-stylebox_type = "Tree"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fl8yr"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.211765, 0.239216, 0.290196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.211765, 0.239216, 0.290196, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBox" id="StyleBox_6lhum"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-script = ExtResource("1_jhkbs")
-use_editor_theme = true
-stylebox_name = "panel"
-stylebox_type = "Tree"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4x6mj"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 12.0
+bg_color = Color(0.145098, 0.168627, 0.203922, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
 
 [node name="Item" type="PanelContainer"]
 offset_right = 56.0
 offset_bottom = 83.0
-theme_override_styles/panel = SubResource("StyleBox_uqytn")
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_fl8yr")
 script = ExtResource("2_n6pnk")
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="Preview" type="PanelContainer" parent="Layout"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_6lhum")
+theme_override_styles/panel = SubResource("StyleBoxFlat_4x6mj")
 
 [node name="BottomLabel" type="Label" parent="Layout"]
 unique_name_in_owner = true

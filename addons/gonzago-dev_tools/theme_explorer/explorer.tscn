@@ -1,23 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://mpanmyvqc6u5"]
+[gd_scene load_steps=7 format=3 uid="uid://mpanmyvqc6u5"]
 
 [ext_resource type="Script" uid="uid://dhrcr7n55jv7y" path="res://addons/gonzago-dev_tools/theme_explorer/explorer.gd" id="1_vd10t"]
 [ext_resource type="PackedScene" uid="uid://ciod7ymryylf0" path="res://addons/gonzago-dev_tools/theme_explorer/filter_bar.tscn" id="2_0sliq"]
-[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="2_cj8bl"]
 [ext_resource type="PackedScene" uid="uid://44a6t8fn4x8u" path="res://addons/gonzago-dev_tools/theme_explorer/file_bar.tscn" id="2_dk03w"]
 [ext_resource type="PackedScene" uid="uid://baapywium5evd" path="res://addons/gonzago-dev_tools/theme_explorer/theme_tree.tscn" id="4_wypai"]
 [ext_resource type="PackedScene" uid="uid://c8f5ktsgc5sbh" path="res://addons/gonzago-dev_tools/theme_explorer/type_group.tscn" id="6_ok8wm"]
 
-[sub_resource type="StyleBox" id="StyleBox_epip4"]
-resource_local_to_scene = false
-resource_name = ""
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jng7n"]
 content_margin_left = 8.0
 content_margin_top = 8.0
-content_margin_right = 8.0
+content_margin_right = 2.0
 content_margin_bottom = 8.0
-script = ExtResource("2_cj8bl")
-use_editor_theme = true
-stylebox_name = "panel"
-stylebox_type = "Tree"
+bg_color = Color(0.113725, 0.133333, 0.160784, 1)
 
 [node name="Explorer" type="VBoxContainer"]
 custom_minimum_size = Vector2(640, 480)
@@ -54,7 +48,7 @@ size_flags_stretch_ratio = 4.0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-theme_override_styles/panel = SubResource("StyleBox_epip4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_jng7n")
 follow_focus = true
 horizontal_scroll_mode = 0
 
