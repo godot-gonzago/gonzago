@@ -20,11 +20,20 @@ func _init() -> void:
     _popup.about_to_popup.connect(_build_tree)
     add_child(_popup)
     
+    var vbox := VBoxContainer.new()
+    _popup.add_child(vbox)
+    
     _tree.custom_minimum_size = Vector2(400, 600) # TODO:
     _tree.hide_root = true
+    _tree.hide_folding = true
+    _tree.select_mode = Tree.SELECT_ROW
     _tree.item_edited.connect(_toggle_plugin_enabled)
     _tree.button_clicked.connect(_handle_button_clicks)
-    _popup.add_child(_tree)
+    vbox.add_child(_tree)
+    
+    #var new_name := LineEdit.new()
+    #new_name.placeholder_text = "Plugin name"
+    #vbox.add_child(new_name)
     
     pressed.connect(_show_popup)
     
@@ -33,6 +42,8 @@ func _notification(what: int) -> void:
     match what:
         NOTIFICATION_THEME_CHANGED:
             icon = get_theme_icon("EditorPlugin", "EditorIcons")
+            #_popup.add_theme_stylebox_override("panel", get_theme_stylebox("panel", "PopupMenu"))
+            #_tree.add_theme_stylebox_override("panel", get_theme_stylebox("panel", "PopupMenu"))
             _update_tree_items(_update_tree_item_icons)
         NOTIFICATION_TRANSLATION_CHANGED:
             tooltip_text = tr("Plugins")
@@ -42,8 +53,8 @@ func _notification(what: int) -> void:
 func _show_popup() -> void:
     var rect := get_global_rect()
     rect.position.y += rect.size.y
-    rect.size = _popup.get_contents_minimum_size()
     _popup.popup_on_parent(rect)
+    _popup.reset_size()
 
 
 func _build_tree() -> void:
@@ -137,4 +148,11 @@ func _handle_button_clicks(item: TreeItem, column: int, id: int, mouse_button_in
             info.reload_deffered()
             call_deferred("_update_tree_items", _update_tree_item_checked)
     elif id == 1: # Edit
-        pass
+        var script_path := info.config_path.get_base_dir().path_join(info.script_path)
+        var script := load(script_path) as Script
+        EditorInterface.edit_script(script)
+        EditorInterface.select_file(info.config_path)
+        # TextFile doesn't work anymore
+        #print(EditorInterface.get_resource_filesystem().get_file_type(info.config_path))
+        #var config_file := ResourceLoader.load(info.config_path, "TextFile")
+        #EditorInterface.inspect_object(config_file)
