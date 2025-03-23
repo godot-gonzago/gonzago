@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dot2oyoe55qju"]
+[gd_scene load_steps=3 format=3 uid="uid://dot2oyoe55qju"]
 
 [ext_resource type="Script" uid="uid://br1ec5u31sec" path="res://addons/gonzago/systems/splash/splash.gd" id="1_ek2mg"]
+[ext_resource type="Texture2D" uid="uid://qhnq50skom2d" path="res://addons/gonzago/assets/godot-logo.svg" id="2_ugksx"]
 
 [node name="Splash" type="CanvasLayer"]
 layer = 127
@@ -15,6 +16,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+color = Color(0, 0, 0, 1)
 
 [node name="Screen" type="TextureRect" parent="."]
 unique_name_in_owner = true
@@ -26,4 +28,5 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+texture = ExtResource("2_ugksx")
 stretch_mode = 3

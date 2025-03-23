@@ -13,7 +13,7 @@ func _enable_plugin() -> void:
         var config_path := plugin_path.path_join(CONFIG_FILE_NAME)
         if not FileAccess.file_exists(config_path):
             continue
-        
+
         EditorInterface.set_plugin_enabled(DEV_TOOLS_PLUGIN.path_join(plugin_name), true)
 
 
@@ -23,5 +23,5 @@ func _disable_plugin() -> void:
         var config_path := plugin_path.path_join(CONFIG_FILE_NAME)
         if not FileAccess.file_exists(config_path):
             continue
-    
+
         EditorInterface.set_plugin_enabled(DEV_TOOLS_PLUGIN.path_join(plugin_name), false)

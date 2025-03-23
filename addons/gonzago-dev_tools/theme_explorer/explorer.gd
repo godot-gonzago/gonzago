@@ -11,7 +11,7 @@ const TypeGroup := preload("./type_group.gd")
 #       Rebuild cache when resource changed outside of plugin
 
 # TODO: Create detail view for theme entries
-# TODO: Handle readonly (editor, default) and mutable themes differently (give export, merge options) 
+# TODO: Handle readonly (editor, default) and mutable themes differently (give export, merge options)
 
 @export
 var type_group_scene: PackedScene
@@ -20,7 +20,7 @@ var type_group_scene: PackedScene
 func _enter_tree() -> void:
     if NodeUtil.is_node_being_edited(self):
         return
-    
+
     inspect_editor_theme()
 
 
@@ -38,15 +38,15 @@ func inspect_editor_theme() -> void:
 func inspect(t: Theme) -> void:
     var tree := get_node("%ThemeTree") as ThemeTree
     tree.inspect(t)
-    
+
     var item_list := get_node("%ItemList") as VBoxContainer
     #var types := PackedStringArray()
-    
+
     #var root_types := PackedStringArray()
     #for type in t.get_type_list():
         #if t.get_type_variation_base(type).is_empty():
             #root_types.append(type)
-    
+
     # TODO: Sort correctly
     #var types_stack := []
     #types_stack.push_back(root_types)
@@ -57,19 +57,19 @@ func inspect(t: Theme) -> void:
         #for type in types_list:
             #var variations := t.get_type_variation_list(type)
             #types_stack.push_back(variations)
-    
+
     var types := t.get_type_list()
     types.sort()
-    
+
     var child_count := item_list.get_child_count()
     var types_count := types.size()
-    
+
     var set_end_count := min(child_count, types_count)
     for idx in set_end_count:
         var type := types[idx]
         var item := item_list.get_child(idx) as TypeGroup
         item.inspect(t, type, t.get_type_variation_base(type))
-    
+
     var needs_to_add := child_count < types_count
     if needs_to_add:
         for idx in range(set_end_count, types_count):
@@ -77,13 +77,13 @@ func inspect(t: Theme) -> void:
             var item := type_group_scene.instantiate() as TypeGroup
             item_list.add_child(item)
             item.inspect(t, type, t.get_type_variation_base(type))
-    
+
     var needs_to_remove := child_count > types_count
     if needs_to_remove:
         for idx in range(set_end_count, child_count):
             var child := item_list.get_child(idx) as TypeGroup
             child.queue_free()
-            
+
     item_list.queue_sort()
 
 
