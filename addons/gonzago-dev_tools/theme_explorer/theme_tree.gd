@@ -64,17 +64,24 @@ func _build_tree(t: Theme) -> void:
     for type in _theme.get_type_list():
         if _theme.get_type_variation_base(type).is_empty():
             types.append(type)
-    _build_types(types_root, types)
-
-
-func _build_types(root: TreeItem, types: PackedStringArray) -> void:
-    types.sort()
-    for type in types:
-        var type_item := root.create_child()
-        type_item.set_text(0, type)
-        type_item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
-        var variations := _theme.get_type_variation_list(type)
-        _build_types(type_item, variations)
+            
+    
+    var types_stack := []
+    types_stack.push_back(types)
+    types_stack.push_back(types_root)
+    while not types_stack.is_empty():
+        var types_parent: TreeItem = types_stack.pop_back() as TreeItem
+        var types_list: PackedStringArray = types_stack.pop_back() as PackedStringArray
+        
+        types_list.sort()
+        for type in types_list:
+            var type_item := types_parent.create_child()
+            type_item.set_text(0, type)
+            type_item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
+            var variations := _theme.get_type_variation_list(type)
+            
+            types_stack.push_back(variations)
+            types_stack.push_back(type_item)
 
 
 func _update_tree() -> void:
@@ -113,14 +120,17 @@ func _update_tree() -> void:
     types_root.set_custom_bg_color(0, section_color)
 
     var types_fallback_icon := get_theme_icon("NodeDisabled", "EditorIcons")
-    _update_types(types_root, types_fallback_icon)
-
-
-func _update_types(root: TreeItem, root_icon: Texture2D) -> void:
-    for item in root.get_children():
-        var type := item.get_text(0)
-        var icon := root_icon
-        if has_theme_icon(type, "EditorIcons"):
-            icon = get_theme_icon(type, "EditorIcons")
-        item.set_icon(0, icon)
-        _update_types(item, root_icon)
+    
+    var types_stack: Array[TreeItem] = []
+    types_stack.push_back(types_root)
+    while not types_stack.is_empty():
+        var types_parent: TreeItem = types_stack.pop_back() as TreeItem
+        
+        for types_child in types_parent.get_children():
+            var type := types_child.get_text(0)
+            var icon := types_fallback_icon
+            if has_theme_icon(type, "EditorIcons"):
+                icon = get_theme_icon(type, "EditorIcons")
+            types_child.set_icon(0, icon)
+            
+            types_stack.push_back(types_child)
