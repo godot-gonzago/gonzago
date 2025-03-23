@@ -112,7 +112,7 @@ static func _build_plugins_cache() -> void:
         info.description = str(config.get_value("plugin", "description", ""))
         info.author = str(config.get_value("plugin", "author", ""))
         info.version = str(config.get_value("plugin", "version", ""))
-        info.script_path = dir.get_path().path_join(str(config.get_value("plugin", "script", "")))
+        info.script_path = str(config.get_value("plugin", "script", ""))
         
         _plugins_map[plugin_id] = info
         if is_root_plugin:
