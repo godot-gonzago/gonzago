@@ -13,7 +13,7 @@ func inspect(t: Theme, type: StringName, name: StringName) -> void:
     if font_name in font_list:
         var label := get_node("%BottomLabel") as Label
         label.text = "%s (%s)" % [name, font_name]
-        label.tooltip_text = label.text
+        tooltip_text = label.text
         
         var font := t.get_font(font_name, type)
         previewer.add_theme_font_override("font", font)

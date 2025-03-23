@@ -6,9 +6,8 @@
 [node name="ItemStylebox" instance=ExtResource("1_6a6c3")]
 script = ExtResource("2_ip2qm")
 
-[node name="Preview" parent="Layout" index="0"]
-custom_minimum_size = Vector2(96, 96)
-
 [node name="Panel" type="Panel" parent="Layout/Preview" index="0"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+mouse_filter = 2

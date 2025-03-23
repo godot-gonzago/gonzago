@@ -6,12 +6,9 @@
 [node name="ItemFont" instance=ExtResource("1_4a77e")]
 script = ExtResource("2_nm8b7")
 
-[node name="Preview" parent="Layout" index="0"]
-custom_minimum_size = Vector2(192, 192)
-
 [node name="TextEdit" type="Label" parent="Layout/Preview" index="0"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(144, 144)
+custom_minimum_size = Vector2(192, 192)
 layout_mode = 2
 size_flags_vertical = 1
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt ultricies neque, non convallis dui elementum ut. Vestibulum sed viverra massa. Proin massa ex, pellentesque a risus vel, vestibulum tincidunt quam. Quisque leo nulla, hendrerit non sapien vitae, commodo ullamcorper massa. Donec aliquam felis sed erat tincidunt fermentum."

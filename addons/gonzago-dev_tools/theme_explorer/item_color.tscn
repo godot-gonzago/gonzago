@@ -8,4 +8,6 @@ script = ExtResource("2_0g6l7")
 
 [node name="ColorRect" type="ColorRect" parent="Layout/Preview" index="0"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+mouse_filter = 2

@@ -6,10 +6,8 @@
 [node name="ItemConstant" instance=ExtResource("1_8unyo")]
 script = ExtResource("2_ecwv8")
 
-[node name="Preview" parent="Layout" index="0"]
-custom_minimum_size = Vector2(96, 48)
-
 [node name="TextEdit" type="Label" parent="Layout/Preview" index="0"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 48)
 layout_mode = 2
 size_flags_vertical = 1

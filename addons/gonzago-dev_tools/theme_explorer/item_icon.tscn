@@ -8,5 +8,7 @@ script = ExtResource("2_b1l6j")
 
 [node name="TextureRect" type="TextureRect" parent="Layout/Preview" index="0"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
-stretch_mode = 2
+mouse_filter = 2
+stretch_mode = 3
