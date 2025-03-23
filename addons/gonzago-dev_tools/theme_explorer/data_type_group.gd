@@ -3,6 +3,9 @@ extends HBoxContainer
 
 const Item := preload("./item.gd")
 
+# TODO: Consolidate into one view where data types are draw automaticall (without nodes)
+#       Only children should be items (or a context menu)
+
 @export
 var icon: Texture2D:
     get:

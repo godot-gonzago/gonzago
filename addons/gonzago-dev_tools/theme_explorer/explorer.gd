@@ -5,6 +5,13 @@ extends VBoxContainer
 const ThemeTree := preload("./theme_tree.gd")
 const TypeGroup := preload("./type_group.gd")
 
+# TODO: Create central theme cache where every ui can reference an instance of an object
+#       Filtering can be done through this. Nodes/Controls can be linked to the cache objects
+#       instead of doing everything on their own?
+#       Rebuild cache when resource changed outside of plugin
+
+# TODO: Create detail view for theme entries
+# TODO: Handle readonly (editor, default) and mutable themes differently (give export, merge options) 
 
 @export
 var type_group_scene: PackedScene

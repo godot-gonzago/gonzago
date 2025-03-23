@@ -18,6 +18,10 @@ func _init() -> void:
     theme_root.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
     theme_root.set_selectable(0, false)
     theme_root.set_editable(0, false)
+    # TODO: Separate view for meta info of theme. Eg. resources like Styleboxes that are reused in different places. Groups of colors etc.
+    #       This view provides additional options like creating a copy based on the resource structure.
+    #       Separate statistics page, don't know for what yet.
+    #       Properties like default font can be previewed here (similar to data types view)
     var theme_items: PackedStringArray = ["Properties", "Statistics", "Resources"]
     for theme_item in theme_items:
         var item := theme_root.create_child()
@@ -27,8 +31,19 @@ func _init() -> void:
     var data_root := root.create_child()
     data_root.set_text(0, tr("Data"))
     data_root.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
+    # TODO: if data is selected ignore theme types and group them all under the selected data type.
+    #       eg. show me all icons in the theme.
+    #       Data root shows all data types?
+    #       Add a visibility button (for filtering). Sort of like a mute solo button
+    #       or in an installer with partial visibility that can toggle all children.
+    #       Default everything is visible.
+    #       get_theme_icon("GuiVisibilityVisible", "EditorIcons") # open eye
+    #       get_theme_icon("GuiVisibilityHidden", "EditorIcons") # closed eye
+    #       get_theme_icon("GuiVisibilityXray", "EditorIcons") # half eye
+    #       Maybe like in scene view with disabled greyed out?
     data_root.set_selectable(0, false)
     data_root.set_editable(0, false)
+    data_root.add_button(0, ThemeDB.fallback_icon)
     for data_type in Theme.DATA_TYPE_MAX:
         var item := data_root.create_child()
         item.set_text(0, ThemeUtil.get_data_type_name(data_type))
@@ -37,6 +52,17 @@ func _init() -> void:
     var types_root := root.create_child()
     types_root.set_text(0, tr("Types"))
     types_root.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
+    # TODO: Filter by theme type. Show only entries based on theme type and its subtypes
+    #       Types root shows all types?
+    #       Add a visibility button (for filtering). Sort of like a mute solo button
+    #       or in an installer with partial visibility that can toggle all children.
+    #       Default everything is visible.
+    #       get_theme_icon("GuiVisibilityVisible", "EditorIcons") # open eye
+    #       get_theme_icon("GuiVisibilityHidden", "EditorIcons") # closed eye
+    #       get_theme_icon("GuiVisibilityXray", "EditorIcons") # half eye
+    #       Maybe like in scene view with disabled greyed out?
+    #       https://docs.godotengine.org/en/stable/classes/class_treeitem.html#class-treeitem-method-set-indeterminate
+    #       might be helpful
     types_root.set_selectable(0, false)
     types_root.set_editable(0, false)
 
@@ -114,10 +140,12 @@ func _update_tree() -> void:
     theme_root.get_child(1).set_icon(0, get_theme_icon("NodeInfo", "EditorIcons"))
     theme_root.get_child(2).set_icon(0, get_theme_icon("Object", "EditorIcons"))
 
+    var visibility_icon := get_theme_icon("GuiVisibilityVisible", "EditorIcons")
     var data_icon := get_theme_icon("Groups", "EditorIcons")
     var data_root := root.get_child(1)
     data_root.set_icon(0, data_icon)
     data_root.set_custom_bg_color(0, section_color)
+    data_root.set_button(0, 0, visibility_icon)
     for data_type in Theme.DATA_TYPE_MAX:
         var item := data_root.get_child(data_type)
         item.set_icon(

@@ -1,6 +1,8 @@
 @tool
 extends Container
 
+# TODO: Consolitate all data types into one item
+
 func inspect(t: Theme, type: StringName, name: StringName) -> void:
     var label := get_node("%BottomLabel") as Label
     label.text = name

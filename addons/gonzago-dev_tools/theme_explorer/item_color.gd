@@ -1,6 +1,8 @@
 @tool
 extends "res://addons/gonzago-dev_tools/theme_explorer/item.gd"
 
+# TODO: Consolitate all data types into one item
+
 func inspect(t: Theme, type: StringName, name: StringName) -> void:
     super(t, type, name)
     

@@ -3,6 +3,9 @@ extends VBoxContainer
 
 const DataTypeGroup := preload("./data_type_group.gd")
 
+# TODO: Consolidate into one view where data types are draw automaticall (without nodes)
+#       Only children should be items (or a context menu)
+
 func inspect(t: Theme, type: StringName, base_type: StringName) -> void:
     # TODO: Get icon for type in a better way
     var editor_theme := EditorInterface.get_editor_theme()

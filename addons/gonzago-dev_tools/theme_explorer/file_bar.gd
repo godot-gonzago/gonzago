@@ -2,6 +2,17 @@
 extends HBoxContainer
 
 # TODO: https://docs.godotengine.org/en/stable/classes/class_projectsettings.html#class-projectsettings-property-gui-theme-custom
+#       https://docs.godotengine.org/en/stable/classes/class_editorplugin.html#class-editorplugin-private-method-get-window-layout
+#       Add theme creation options
+#       Save last open themes and reopen next time
+#       Add display options for entry views (theme resources, data types, theme types view) or detail view (eg. Text to display or image background)
+#       get_theme_icon("Checkerboard", "EditorIcons") as a background for example
+
+# TODO: Dont allow to close editor. defaiöt or project theme
+#       Allow manipulation of project theme
+#       Find project theme in project settings and enable or disable tab based on result
+#       When opening a theme check if project theme and show in project tab instead of file tab
+#       Behaviour should be the same as any other theme files
 
 #var _tabs := TabBar.new()
 #var _new := Button.new()
