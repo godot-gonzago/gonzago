@@ -36,6 +36,9 @@ func _init() -> void:
 
 
 func _notification(what: int) -> void:
+    if NodeUtil.is_node_being_edited(self):
+        return
+    
     match what:
         NOTIFICATION_THEME_CHANGED:
             _update_tree()
@@ -64,7 +67,6 @@ func _build_tree(t: Theme) -> void:
     for type in _theme.get_type_list():
         if _theme.get_type_variation_base(type).is_empty():
             types.append(type)
-            
     
     var types_stack := []
     types_stack.push_back(types)
@@ -82,6 +84,9 @@ func _build_tree(t: Theme) -> void:
             
             types_stack.push_back(variations)
             types_stack.push_back(type_item)
+            
+    if is_inside_tree():
+        _update_tree()
 
 
 func _update_tree() -> void:

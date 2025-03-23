@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://1uloa1c44nl7"]
+
+[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/item.tscn" id="1_6a6c3"]
+[ext_resource type="Script" uid="uid://dc1yjoy0fmnuh" path="res://addons/gonzago-dev_tools/theme_explorer/item_stylebox.gd" id="2_ip2qm"]
+
+[node name="ItemStylebox" instance=ExtResource("1_6a6c3")]
+script = ExtResource("2_ip2qm")
+
+[node name="Preview" parent="Layout" index="0"]
+custom_minimum_size = Vector2(96, 96)
+
+[node name="Panel" type="Panel" parent="Layout/Preview" index="0"]
+unique_name_in_owner = true
+layout_mode = 2

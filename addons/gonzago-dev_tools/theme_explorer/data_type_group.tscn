@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3 uid="uid://csecd3oq5veba"]
+
+[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_wo7ni"]
+[ext_resource type="Script" uid="uid://b12t18ypjfwyh" path="res://addons/gonzago-dev_tools/theme_explorer/data_type_group.gd" id="1_xw3pr"]
+
+[sub_resource type="StyleBox" id="StyleBox_nurjr"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+script = ExtResource("1_wo7ni")
+use_editor_theme = true
+stylebox_name = "selected"
+stylebox_type = "Tree"
+
+[node name="DataTypeGroup" type="HBoxContainer"]
+script = ExtResource("1_xw3pr")
+
+[node name="ItemTypeHeaderontainer" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_nurjr")
+
+[node name="ItemTypeHeaderontainerLayout" type="VBoxContainer" parent="ItemTypeHeaderontainer"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="ItemTypeHeaderontainer/ItemTypeHeaderontainerLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+
+[node name="ItemsContainer" type="HFlowContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3

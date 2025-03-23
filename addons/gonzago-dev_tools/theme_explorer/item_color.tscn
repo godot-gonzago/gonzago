@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://wvqpye0eigcd"]
+
+[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/item.tscn" id="1_an0la"]
+[ext_resource type="Script" uid="uid://ctk0m7lrdt81w" path="res://addons/gonzago-dev_tools/theme_explorer/item_color.gd" id="2_0g6l7"]
+
+[node name="ItemColor" instance=ExtResource("1_an0la")]
+script = ExtResource("2_0g6l7")
+
+[node name="ColorRect" type="ColorRect" parent="Layout/Preview" index="0"]
+unique_name_in_owner = true
+layout_mode = 2

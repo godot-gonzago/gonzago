@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdmjsljmwabeu"]
+
+[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/item.tscn" id="1_4a77e"]
+[ext_resource type="Script" uid="uid://bh0j8e7fveh30" path="res://addons/gonzago-dev_tools/theme_explorer/item_font.gd" id="2_nm8b7"]
+
+[node name="ItemFont" instance=ExtResource("1_4a77e")]
+script = ExtResource("2_nm8b7")
+
+[node name="Preview" parent="Layout" index="0"]
+custom_minimum_size = Vector2(192, 192)
+
+[node name="TextEdit" type="Label" parent="Layout/Preview" index="0"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 2
+size_flags_vertical = 1
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tincidunt ultricies neque, non convallis dui elementum ut. Vestibulum sed viverra massa. Proin massa ex, pellentesque a risus vel, vestibulum tincidunt quam. Quisque leo nulla, hendrerit non sapien vitae, commodo ullamcorper massa. Donec aliquam felis sed erat tincidunt fermentum."
+autowrap_mode = 1
+clip_text = true
+text_overrun_behavior = 3
