@@ -11,11 +11,9 @@ func inspect(t: Theme, type: StringName, name: StringName) -> void:
     previewer.text = str(item)
     # TODO: Guess format
     #       name ends with:
-    #       px: size, height, width,
-    #           margin, margin_bottom, margin_left, margin_right, margin_top,
-    #           padding,
-    #           separation, h_separation, v_separation
-    #           offset, offset_x, offset_y,
-    #           spacing, thickness, border
+    #       px: size, height, width, margin, padding,
+    #           separation, offset, spacing, thickness, border
+    #           with optional prefix: h_, v_ (does not need checking)
+    #           with optional suffix: _bottom, _top, _left, _right, _x, _y
     #       factor: scale, speed
-    #       bool: if 0 or 1 (but only a guess)
+    #       bool: if value is 0 or 1 (but only guessing)
