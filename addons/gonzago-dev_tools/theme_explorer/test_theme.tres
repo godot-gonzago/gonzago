@@ -1,3 +1,5 @@
 [gd_resource type="Theme" format=3 uid="uid://dxcmqlxqepn3v"]
 
 [resource]
+AcceptDialog/colors/title_color = Color(1, 0, 0, 1)
+AcceptDialog/constants/buttons_separation = 0

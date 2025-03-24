@@ -128,18 +128,29 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
     return theme.get_icon(&"NodeDisabled", &"EditorIcons")
 
 
-static func get_ordered_theme_types(theme: Theme, base_type: StringName = StringName()) -> PackedStringArray:
-    if base_type:
-        var variations := theme.get_type_variation_list(base_type)
-        variations.sort()
-        return variations
-    
-    var root_types := PackedStringArray()
-    for type in theme.get_type_list():
-        if theme.get_type_variation_base(type).is_empty():
-            root_types.append(type)
-    root_types.sort()
-    return root_types
+static func get_type_list(
+    theme: Theme,
+    with_variations := false,
+    sort := true
+) -> PackedStringArray:
+    var types := PackedStringArray(theme.get_type_list())
+    if not with_variations:
+        for idx in range(types.size() - 1, -1, -1):
+            var type := types[idx]
+            if theme.get_type_variation_base(type):
+                types.remove_at(idx)
+    if sort: types.sort()
+    return types
+
+
+static func get_type_variation_list(
+    theme: Theme,
+    base_type: StringName,
+    sort := true
+) -> PackedStringArray:
+    var variations := PackedStringArray(theme.get_type_variation_list(base_type))
+    if sort: variations.sort()
+    return variations
 
 
 # TODO

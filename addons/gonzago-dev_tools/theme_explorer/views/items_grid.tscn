@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1aqty87bawm0"]
+
+[ext_resource type="PackedScene" uid="uid://c8f5ktsgc5sbh" path="res://addons/gonzago-dev_tools/theme_explorer/views/type_group.tscn" id="1_0kqm6"]
+
+[node name="ItemsGrid" type="ScrollContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+
+[node name="Container" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TypeGroup" parent="Container" instance=ExtResource("1_0kqm6")]
+layout_mode = 2

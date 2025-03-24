@@ -98,7 +98,7 @@ func _build_tree(t: Theme) -> void:
         push_error("Theme was null!")
         return
     
-    var types := ThemeUtil.get_ordered_theme_types(_theme)
+    var types := ThemeUtil.get_type_list(_theme)
     _build_types_items(types_root, types)
             
     if is_inside_tree():
@@ -110,7 +110,7 @@ func _build_types_items(parent: TreeItem, types: PackedStringArray) -> void:
         var type_item := parent.create_child()
         type_item.set_text(0, type)
         type_item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
-        var variations := ThemeUtil.get_ordered_theme_types(_theme, type)
+        var variations := ThemeUtil.get_type_variation_list(_theme, type)
         if variations.size() > 0:
             _build_types_items(type_item, variations)
 
