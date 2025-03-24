@@ -1,6 +1,7 @@
 @tool
 extends HBoxContainer
 
+const ThemeUtil := preload("../theme_util.gd")
 const Item := preload("./item.gd")
 
 # TODO: Consolidate into one view where data types are draw automaticall (without nodes)
