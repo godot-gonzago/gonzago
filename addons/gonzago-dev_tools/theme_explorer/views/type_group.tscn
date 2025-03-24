@@ -1,14 +1,14 @@
 [gd_scene load_steps=19 format=3 uid="uid://c8f5ktsgc5sbh"]
 
-[ext_resource type="Script" uid="uid://c4yptv0vcidky" path="res://addons/gonzago-dev_tools/theme_explorer/type_group.gd" id="1_la0us"]
+[ext_resource type="Script" uid="uid://c4yptv0vcidky" path="res://addons/gonzago-dev_tools/theme_explorer/views/type_group.gd" id="1_la0us"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_la0us"]
-[ext_resource type="PackedScene" uid="uid://csecd3oq5veba" path="res://addons/gonzago-dev_tools/theme_explorer/data_type_group.tscn" id="3_tye8e"]
-[ext_resource type="PackedScene" uid="uid://wvqpye0eigcd" path="res://addons/gonzago-dev_tools/theme_explorer/item_color.tscn" id="4_17xff"]
-[ext_resource type="PackedScene" uid="uid://bmbvwe5618rjx" path="res://addons/gonzago-dev_tools/theme_explorer/item_constant.tscn" id="5_agf17"]
-[ext_resource type="PackedScene" uid="uid://bdmjsljmwabeu" path="res://addons/gonzago-dev_tools/theme_explorer/item_font.tscn" id="6_7eril"]
-[ext_resource type="PackedScene" uid="uid://p0daqyus2tu7" path="res://addons/gonzago-dev_tools/theme_explorer/item_font_size.tscn" id="7_w4tpy"]
-[ext_resource type="PackedScene" uid="uid://0rwubfyjua0c" path="res://addons/gonzago-dev_tools/theme_explorer/item_icon.tscn" id="8_4p6j0"]
-[ext_resource type="PackedScene" uid="uid://1uloa1c44nl7" path="res://addons/gonzago-dev_tools/theme_explorer/item_stylebox.tscn" id="9_82tc7"]
+[ext_resource type="PackedScene" uid="uid://csecd3oq5veba" path="res://addons/gonzago-dev_tools/theme_explorer/views/data_type_group.tscn" id="3_tye8e"]
+[ext_resource type="PackedScene" uid="uid://wvqpye0eigcd" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_color.tscn" id="4_17xff"]
+[ext_resource type="PackedScene" uid="uid://bmbvwe5618rjx" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_constant.tscn" id="5_agf17"]
+[ext_resource type="PackedScene" uid="uid://bdmjsljmwabeu" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_font.tscn" id="6_7eril"]
+[ext_resource type="PackedScene" uid="uid://p0daqyus2tu7" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_font_size.tscn" id="7_w4tpy"]
+[ext_resource type="PackedScene" uid="uid://0rwubfyjua0c" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_icon.tscn" id="8_4p6j0"]
+[ext_resource type="PackedScene" uid="uid://1uloa1c44nl7" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_stylebox.tscn" id="9_82tc7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_260my"]
 content_margin_left = 6.0

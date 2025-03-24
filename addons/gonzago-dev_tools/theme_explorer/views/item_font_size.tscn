@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://p0daqyus2tu7"]
+
+[ext_resource type="PackedScene" uid="uid://bdmjsljmwabeu" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_font.tscn" id="1_7hnim"]
+[ext_resource type="Script" uid="uid://csw52odhen6sj" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_font_size.gd" id="2_bchwm"]
+
+[node name="ItemFontSize" instance=ExtResource("1_7hnim")]
+script = ExtResource("2_bchwm")

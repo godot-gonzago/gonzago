@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/gonzago-dev_tools/theme_explorer/item.gd"
+extends "./item.gd"
 
 # TODO: Consolitate all data types into one item
 
