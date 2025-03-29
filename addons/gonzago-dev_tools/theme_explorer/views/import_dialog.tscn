@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dd5vq37p0ovcx"]
+[gd_scene load_steps=17 format=3 uid="uid://dd5vq37p0ovcx"]
 
 [ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_gxpm6"]
 [ext_resource type="Script" uid="uid://durgexe8t7ntp" path="res://addons/gonzago-dev_tools/theme_explorer/views/import_dialog.gd" id="1_tryw0"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_tryw0"]
+[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="4_na1j8"]
 
 [sub_resource type="Texture2D" id="Texture2D_gxpm6"]
 resource_local_to_scene = false
@@ -49,10 +50,77 @@ icon_name = "ThemeDeselectAll"
 icon_type = "EditorIcons"
 metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
+[sub_resource type="StyleBox" id="StyleBox_23lrh"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+script = ExtResource("4_na1j8")
+use_editor_theme = true
+stylebox_name = "disabled"
+stylebox_type = "Button"
+metadata/_custom_type_script = "uid://cpbyfhnvp7snj"
+
+[sub_resource type="Texture2D" id="Texture2D_tryw0"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "Color"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_na1j8"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "MemberConstant"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_kksm6"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "FontItem"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_4ygd4"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "FontSize"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_q2atk"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "Image"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_23lrh"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "StyleBoxFlat"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
 [node name="ImportDialog" type="AcceptDialog"]
 title = "Import Theme Items"
 position = Vector2i(0, 36)
-size = Vector2i(416, 457)
+size = Vector2i(621, 457)
 visible = true
 ok_button_text = "Close"
 script = ExtResource("1_tryw0")
@@ -111,9 +179,114 @@ columns = 3
 column_titles_visible = true
 hide_root = true
 
-[node name="ImportButton" type="Button" parent="ImportTree"]
+[node name="BottomBar" type="HBoxContainer" parent="ImportTree"]
 layout_mode = 2
-size_flags_horizontal = 8
+
+[node name="Color" type="PanelContainer" parent="ImportTree/BottomBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_23lrh")
+
+[node name="Layout" type="HBoxContainer" parent="ImportTree/BottomBar/Color"]
+layout_mode = 2
+
+[node name="ColorIcon" type="TextureRect" parent="ImportTree/BottomBar/Color/Layout"]
+layout_mode = 2
+tooltip_text = "Color Items."
+texture = SubResource("Texture2D_tryw0")
+stretch_mode = 5
+
+[node name="ColorLabel" type="Label" parent="ImportTree/BottomBar/Color/Layout"]
+layout_mode = 2
+text = "0/100"
+
+[node name="Constant" type="PanelContainer" parent="ImportTree/BottomBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_23lrh")
+
+[node name="Layout" type="HBoxContainer" parent="ImportTree/BottomBar/Constant"]
+layout_mode = 2
+
+[node name="ConstantIcon" type="TextureRect" parent="ImportTree/BottomBar/Constant/Layout"]
+layout_mode = 2
+tooltip_text = "Constant Items."
+texture = SubResource("Texture2D_na1j8")
+stretch_mode = 5
+
+[node name="ConstantLabel" type="Label" parent="ImportTree/BottomBar/Constant/Layout"]
+layout_mode = 2
+text = "0/100"
+
+[node name="Font" type="PanelContainer" parent="ImportTree/BottomBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_23lrh")
+
+[node name="Layout" type="HBoxContainer" parent="ImportTree/BottomBar/Font"]
+layout_mode = 2
+
+[node name="FontIcon" type="TextureRect" parent="ImportTree/BottomBar/Font/Layout"]
+layout_mode = 2
+tooltip_text = "Font Items."
+texture = SubResource("Texture2D_kksm6")
+stretch_mode = 5
+
+[node name="FontLabel" type="Label" parent="ImportTree/BottomBar/Font/Layout"]
+layout_mode = 2
+text = "0/100"
+
+[node name="FontSize" type="PanelContainer" parent="ImportTree/BottomBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_23lrh")
+
+[node name="Layout" type="HBoxContainer" parent="ImportTree/BottomBar/FontSize"]
+layout_mode = 2
+
+[node name="FontSizeIcon" type="TextureRect" parent="ImportTree/BottomBar/FontSize/Layout"]
+layout_mode = 2
+tooltip_text = "Font Size Items."
+texture = SubResource("Texture2D_4ygd4")
+stretch_mode = 5
+
+[node name="FontSizeLabel" type="Label" parent="ImportTree/BottomBar/FontSize/Layout"]
+layout_mode = 2
+text = "0/100"
+
+[node name="Icon" type="PanelContainer" parent="ImportTree/BottomBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_23lrh")
+
+[node name="Layout" type="HBoxContainer" parent="ImportTree/BottomBar/Icon"]
+layout_mode = 2
+
+[node name="IconIcon" type="TextureRect" parent="ImportTree/BottomBar/Icon/Layout"]
+layout_mode = 2
+tooltip_text = "Icon Items."
+texture = SubResource("Texture2D_q2atk")
+stretch_mode = 5
+
+[node name="IconLabel" type="Label" parent="ImportTree/BottomBar/Icon/Layout"]
+layout_mode = 2
+text = "0/100"
+
+[node name="StyleBox" type="PanelContainer" parent="ImportTree/BottomBar"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_23lrh")
+
+[node name="Layout" type="HBoxContainer" parent="ImportTree/BottomBar/StyleBox"]
+layout_mode = 2
+
+[node name="StyleBoxIcon" type="TextureRect" parent="ImportTree/BottomBar/StyleBox/Layout"]
+layout_mode = 2
+tooltip_text = "StyleBox Items."
+texture = SubResource("Texture2D_23lrh")
+stretch_mode = 5
+
+[node name="StyleBoxLabel" type="Label" parent="ImportTree/BottomBar/StyleBox/Layout"]
+layout_mode = 2
+text = "0/100"
+
+[node name="ImportButton" type="Button" parent="ImportTree/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 10
 text = "Import Selected"
 
 [connection signal="theme_selected" from="ImportTree/FileBar" to="." method="_on_file_bar_theme_selected"]

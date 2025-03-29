@@ -5,6 +5,7 @@ const ThemeUtil := preload("../theme_util.gd")
 const FileBar := preload("./file_bar.gd")
 
 @onready var _file_bar := get_node("ImportTree/FileBar") as FileBar
+@onready var _options_button := get_node("ImportTree/Toolbar/OptionsButton") as MenuButton
 @onready var _tree := get_node("ImportTree/Tree") as Tree
 
 var _theme: Theme = null
@@ -13,6 +14,8 @@ var _theme: Theme = null
 func _notification(what: int) -> void:
     match what:
         NOTIFICATION_READY:
+            _options_button.about_to_popup.connect(_options_about_to_popup)
+            
             _tree.set_column_expand(0, true)
             _tree.set_column_expand(1, false)
             _tree.set_column_title(1, tr("Import"))
@@ -26,6 +29,88 @@ func _notification(what: int) -> void:
         NOTIFICATION_THEME_CHANGED:
             if _theme and is_node_ready():
                 _update_tree()
+
+
+func _options_about_to_popup() -> void:
+    var popup := _options_button.get_popup()
+    popup.clear(true)
+    
+    var count := PackedInt32Array()
+    count.resize(Theme.DATA_TYPE_MAX)
+    count.fill(0)
+    var total_count := 0
+    
+    var root := _tree.get_root()
+    for type_tree_item in root.get_children():
+        for data_type_tree_item in type_tree_item.get_children():
+            var data_type: int = data_type_tree_item.get_metadata(0)
+            for item_tree_item in data_type_tree_item.get_children():
+                if item_tree_item.visible:
+                    count[data_type] += 1
+                    total_count += 1
+    
+    var select_sub_menu := PopupMenu.new()
+    select_sub_menu.add_icon_item(
+        get_theme_icon("Theme", "EditorIcons"),
+        tr("All")
+    )
+    select_sub_menu.set_item_disabled(
+        select_sub_menu.item_count - 1,
+        total_count == 0
+    )
+    select_sub_menu.add_separator()
+    for data_type in Theme.DATA_TYPE_MAX:
+        var idx := select_sub_menu.item_count
+        select_sub_menu.add_icon_item(
+            ThemeUtil.get_data_type_icon(data_type),
+            "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
+        )
+        select_sub_menu.set_item_disabled(idx, count[data_type] == 0)
+    
+    popup.add_submenu_node_item(tr("Select"), select_sub_menu)
+    popup.set_item_icon(popup.item_count - 1, get_theme_icon("ThemeSelectAll", "EditorIcons"))
+    
+    var select_with_sub_menu := PopupMenu.new()
+    select_with_sub_menu.add_icon_item(
+        get_theme_icon("Theme", "EditorIcons"),
+        tr("All")
+    )
+    select_with_sub_menu.set_item_disabled(
+        select_with_sub_menu.item_count - 1,
+        total_count == 0
+    )
+    select_with_sub_menu.add_separator()
+    for data_type in Theme.DATA_TYPE_MAX:
+        var idx := select_with_sub_menu.item_count
+        select_with_sub_menu.add_icon_item(
+            ThemeUtil.get_data_type_icon(data_type),
+            "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
+        )
+        select_with_sub_menu.set_item_disabled(idx, count[data_type] == 0)
+    
+    popup.add_submenu_node_item(tr("Select With Data"), select_with_sub_menu)
+    popup.set_item_icon(popup.item_count - 1, get_theme_icon("ThemeSelectFull", "EditorIcons"))
+    
+    var deselect_sub_menu := PopupMenu.new()
+    deselect_sub_menu.add_icon_item(
+        get_theme_icon("Theme", "EditorIcons"),
+        tr("All")
+    )
+    deselect_sub_menu.set_item_disabled(
+        deselect_sub_menu.item_count - 1,
+        total_count == 0
+    )
+    deselect_sub_menu.add_separator()
+    for data_type in Theme.DATA_TYPE_MAX:
+        var idx := deselect_sub_menu.item_count
+        deselect_sub_menu.add_icon_item(
+            ThemeUtil.get_data_type_icon(data_type),
+            "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
+        )
+        deselect_sub_menu.set_item_disabled(idx, count[data_type] == 0)
+    
+    popup.add_submenu_node_item(tr("Deselect"), deselect_sub_menu)
+    popup.set_item_icon(popup.item_count - 1, get_theme_icon("ThemeDeselectAll", "EditorIcons"))
 
     
 func _build_tree() -> void:
