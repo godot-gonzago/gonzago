@@ -24,6 +24,7 @@ func inspect(theme: Theme) -> void:
     if is_node_ready():
         _build_tree()
 
+
 func _build_tree() -> void:
     _tree.clear()
     if not _theme: return
