@@ -15,7 +15,10 @@ static func get_appropriate_base_theme() -> Theme:
     
     
 # TODO
-static func get_theme_meta_data(theme: Theme) -> Dictionary:
+static func get_theme_meta_data(
+    theme: Theme,
+    include_base_theme := true # TODO:
+) -> Dictionary:
     return {}
 
 #endregion
@@ -23,7 +26,7 @@ static func get_theme_meta_data(theme: Theme) -> Dictionary:
 
 #region Data type methods
 
-const _DATA_TYPE_INFO := {
+const _DATA_TYPE_INFO: Dictionary[Theme.DataType, Dictionary] = {
     Theme.DATA_TYPE_COLOR: {
         &"name": &"Colors",
         &"property_path": &"colors",
@@ -116,7 +119,9 @@ static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
 # TODO
 static func get_data_type_meta_data(
     theme: Theme,
-    data_type: Theme.DataType
+    base_theme: Theme,
+    data_type: Theme.DataType,
+    include_base_theme := true # TODO:
 ) -> Dictionary:
     return {}
 
@@ -134,6 +139,7 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
 static func get_type_list(
     theme: Theme,
     with_variations := false,
+    include_base_theme := true,
     sort := true
 ) -> PackedStringArray:
     var types := PackedStringArray(theme.get_type_list())
@@ -142,6 +148,14 @@ static func get_type_list(
             var type := types[idx]
             if theme.get_type_variation_base(type):
                 types.remove_at(idx)
+    if include_base_theme and theme.resource_path:
+        var base_theme := ThemeDB.get_default_theme()
+        var base_types := base_theme.get_type_list()
+        for base_type in base_types:
+            if not with_variations and base_theme.get_type_variation_base(base_type):
+                continue
+            if base_type not in types:
+                types.append(base_type)
     if sort: types.sort()
     return types
 
@@ -149,9 +163,16 @@ static func get_type_list(
 static func get_type_variation_list(
     theme: Theme,
     base_type: StringName,
+    include_base_theme := true,
     sort := true
 ) -> PackedStringArray:
     var variations := PackedStringArray(theme.get_type_variation_list(base_type))
+    if include_base_theme and theme.resource_path:
+        var base_theme := ThemeDB.get_default_theme()
+        var base_variations := base_theme.get_type_variation_list(base_type)
+        for base_variation in base_variations:
+            if base_variation not in variations:
+                variations.append(base_variation)
     if sort: variations.sort()
     return variations
 
@@ -159,7 +180,9 @@ static func get_type_variation_list(
 # TODO
 static func get_theme_type_meta_data(
     theme: Theme,
-    theme_type: StringName
+    base_theme: Theme,
+    theme_type: StringName,
+    include_base_theme := true # TODO:
 ) -> Dictionary:
     return {}
 
@@ -183,7 +206,8 @@ static func get_theme_item_meta_data(
     theme: Theme,
     data_type: Theme.DataType,
     theme_type: StringName,
-    name: StringName
+    name: StringName,
+    include_base_theme := true # TODO:
 ) -> Dictionary:
     return {}
 

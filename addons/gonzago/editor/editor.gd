@@ -1,4 +1,5 @@
 @tool
+@static_unload
 class_name GonzagoEditor
 extends RefCounted
 ## Gonzago editor utilities.

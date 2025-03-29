@@ -32,6 +32,17 @@ func _draw() -> void:
 
 func inspect_editor_theme() -> void:
     var editor_theme := EditorInterface.get_editor_theme()
+    print("Editor-Theme-Path: %s" % editor_theme.resource_path)
+    
+    var default_theme := ThemeDB.get_default_theme()
+    print("Default-Theme-Path: %s" % default_theme.resource_path)
+    
+    var project_theme := ThemeDB.get_project_theme()
+    if project_theme:
+        print("Project-Theme-Path: %s" % project_theme.resource_path)
+    else:
+        print("No project theme")
+    
     inspect(editor_theme)
 
 

@@ -62,6 +62,13 @@ func _gui_input(event: InputEvent) -> void:
             accept_event()
             
 
+#func _get_minimum_size() -> Vector2:
+    # TODO: Get editor icon min size, multiply based on data type (icluding separator)
+    #       Add styleboxes
+    #       Add bottom text and stylebox
+    #var min := Vector2(16, 16) * EditorInterface.get_editor_scale()
+    #return min
+
 #https://docs.godotengine.org/en/stable/classes/class_control.html#class-control-private-method-make-custom-tooltip
 #func _make_custom_tooltip(for_text: String) -> Object:
 #    pass
