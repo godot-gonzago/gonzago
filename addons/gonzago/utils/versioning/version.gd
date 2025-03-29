@@ -2,17 +2,16 @@
 @static_unload
 class_name Version
 extends Resource
-## Version info based on [url=https://semver.org]Semantic Versioning[/url].
+## Version resource based on [url=https://semver.org]Semantic Versioning[/url].
 ##
-## The description of the script, what it can do,
-## and any further detail.
+## Stores information about a version.
 ## Compliant with Godot [url=https://docs.godotengine.org/en/stable/about/release_policy.html#godot-versioning]release policy[/url].
 
 # https://docs.godotengine.org/en/stable/classes/class_engine.html#class-engine-method-get-version-info
 # https://semver.org/
 # https://regex101.com/r/Ly7O1x/3/
-
 # https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
+
 
 static var _version_regex := RegEx.create_from_string(
     r"(?(DEFINE)(?P<n>0|[1-9]\d*)(?P<s>\d*[a-zA-Z_-][\w-]*|(?P>n))(?P<b>[\w-]+))" + \
