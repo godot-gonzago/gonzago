@@ -5,17 +5,39 @@ const FileBar := preload("./file_bar.gd")
 const TypesTree := preload("./types_tree.gd")
 const ItemsTree := preload("./items_tree.gd")
 
-@onready var file_bar := get_node("FileBar") as FileBar
+const ImportDialog := preload("./import_dialog.gd")
+const ImportDialogScene := preload("./import_dialog.tscn")
+const ExportDialog := preload("./export_dialog.gd")
+const ExportDialogScene := preload("./export_dialog.tscn")
+
+@onready var file_bar := get_node("ToolBar/FileBar") as FileBar
 @onready var type_tree := get_node("Split/TypesTree") as TypesTree
 @onready var items_tree := get_node("Split/Split/ItemsTree") as ItemsTree
+@onready var tools_button := get_node("ToolBar/ToolsButton") as MenuButton
+
+
+var _import_dialog: ImportDialog
+var _export_dialog: ExportDialog
 
 
 var _theme: Theme
 
 
 func _ready() -> void:
+    _import_dialog = ImportDialogScene.instantiate() as ImportDialog
+    _export_dialog = ExportDialogScene.instantiate() as ExportDialog
+    tools_button.get_popup().index_pressed.connect(_on_tools_button_index_pressed)
+    
     _theme = file_bar.get_current_theme()
     type_tree.inspect(_theme)
+
+
+func _on_tools_button_index_pressed(index: int) -> void:
+    match index:
+        0:
+            EditorInterface.popup_dialog_centered_ratio(_import_dialog, 0.6)
+        1:
+            EditorInterface.popup_dialog_centered_ratio(_export_dialog, 0.6)
 
 
 func _on_theme_selected(theme: Theme) -> void:

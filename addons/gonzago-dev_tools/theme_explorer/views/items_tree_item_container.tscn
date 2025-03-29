@@ -1,0 +1,218 @@
+[gd_scene load_steps=12 format=3 uid="uid://b6va6h6o2vtkx"]
+
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_r62uk"]
+
+[sub_resource type="Texture2D" id="Texture2D_gk0a7"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "arrow"
+icon_type = "Tree"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_r62uk"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "Color"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_64bs5"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "GuiTabMenuHl"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_572sa"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "GuiScrollArrowRight"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_mwras"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "Add"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_6fyeu"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "Edit"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_onexg"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "Remove"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_5ocu0"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "FontItem"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_6eseb"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "Image"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_reuky"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_r62uk")
+use_editor_theme = true
+icon_name = "StyleBoxFlat"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="ItemContainer" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 27.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Arrow" type="TextureRect" parent="Header"]
+layout_mode = 2
+texture = SubResource("Texture2D_gk0a7")
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="Header"]
+layout_mode = 2
+texture = SubResource("Texture2D_r62uk")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Colors"
+text_overrun_behavior = 3
+
+[node name="OptionsButton" type="Button" parent="Header"]
+layout_mode = 2
+icon = SubResource("Texture2D_64bs5")
+flat = true
+
+[node name="Item" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Identifier" type="HBoxContainer" parent="Item"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="ItemMargin" type="TextureRect" parent="Item/Identifier"]
+layout_mode = 2
+texture = SubResource("Texture2D_572sa")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Item/Identifier"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "focus_color"
+text_overrun_behavior = 3
+
+[node name="OverrideButton" type="Button" parent="Item/Identifier"]
+layout_mode = 2
+tooltip_text = "Override Item"
+icon = SubResource("Texture2D_mwras")
+flat = true
+
+[node name="RenameButton" type="Button" parent="Item/Identifier"]
+visible = false
+layout_mode = 2
+tooltip_text = "Rename Item	"
+icon = SubResource("Texture2D_6fyeu")
+flat = true
+
+[node name="RemoveButton" type="Button" parent="Item/Identifier"]
+visible = false
+layout_mode = 2
+tooltip_text = "Remove Item	"
+icon = SubResource("Texture2D_onexg")
+flat = true
+
+[node name="Edit" type="LineEdit" parent="Item/Identifier"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "focus_color"
+placeholder_text = "focus_color"
+select_all_on_focus = true
+caret_blink = true
+
+[node name="Value" type="HBoxContainer" parent="Item"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Color" type="ColorPickerButton" parent="Item/Value"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Constant" type="SpinBox" parent="Item/Value"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+rounded = true
+allow_greater = true
+allow_lesser = true
+suffix = "px"
+
+[node name="Font" type="Button" parent="Item/Value"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Font"
+icon = SubResource("Texture2D_5ocu0")
+
+[node name="FontSize" type="SpinBox" parent="Item/Value"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+rounded = true
+allow_greater = true
+suffix = "pt"
+
+[node name="Icon" type="Button" parent="Item/Value"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Texture2D"
+icon = SubResource("Texture2D_6eseb")
+
+[node name="StyleBox" type="Button" parent="Item/Value"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "StyleBoxFlat"
+icon = SubResource("Texture2D_reuky")

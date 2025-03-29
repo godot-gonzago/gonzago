@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://mhkkeep0sjyq"]
+[gd_scene load_steps=15 format=3 uid="uid://mhkkeep0sjyq"]
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_kv3cv"]
 [ext_resource type="Script" uid="uid://cbpfi4h7r3ny4" path="res://addons/gonzago-dev_tools/theme_explorer/views/items_tree.gd" id="1_neqrd"]
@@ -18,6 +18,96 @@ resource_name = ""
 script = ExtResource("1_kv3cv")
 use_editor_theme = true
 icon_name = "Add"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_ol6oe"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "Color"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_quly2"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "MemberConstant"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_r0jb4"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "FontItem"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_ywpc6"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "FontSize"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_wkx0d"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "ImageTexture"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_exsi3"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "StyleBoxFlat"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_5pibg"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "Control"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_eaw1d"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "ThemeRemoveCustomItems"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_t7bgx"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "ThemeRemoveAllItems"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_neqrd"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kv3cv")
+use_editor_theme = true
+icon_name = "FileThumbnail"
 icon_type = "EditorIcons"
 metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
@@ -43,10 +133,49 @@ right_icon = SubResource("Texture2D_m6l8n")
 select_all_on_focus = true
 caret_blink = true
 
-[node name="AddButton" type="Button" parent="Toolbar"]
+[node name="AddButton" type="MenuButton" parent="Toolbar"]
 layout_mode = 2
 tooltip_text = "Add type to Theme."
 icon = SubResource("Texture2D_6q1ra")
+item_count = 12
+popup/item_0/text = "Override All"
+popup/item_0/id = 0
+popup/item_1/id = 1
+popup/item_1/separator = true
+popup/item_2/text = "Add Color Item"
+popup/item_2/icon = SubResource("Texture2D_ol6oe")
+popup/item_2/id = 2
+popup/item_3/text = "Add Constant Item"
+popup/item_3/icon = SubResource("Texture2D_quly2")
+popup/item_3/id = 3
+popup/item_4/text = "Add Font Item"
+popup/item_4/icon = SubResource("Texture2D_r0jb4")
+popup/item_4/id = 4
+popup/item_5/text = "Add Font Size Item"
+popup/item_5/icon = SubResource("Texture2D_ywpc6")
+popup/item_5/id = 5
+popup/item_6/text = "Add Icon Item"
+popup/item_6/icon = SubResource("Texture2D_wkx0d")
+popup/item_6/id = 6
+popup/item_7/text = "Add StyleBox Item"
+popup/item_7/icon = SubResource("Texture2D_exsi3")
+popup/item_7/id = 7
+popup/item_8/id = 8
+popup/item_8/separator = true
+popup/item_9/text = "Remove Class Items"
+popup/item_9/icon = SubResource("Texture2D_5pibg")
+popup/item_9/id = 9
+popup/item_10/text = "Remove Custom Items"
+popup/item_10/icon = SubResource("Texture2D_eaw1d")
+popup/item_10/id = 10
+popup/item_11/text = "Remove All Items"
+popup/item_11/icon = SubResource("Texture2D_t7bgx")
+popup/item_11/id = 11
+
+[node name="DisplayButton" type="Button" parent="Toolbar"]
+layout_mode = 2
+tooltip_text = "View items as a grid of thumbnails."
+icon = SubResource("Texture2D_neqrd")
 flat = true
 
 [node name="Tree" type="Tree" parent="."]

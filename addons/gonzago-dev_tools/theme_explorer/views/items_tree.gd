@@ -74,10 +74,11 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
     for item in parent.get_children():
         var theme_item := item.get_text(0)
         
-        var color := Color.WHITE
+        item.clear_custom_color(0)
+        var font_color := get_theme_color("font_color", "Tree")
+        var font_disabled_color := get_theme_color("font_disabled_color", "Tree")
         if not _theme.has_theme_item(data_type, theme_item, _theme_type):
-            color = color.darkened(0.5)
-        item.set_custom_color(0, color)
+            item.set_custom_color(0, font_disabled_color)
         
         match data_type:
             Theme.DATA_TYPE_COLOR:
@@ -87,6 +88,12 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 # TODO: This is not possible with tree.
                 #       https://github.com/godotengine/godot/blob/master/editor/plugins/theme_editor_plugin.cpp#L2448
                 #       Original uses HBoxContainer
+                #       Merge together with list (only handle stuff inside type, not everything at once).
+                #       Handle like FileSystem with display toggle
+                #       get_theme_icon("FileList", "EditorIcons")
+                #       tr("View items as a list.")
+                #       get_theme_icon("FileThumbnail", "EditorIcons")
+                #       tr("View items as a grid of thumbnails.")
         
         if item.visible:
             has_visibile_children = true

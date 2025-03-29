@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://dd5vq37p0ovcx"]
+[gd_scene load_steps=9 format=3 uid="uid://dd5vq37p0ovcx"]
 
 [ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_gxpm6"]
+[ext_resource type="Script" uid="uid://durgexe8t7ntp" path="res://addons/gonzago-dev_tools/theme_explorer/views/import_dialog.gd" id="1_tryw0"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_tryw0"]
 
 [sub_resource type="Texture2D" id="Texture2D_gxpm6"]
@@ -50,9 +51,11 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
 [node name="ImportDialog" type="AcceptDialog"]
 title = "Import Theme Items"
+position = Vector2i(0, 36)
 size = Vector2i(416, 457)
 visible = true
 ok_button_text = "Close"
+script = ExtResource("1_tryw0")
 
 [node name="ImportTree" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(400, 400)
@@ -112,3 +115,5 @@ hide_root = true
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Import Selected"
+
+[connection signal="theme_selected" from="ImportTree/FileBar" to="." method="_on_file_bar_theme_selected"]
