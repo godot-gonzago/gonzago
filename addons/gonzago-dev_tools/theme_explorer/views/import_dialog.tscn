@@ -61,8 +61,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 408.0
-offset_bottom = 408.0
+offset_right = -8.0
+offset_bottom = -49.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -70,8 +70,8 @@ size_flags_vertical = 3
 
 [node name="FileBar" parent="ImportTree" instance=ExtResource("1_gxpm6")]
 layout_mode = 2
-_can_create = false
-_can_save = false
+can_create = false
+can_save = false
 
 [node name="Toolbar" type="HBoxContainer" parent="ImportTree"]
 layout_mode = 2

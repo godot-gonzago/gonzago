@@ -6,7 +6,8 @@ extends GonzagoEditorPlugin
 ##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 
-const ThemeExplorer := preload("./views_old/explorer.tscn")
+#const ThemeExplorer := preload("./views_old/explorer.tscn")
+const ThemeExplorer := preload("./views/main_view.tscn")
 
 
 var _theme_explorer: Control
