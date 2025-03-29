@@ -88,7 +88,6 @@ var build := "":
             emit_changed()
 
 
-@warning_ignore("shadowed_variable")
 func _init(
     major := 0, minor := 0, patch := 0,
     status := "", build := ""
