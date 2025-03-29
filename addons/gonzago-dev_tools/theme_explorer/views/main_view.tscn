@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://rdphd1mywfyv"]
+[gd_scene load_steps=9 format=3 uid="uid://rdphd1mywfyv"]
 
+[ext_resource type="Script" uid="uid://uxfnpiu3xjmj" path="res://addons/gonzago-dev_tools/theme_explorer/views/main_view.gd" id="1_awcdo"]
 [ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_rxhlw"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_46j6x"]
 [ext_resource type="PackedScene" uid="uid://cdpq53utwr741" path="res://addons/gonzago-dev_tools/theme_explorer/views/types_tree.tscn" id="3_6kapw"]
@@ -32,6 +33,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_awcdo")
 
 [node name="FileBar" parent="." instance=ExtResource("1_rxhlw")]
 layout_mode = 2
@@ -67,3 +69,5 @@ size_flags_stretch_ratio = 2.0
 
 [node name="ItemInspector" parent="Split/Split" instance=ExtResource("5_awcdo")]
 layout_mode = 2
+
+[connection signal="theme_selected" from="FileBar" to="." method="_on_theme_selected"]

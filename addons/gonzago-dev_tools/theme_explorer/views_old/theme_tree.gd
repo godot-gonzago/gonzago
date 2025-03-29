@@ -4,7 +4,6 @@ extends Tree
 
 const ThemeUtil := preload("../theme_util.gd")
 
-
 var _theme: Theme = null
 
 

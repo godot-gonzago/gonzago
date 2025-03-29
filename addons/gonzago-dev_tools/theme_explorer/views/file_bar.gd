@@ -32,6 +32,15 @@ var _file_open_dialog: EditorFileDialog
         _save_button.visible = value
 
 
+func get_current_theme() -> Theme:
+    var tab_idx := _file_tabs.current_tab
+    if tab_idx < 0: return null
+    if tab_idx == 0: return EditorInterface.get_editor_theme()
+    if tab_idx == 1: return ThemeDB.get_default_theme()
+    var theme := _file_tabs.get_tab_metadata(tab_idx) as Theme
+    return theme
+
+
 func _init() -> void:
     set_anchors_preset(Control.PRESET_TOP_WIDE)
     size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -142,7 +151,10 @@ func _tab_changed(tab_idx: int) -> void:
         TabBar.CLOSE_BUTTON_SHOW_NEVER if tab_idx <= 2 else
         TabBar.CLOSE_BUTTON_SHOW_ACTIVE_ONLY
     )
-    var theme := _file_tabs.get_tab_metadata(tab_idx) as Theme
+    var theme: Theme
+    if tab_idx == 0: theme = EditorInterface.get_editor_theme()
+    elif tab_idx == 1: theme = ThemeDB.get_default_theme()
+    else: theme = _file_tabs.get_tab_metadata(tab_idx) as Theme
     if theme:
         theme_selected.emit(theme)
 
