@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bdmjsljmwabeu"]
 
-[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/views/item.tscn" id="1_4a77e"]
-[ext_resource type="Script" uid="uid://bh0j8e7fveh30" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_font.gd" id="2_nm8b7"]
+[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/item.tscn" id="1_4a77e"]
+[ext_resource type="Script" uid="uid://bh0j8e7fveh30" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/item_font.gd" id="2_nm8b7"]
 
 [node name="ItemFont" instance=ExtResource("1_4a77e")]
 script = ExtResource("2_nm8b7")

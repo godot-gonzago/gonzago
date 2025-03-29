@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://baapywium5evd"]
 
-[ext_resource type="Script" uid="uid://bb74umkal8gb5" path="res://addons/gonzago-dev_tools/theme_explorer/views/theme_tree.gd" id="1_iv3el"]
+[ext_resource type="Script" uid="uid://bb74umkal8gb5" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/theme_tree.gd" id="1_iv3el"]
 
 [node name="ThemeTree" type="Tree"]
 size_flags_horizontal = 3

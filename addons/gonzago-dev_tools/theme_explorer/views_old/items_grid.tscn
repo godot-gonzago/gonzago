@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b1aqty87bawm0"]
 
-[ext_resource type="PackedScene" uid="uid://c8f5ktsgc5sbh" path="res://addons/gonzago-dev_tools/theme_explorer/views/type_group.tscn" id="1_0kqm6"]
+[ext_resource type="PackedScene" uid="uid://c8f5ktsgc5sbh" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/type_group.tscn" id="1_0kqm6"]
 
 [node name="ItemsGrid" type="ScrollContainer"]
 anchors_preset = 15

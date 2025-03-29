@@ -2,8 +2,8 @@
 extends VBoxContainer
 
 
-const ThemeTree := preload("./views/theme_tree.gd")
-const TypeGroup := preload("./views/type_group.gd")
+const ThemeTree := preload("./views_old/theme_tree.gd")
+const TypeGroup := preload("./views_old/type_group.gd")
 
 # TODO: Create central theme cache where every ui can reference an instance of an object
 #       Filtering can be done through this. Nodes/Controls can be linked to the cache objects

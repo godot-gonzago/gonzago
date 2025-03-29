@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://0rwubfyjua0c"]
 
-[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/views/item.tscn" id="1_ekqfu"]
-[ext_resource type="Script" uid="uid://qve5u3l7oeyd" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_icon.gd" id="2_b1l6j"]
+[ext_resource type="PackedScene" uid="uid://dvp7aqcgktsja" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/item.tscn" id="1_ekqfu"]
+[ext_resource type="Script" uid="uid://qve5u3l7oeyd" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/item_icon.gd" id="2_b1l6j"]
 
 [node name="ItemIcon" instance=ExtResource("1_ekqfu")]
 script = ExtResource("2_b1l6j")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dvp7aqcgktsja"]
 
-[ext_resource type="Script" uid="uid://di7kjwc4di3jr" path="res://addons/gonzago-dev_tools/theme_explorer/views/item.gd" id="2_n6pnk"]
+[ext_resource type="Script" uid="uid://di7kjwc4di3jr" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/item.gd" id="2_n6pnk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fl8yr"]
 content_margin_left = 6.0

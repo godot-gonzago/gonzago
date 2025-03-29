@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://ciod7ymryylf0"]
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_b26ag"]
-[ext_resource type="Script" uid="uid://bbod8haolxv06" path="res://addons/gonzago-dev_tools/theme_explorer/views/filter_bar.gd" id="2_a5u61"]
+[ext_resource type="Script" uid="uid://bbod8haolxv06" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/filter_bar.gd" id="2_a5u61"]
 
 [sub_resource type="Texture2D" id="Texture2D_u2n2b"]
 resource_local_to_scene = false
