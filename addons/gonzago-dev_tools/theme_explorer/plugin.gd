@@ -1,5 +1,9 @@
 @tool
 extends GonzagoEditorPlugin
+## Gonzago.DevTools.ThemeExplorer editor plugin
+##
+## TODO: Document according to
+##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 
 const ThemeExplorer := preload("./explorer.tscn")

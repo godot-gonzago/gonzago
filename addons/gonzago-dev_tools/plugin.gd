@@ -1,5 +1,9 @@
 @tool
 extends GonzagoEditorPlugin
+## Gonzago.DevTools editor plugin.
+##
+## TODO: Document according to
+##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 
 const CONFIG_FILE_NAME := "plugin.cfg"

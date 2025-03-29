@@ -1,10 +1,10 @@
 @tool
 class_name GonzagoApp
 extends Node
-
-
-## Main entry point of the application.
-
+## Main entry point of a Gonzago application.
+##
+## TODO: Document according to
+##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 # - ApplicationDomain
 #   - Initialization

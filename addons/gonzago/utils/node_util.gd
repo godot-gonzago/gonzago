@@ -1,6 +1,10 @@
 @tool
 class_name NodeUtil
 extends RefCounted
+## Utility functions for nodes.
+##
+## TODO: Document according to
+##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 
 static func is_node_being_edited(node: Node) -> bool:

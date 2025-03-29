@@ -1,7 +1,7 @@
 @tool
 extends Button
-
 ## Adds a toolbar button for instantly enabling/disabling plugins.
+##
 ## Based on the idea by willnationsdev,
 ## see https://github.com/godot-extended-libraries/godot-plugin-refresher
 
