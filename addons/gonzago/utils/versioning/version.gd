@@ -4,7 +4,7 @@ class_name Version
 extends Resource
 ## Version resource based on [url=https://semver.org]Semantic Versioning[/url].
 ##
-## Stores information about a version.
+## Stores information about a version and provides utlity functions.
 ## Compliant with Godot [url=https://docs.godotengine.org/en/stable/about/release_policy.html#godot-versioning]release policy[/url].
 
 # https://docs.godotengine.org/en/stable/classes/class_engine.html#class-engine-method-get-version-info

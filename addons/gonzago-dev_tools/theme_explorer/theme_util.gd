@@ -1,7 +1,10 @@
 @tool
 @static_unload
 extends RefCounted
-
+## Utility for GUI theme.
+##
+## TODO: Document according to
+##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 #region Theme methods
 
