@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://mhkkeep0sjyq"]
+[gd_scene load_steps=5 format=3 uid="uid://mhkkeep0sjyq"]
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_kv3cv"]
+[ext_resource type="Script" uid="uid://cbpfi4h7r3ny4" path="res://addons/gonzago-dev_tools/theme_explorer/views/items_tree.gd" id="1_neqrd"]
 
 [sub_resource type="Texture2D" id="Texture2D_m6l8n"]
 resource_local_to_scene = false
@@ -28,6 +29,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_neqrd")
 
 [node name="Toolbar" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -50,4 +52,6 @@ flat = true
 [node name="Tree" type="Tree" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
+columns = 2
 hide_root = true
+select_mode = 1

@@ -177,6 +177,10 @@ static func get_type_variation_list(
     return variations
 
 
+static func has_type(theme: Theme, theme_type: StringName) -> bool:
+    return theme_type in theme.get_type_list()
+
+
 # TODO
 static func get_theme_type_meta_data(
     theme: Theme,
@@ -199,6 +203,41 @@ static func get_theme_item_path(
     return StringName("%s/%s/%s" % [
         theme_type, get_data_type_property_path(data_type), name
     ])
+    
+    
+static func get_theme_item_list(
+    theme: Theme,
+    data_type: Theme.DataType,
+    theme_type: StringName,
+    include_base_type := true,
+    include_base_theme := true,
+    sort := true
+) -> PackedStringArray:
+    var items := PackedStringArray(theme.get_theme_item_list(data_type, theme_type))
+    
+    if include_base_type:
+        var base_type := theme.get_type_variation_base(theme_type)
+        var base_type_items := theme.get_theme_item_list(data_type, base_type)
+        for item in base_type_items:
+            if item not in items:
+                items.append(item)
+        
+    if include_base_theme and theme.resource_path:
+        var base_theme := ThemeDB.get_default_theme()
+        var base_theme_items := base_theme.get_theme_item_list(data_type, theme_type)
+        for item in base_theme_items:
+                if item not in items:
+                    items.append(item)
+        
+        if include_base_type:
+            var base_type := base_theme.get_type_variation_base(theme_type)
+            var base_type_items := base_theme.get_theme_item_list(data_type, base_type)
+            for item in base_type_items:
+                if item not in items:
+                    items.append(item)
+    
+    if sort: items.sort()
+    return items
 
 
 # TODO Build meta data for theme item, eg. icon width, height and resource location (path/embedded) etc.

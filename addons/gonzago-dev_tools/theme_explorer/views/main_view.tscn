@@ -71,3 +71,4 @@ size_flags_stretch_ratio = 2.0
 layout_mode = 2
 
 [connection signal="theme_selected" from="FileBar" to="." method="_on_theme_selected"]
+[connection signal="theme_type_selected" from="Split/TypesTree" to="." method="_on_types_tree_theme_type_selected"]

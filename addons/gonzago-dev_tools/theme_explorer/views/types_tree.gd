@@ -3,6 +3,8 @@ extends VBoxContainer
 
 const ThemeUtil := preload("../theme_util.gd")
 
+signal theme_type_selected(theme_type: StringName)
+
 @onready var _tree := get_node("Tree") as Tree
 
 var _theme: Theme = null
@@ -55,4 +57,16 @@ func _update_types_items(parent: TreeItem) -> void:
         var type := item.get_text(0)
         var icon := ThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
+        
+        var color := Color.WHITE
+        if not ThemeUtil.has_type(_theme, type):
+            color = color.darkened(0.5)
+        item.set_custom_color(0, color)
+        
         _update_types_items(item)
+
+
+func _on_tree_item_selected() -> void:
+    var item := _tree.get_selected()
+    var type := item.get_text(0)
+    theme_type_selected.emit(type)
