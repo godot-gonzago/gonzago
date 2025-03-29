@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=3 uid="uid://bo6smsoi8sunw"]
+
+[ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_8cw35"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_wdrpm"]
+
+[sub_resource type="StyleBox" id="StyleBox_2f41c"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+script = ExtResource("1_8cw35")
+use_editor_theme = true
+stylebox_name = "hover"
+stylebox_type = "Button"
+metadata/_custom_type_script = "uid://cpbyfhnvp7snj"
+
+[sub_resource type="Texture2D" id="Texture2D_fqxdc"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_wdrpm")
+use_editor_theme = true
+icon_name = "Godot"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="ItemInspector" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Name"
+
+[node name="PreviewBox" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_2f41c")
+
+[node name="Icon" type="TextureRect" parent="PreviewBox"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+mouse_filter = 2
+texture = SubResource("Texture2D_fqxdc")
+stretch_mode = 3
+
+[node name="MetaData" type="ItemList" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 1
+item_0/text = "asdf"

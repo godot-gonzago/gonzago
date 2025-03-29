@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdpq53utwr741"]
+
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_kufiq"]
+
+[sub_resource type="Texture2D" id="Texture2D_ewq6x"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kufiq")
+use_editor_theme = true
+icon_name = "Search"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_n3c0w"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_kufiq")
+use_editor_theme = true
+icon_name = "Add"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="TypesTree" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Toolbar" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Filter" type="LineEdit" parent="Toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter types..."
+clear_button_enabled = true
+right_icon = SubResource("Texture2D_ewq6x")
+select_all_on_focus = true
+caret_blink = true
+
+[node name="AddButton" type="Button" parent="Toolbar"]
+layout_mode = 2
+tooltip_text = "Add type to Theme."
+icon = SubResource("Texture2D_n3c0w")
+flat = true
+
+[node name="Tree" type="Tree" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+hide_root = true

@@ -1,0 +1,83 @@
+[gd_scene load_steps=6 format=3 uid="uid://cvosahu0nijik"]
+
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_d6b7v"]
+
+[sub_resource type="Texture2D" id="Texture2D_a43l6"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_d6b7v")
+use_editor_theme = true
+icon_name = "GuiVisibilityVisible"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_d17au"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_d6b7v")
+use_editor_theme = true
+icon_name = "Load"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_2f41c"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_d6b7v")
+use_editor_theme = true
+icon_name = "Tools"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_8uq31"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_d6b7v")
+use_editor_theme = true
+icon_name = "GuiTabMenuHl"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="Preview" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FileBar" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FileTabs" type="TabBar" parent="FileBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+current_tab = 0
+tab_count = 1
+tab_0/title = "Default Preview"
+tab_0/icon = SubResource("Texture2D_a43l6")
+
+[node name="OpenButton" type="Button" parent="FileBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_d17au")
+flat = true
+
+[node name="ToolsButton" type="Button" parent="FileBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_2f41c")
+flat = true
+
+[node name="Separator" type="VSeparator" parent="FileBar"]
+layout_mode = 2
+
+[node name="OptionsButton" type="Button" parent="FileBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_8uq31")
+flat = true
+
+[node name="Container" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
