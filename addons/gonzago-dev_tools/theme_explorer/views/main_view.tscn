@@ -1,0 +1,69 @@
+[gd_scene load_steps=8 format=3 uid="uid://rdphd1mywfyv"]
+
+[ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_rxhlw"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_46j6x"]
+[ext_resource type="PackedScene" uid="uid://cdpq53utwr741" path="res://addons/gonzago-dev_tools/theme_explorer/views/types_tree.tscn" id="3_6kapw"]
+[ext_resource type="PackedScene" uid="uid://mhkkeep0sjyq" path="res://addons/gonzago-dev_tools/theme_explorer/views/items_tree.tscn" id="4_e8sr1"]
+[ext_resource type="PackedScene" uid="uid://bo6smsoi8sunw" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_inspector.tscn" id="5_awcdo"]
+
+[sub_resource type="Texture2D" id="Texture2D_2f41c"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_46j6x")
+use_editor_theme = true
+icon_name = "Tools"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_8uq31"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_46j6x")
+use_editor_theme = true
+icon_name = "GuiTabMenuHl"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="MainView" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FileBar" parent="." instance=ExtResource("1_rxhlw")]
+layout_mode = 2
+
+[node name="ToolsButton" type="Button" parent="FileBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_2f41c")
+flat = true
+
+[node name="Separator" type="VSeparator" parent="FileBar"]
+layout_mode = 2
+
+[node name="OptionsButton" type="Button" parent="FileBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_8uq31")
+flat = true
+
+[node name="Split" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TypesTree" parent="Split" instance=ExtResource("3_6kapw")]
+layout_mode = 2
+
+[node name="Split" type="HSplitContainer" parent="Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="ItemsTree" parent="Split/Split" instance=ExtResource("4_e8sr1")]
+layout_mode = 2
+size_flags_stretch_ratio = 2.0
+
+[node name="ItemInspector" parent="Split/Split" instance=ExtResource("5_awcdo")]
+layout_mode = 2

@@ -1,0 +1,114 @@
+[gd_scene load_steps=8 format=3 uid="uid://dd5vq37p0ovcx"]
+
+[ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_gxpm6"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_tryw0"]
+
+[sub_resource type="Texture2D" id="Texture2D_gxpm6"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "Search"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_t7xg0"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "GuiTabMenuHl"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_3wfxq"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "ThemeSelectAll"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_5uyg7"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "ThemeSelectFull"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_uds0c"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_tryw0")
+use_editor_theme = true
+icon_name = "ThemeDeselectAll"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="ImportDialog" type="AcceptDialog"]
+title = "Import Theme Items"
+size = Vector2i(416, 457)
+visible = true
+ok_button_text = "Close"
+
+[node name="ImportTree" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(400, 400)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 408.0
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FileBar" parent="ImportTree" instance=ExtResource("1_gxpm6")]
+layout_mode = 2
+_can_create = false
+_can_save = false
+
+[node name="Toolbar" type="HBoxContainer" parent="ImportTree"]
+layout_mode = 2
+
+[node name="Filter" type="LineEdit" parent="ImportTree/Toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter items..."
+clear_button_enabled = true
+right_icon = SubResource("Texture2D_gxpm6")
+select_all_on_focus = true
+caret_blink = true
+
+[node name="OptionsButton" type="MenuButton" parent="ImportTree/Toolbar"]
+layout_mode = 2
+icon = SubResource("Texture2D_t7xg0")
+item_count = 4
+popup/item_0/text = "Select"
+popup/item_0/icon = SubResource("Texture2D_3wfxq")
+popup/item_0/id = 0
+popup/item_1/text = "Select With Data"
+popup/item_1/icon = SubResource("Texture2D_5uyg7")
+popup/item_1/id = 1
+popup/item_2/id = 2
+popup/item_2/separator = true
+popup/item_3/text = "Deselect"
+popup/item_3/icon = SubResource("Texture2D_uds0c")
+popup/item_3/id = 3
+
+[node name="Tree" type="Tree" parent="ImportTree"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+column_titles_visible = true
+hide_root = true
+
+[node name="ImportButton" type="Button" parent="ImportTree"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Import Selected"

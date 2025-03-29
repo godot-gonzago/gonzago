@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://mpanmyvqc6u5"]
 
-[ext_resource type="Script" uid="uid://dhrcr7n55jv7y" path="res://addons/gonzago-dev_tools/theme_explorer/explorer.gd" id="1_vd10t"]
+[ext_resource type="Script" uid="uid://dhrcr7n55jv7y" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/explorer.gd" id="1_vd10t"]
 [ext_resource type="PackedScene" uid="uid://ciod7ymryylf0" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/filter_bar.tscn" id="2_0sliq"]
 [ext_resource type="PackedScene" uid="uid://44a6t8fn4x8u" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/file_bar.tscn" id="2_dk03w"]
 [ext_resource type="PackedScene" uid="uid://baapywium5evd" path="res://addons/gonzago-dev_tools/theme_explorer/views_old/theme_tree.tscn" id="4_wypai"]

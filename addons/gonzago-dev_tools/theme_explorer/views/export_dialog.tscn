@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjcaygvr2l8je"]
+
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_dbvu7"]
+
+[sub_resource type="Texture2D" id="Texture2D_2lu0d"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_dbvu7")
+use_editor_theme = true
+icon_name = "Load"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="ExportDialog" type="ConfirmationDialog"]
+title = "Export Theme"
+position = Vector2i(0, 36)
+size = Vector2i(416, 457)
+visible = true
+ok_button_text = "Export"
+
+[node name="ExportSettingsTree" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(400, 400)
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 408.0
+offset_bottom = 408.0
+
+[node name="FileBar" type="HBoxContainer" parent="ExportSettingsTree"]
+layout_mode = 2
+
+[node name="FilePath" type="LineEdit" parent="ExportSettingsTree/FileBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Theme file..."
+
+[node name="OpenButton" type="Button" parent="ExportSettingsTree/FileBar"]
+layout_mode = 2
+icon = SubResource("Texture2D_2lu0d")
+flat = true
+
+[node name="Tree" type="Tree" parent="ExportSettingsTree"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2

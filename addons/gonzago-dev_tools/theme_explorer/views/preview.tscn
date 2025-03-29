@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_d6b7v"]
 
-[sub_resource type="Texture2D" id="Texture2D_a43l6"]
+[sub_resource type="Texture2D" id="Texture2D_wdocn"]
 resource_local_to_scene = false
 resource_name = ""
 script = ExtResource("1_d6b7v")
@@ -58,7 +58,7 @@ size_flags_vertical = 8
 current_tab = 0
 tab_count = 1
 tab_0/title = "Default Preview"
-tab_0/icon = SubResource("Texture2D_a43l6")
+tab_0/icon = SubResource("Texture2D_wdocn")
 
 [node name="OpenButton" type="Button" parent="FileBar"]
 layout_mode = 2

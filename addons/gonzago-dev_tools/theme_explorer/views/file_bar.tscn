@@ -1,5 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://b2yapabtwdbpc"]
+[gd_scene load_steps=9 format=3 uid="uid://b2yapabtwdbpc"]
 
+[ext_resource type="Script" uid="uid://bagfm53o5qr5m" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.gd" id="1_rct3o"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_ypya0"]
 
 [sub_resource type="Texture2D" id="Texture2D_053el"]
@@ -56,30 +57,13 @@ icon_name = "Save"
 icon_type = "EditorIcons"
 metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
-[sub_resource type="Texture2D" id="Texture2D_2f41c"]
-resource_local_to_scene = false
-resource_name = ""
-script = ExtResource("1_ypya0")
-use_editor_theme = true
-icon_name = "Tools"
-icon_type = "EditorIcons"
-metadata/_custom_type_script = "uid://fkalipf2jmdp"
-
-[sub_resource type="Texture2D" id="Texture2D_8uq31"]
-resource_local_to_scene = false
-resource_name = ""
-script = ExtResource("1_ypya0")
-use_editor_theme = true
-icon_name = "GuiTabMenuHl"
-icon_type = "EditorIcons"
-metadata/_custom_type_script = "uid://fkalipf2jmdp"
-
 [node name="FileBar" type="HBoxContainer"]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 31.0
 grow_horizontal = 2
 size_flags_horizontal = 3
+script = ExtResource("1_rct3o")
 
 [node name="FileTabs" type="TabBar" parent="."]
 layout_mode = 2
@@ -95,7 +79,7 @@ tab_2/title = "Project"
 tab_2/icon = SubResource("Texture2D_booj5")
 tab_2/disabled = true
 
-[node name="NewButton" type="Button" parent="."]
+[node name="CreateButton" type="Button" parent="."]
 layout_mode = 2
 icon = SubResource("Texture2D_08vuy")
 flat = true
@@ -105,20 +89,7 @@ layout_mode = 2
 icon = SubResource("Texture2D_d17au")
 flat = true
 
-[node name="SaveNewButton" type="Button" parent="."]
+[node name="SaveButton" type="Button" parent="."]
 layout_mode = 2
 icon = SubResource("Texture2D_u5g62")
-flat = true
-
-[node name="ToolsButton" type="Button" parent="."]
-layout_mode = 2
-icon = SubResource("Texture2D_2f41c")
-flat = true
-
-[node name="Separator" type="VSeparator" parent="."]
-layout_mode = 2
-
-[node name="OptionsButton" type="Button" parent="."]
-layout_mode = 2
-icon = SubResource("Texture2D_8uq31")
 flat = true
