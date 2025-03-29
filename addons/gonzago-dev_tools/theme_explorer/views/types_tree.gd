@@ -1,6 +1,10 @@
 @tool
 extends VBoxContainer
 
+# TODO: Add button like in default Theme editor add popup.
+#       LineEdit for type name. Base types as autocomplete?
+#       Direct base type selection when adding.
+
 const ThemeUtil := preload("../theme_util.gd")
 
 signal theme_type_selected(theme_type: StringName)
