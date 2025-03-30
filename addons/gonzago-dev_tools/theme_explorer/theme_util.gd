@@ -328,6 +328,7 @@ static func get_theme_item(
 
     return null
 
+# TODO: Add data type functions get_icon, etc.
 
 # TODO Build meta data for theme item, eg. icon width, height and resource location (path/embedded) etc.
 static func get_theme_item_meta_data(

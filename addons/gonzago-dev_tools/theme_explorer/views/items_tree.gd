@@ -40,14 +40,14 @@ func _build_tree() -> void:
         item.set_text(0, ThemeUtil.get_data_type_name(data_type))
         item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
         item.visible = false
-    
+
     if not _theme: return
     if not _theme_type: return
-    
+
     for data_type in Theme.DATA_TYPE_MAX:
         var item := root.get_child(data_type)
         item.visible = _build_types_items(item, data_type)
-    
+
     _update_tree()
 
 
@@ -73,16 +73,16 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
     var has_visibile_children := false
     for item in parent.get_children():
         var theme_item := item.get_text(0)
-        
+
         item.clear_custom_color(0)
         var font_color := get_theme_color("font_color", "Tree")
         var font_disabled_color := get_theme_color("font_disabled_color", "Tree")
         if not _theme.has_theme_item(data_type, theme_item, _theme_type):
             item.set_custom_color(0, font_disabled_color)
-        
+
         match data_type:
             Theme.DATA_TYPE_COLOR:
-                var value := _theme.get_color(theme_item, _theme_type)
+                var value: Color = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_COLOR, _theme_type, theme_item)
                 item.set_custom_bg_color(1, value)
                 #item.set_cell_mode(1, TreeItem.CELL_MODE_CUSTOM)
                 # TODO: This is not possible with tree.
@@ -94,7 +94,7 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 #       tr("View items as a list.")
                 #       get_theme_icon("FileThumbnail", "EditorIcons")
                 #       tr("View items as a grid of thumbnails.")
-        
+
         if item.visible:
             has_visibile_children = true
     return has_visibile_children
