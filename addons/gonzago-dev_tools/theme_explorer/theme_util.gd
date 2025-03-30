@@ -8,13 +8,33 @@ extends RefCounted
 
 #region Theme methods
 
-
 static func is_base_theme(theme: Theme) -> bool:
     if theme.resource_path: return false
     if Engine.is_editor_hint():
         if theme == EditorInterface.get_editor_theme():
             return true
     return theme == ThemeDB.get_default_theme()
+
+
+static func build_theme_stack(theme: Theme, include_base_theme := true) -> Array[Theme]:
+    var stack: Array[Theme] = [theme]
+    if not include_base_theme: return stack
+
+    if Engine.is_editor_hint():
+        var editor_theme := EditorInterface.get_editor_theme()
+        if theme == editor_theme:
+            return stack
+
+    var default_theme := ThemeDB.get_default_theme()
+    if theme == default_theme:
+        return stack
+
+    var project_theme := ThemeDB.get_project_theme()
+    if project_theme and not theme == project_theme:
+        stack.append(project_theme)
+
+    stack.append(default_theme)
+    return stack
 
 
 # TODO
@@ -153,16 +173,10 @@ static func get_type_list(
     include_base_theme := true,
     sort := true
 ) -> PackedStringArray:
-    var types := PackedStringArray(theme.get_type_list())
+    var types := PackedStringArray()
 
-    if not with_variations:
-        for idx in range(types.size() - 1, -1, -1):
-            var type := types[idx]
-            if theme.get_type_variation_base(type):
-                types.remove_at(idx)
-
-    if include_base_theme and theme.resource_path:
-        var base_theme := ThemeDB.get_default_theme()
+    var stack := build_theme_stack(theme, include_base_theme)
+    for base_theme in stack:
         var base_types := base_theme.get_type_list()
         for base_type in base_types:
             if not with_variations and base_theme.get_type_variation_base(base_type):
@@ -180,10 +194,10 @@ static func get_type_variation_list(
     include_base_theme := true,
     sort := true
 ) -> PackedStringArray:
-    var variations := PackedStringArray(theme.get_type_variation_list(base_type))
+    var variations := PackedStringArray()
 
-    if include_base_theme and theme.resource_path:
-        var base_theme := ThemeDB.get_default_theme()
+    var stack := build_theme_stack(theme, include_base_theme)
+    for base_theme in stack:
         var base_variations := base_theme.get_type_variation_list(base_type)
         for base_variation in base_variations:
             if base_variation not in variations:
@@ -198,12 +212,16 @@ static func has_type(
     theme_type: StringName,
     include_base_theme := false
 ) -> bool:
-    if theme_type in theme.get_type_list():
-        return true
-    if include_base_theme and theme.resource_path:
-        var base_theme := ThemeDB.get_default_theme()
-        return theme_type in base_theme.get_type_list()
+    var stack := build_theme_stack(theme, include_base_theme)
+    for base_theme in stack:
+        if theme_type in base_theme.get_type_list():
+            return true
     return false
+
+
+static func is_built_in_type(type: StringName, max_api_depth := ClassDB.API_EDITOR) -> bool:
+    var api_type := ClassDB.class_get_api_type(type)
+    return api_type <= max_api_depth
 
 
 # TODO
@@ -238,28 +256,19 @@ static func get_theme_item_list(
     include_base_theme := true,
     sort := true
 ) -> PackedStringArray:
-    var items := PackedStringArray(theme.get_theme_item_list(data_type, theme_type))
+    var items := PackedStringArray()
 
-    if include_base_type:
-        var base_type := theme.get_type_variation_base(theme_type)
-        var base_type_items := theme.get_theme_item_list(data_type, base_type)
-        for item in base_type_items:
-            if item not in items:
-                items.append(item)
-
-    if include_base_theme and theme.resource_path:
-        var base_theme := ThemeDB.get_default_theme()
-        var base_theme_items := base_theme.get_theme_item_list(data_type, theme_type)
-        for item in base_theme_items:
-            if item not in items:
-                items.append(item)
-
-        if include_base_type:
-            var base_type := base_theme.get_type_variation_base(theme_type)
+    var stack := build_theme_stack(theme, include_base_theme)
+    for base_theme in stack:
+        var base_type := theme_type
+        while base_type:
             var base_type_items := base_theme.get_theme_item_list(data_type, base_type)
             for item in base_type_items:
                 if item not in items:
                     items.append(item)
+            if not include_base_type:
+                break
+            base_type = base_theme.get_type_variation_base(base_type)
 
     if sort: items.sort()
     return items
@@ -273,30 +282,51 @@ static func has_theme_item(
     include_base_type := false,
     include_base_theme := false
 ) -> bool:
-    if theme.has_theme_item(data_type, name, theme_type):
-        return true
-
-    if include_base_type:
-        var base_type := theme.get_type_variation_base(theme_type)
-        if theme.has_theme_item(data_type, name, base_type):
-            return true
-
-    if include_base_theme and theme.resource_path:
-        var base_theme := ThemeDB.get_default_theme()
-        if base_theme.has_theme_item(data_type, name, theme_type):
-            return true
-
-        if include_base_type:
-            var base_type := base_theme.get_type_variation_base(theme_type)
+    var stack := build_theme_stack(theme, include_base_theme)
+    for base_theme in stack:
+        var base_type := theme_type
+        while base_type:
             if base_theme.has_theme_item(data_type, name, base_type):
                 return true
-
+            if not include_base_type:
+                break
+            base_type = base_theme.get_type_variation_base(base_type)
     return false
 
 
-static func is_built_in_type(type: StringName, max_api_depth := ClassDB.API_EDITOR) -> bool:
-    var api_type := ClassDB.class_get_api_type(type)
-    return api_type <= max_api_depth
+static func get_theme_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    theme_type: StringName,
+    name: StringName,
+    include_base_type := true,
+    include_base_theme := true
+) -> Variant:
+    var stack := build_theme_stack(theme, include_base_theme)
+    for base_theme in stack:
+        var base_type := theme_type
+        while base_type:
+            if base_theme.has_theme_item(data_type, name, base_type):
+                return base_theme.get_theme_item(data_type, name, base_type)
+            if not include_base_type:
+                break
+            base_type = base_theme.get_type_variation_base(base_type)
+
+    match data_type:
+        Theme.DATA_TYPE_COLOR:
+            return Color.WHITE
+        Theme.DATA_TYPE_CONSTANT:
+            return 0
+        Theme.DATA_TYPE_FONT:
+            return ThemeDB.fallback_font
+        Theme.DATA_TYPE_FONT_SIZE:
+            return ThemeDB.fallback_font_size
+        Theme.DATA_TYPE_ICON:
+            return ThemeDB.fallback_icon
+        Theme.DATA_TYPE_STYLEBOX:
+            return ThemeDB.fallback_stylebox
+
+    return null
 
 
 # TODO Build meta data for theme item, eg. icon width, height and resource location (path/embedded) etc.
