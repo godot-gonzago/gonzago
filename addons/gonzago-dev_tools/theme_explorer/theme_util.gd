@@ -50,19 +50,11 @@ class ThemeIterator extends RefCounted:
 
 
 static func has_base_theme(theme: Theme) -> bool:
-    if theme.resource_path: return true
+    if theme and theme.resource_path: return true
     if Engine.is_editor_hint():
         if theme == EditorInterface.get_editor_theme():
             return false
     return theme != ThemeDB.get_default_theme()
-
-
-static func is_base_theme(theme: Theme) -> bool:
-    if theme.resource_path: return false
-    if Engine.is_editor_hint():
-        if theme == EditorInterface.get_editor_theme():
-            return true
-    return theme == ThemeDB.get_default_theme()
 
 
 static func get_base_theme(theme: Theme) -> Theme:
@@ -87,7 +79,7 @@ static func has_project_theme() -> bool:
 
 
 static func is_project_theme(theme: Theme) -> bool:
-    if not theme.resource_path: return false
+    if not theme or not theme.resource_path: return false
     return theme == ThemeDB.get_project_theme()
 
 
@@ -164,11 +156,12 @@ static func get_data_type_property_path(data_type: Theme.DataType) -> StringName
     return StringName()
 
 
-static func get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
-    for data_type in Theme.DATA_TYPE_MAX:
-        if _DATA_TYPE_INFO.has(data_type):
-            return _DATA_TYPE_INFO[data_type].get(&"property_path", -1)
-    return -1
+# TODO: Fix
+#static func get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
+    #for data_type in Theme.DATA_TYPE_MAX:
+        #if _DATA_TYPE_INFO.has(data_type):
+            #return _DATA_TYPE_INFO[data_type].get(&"property_path", -1)
+    #return -1
 
 
 static func get_data_type_override_property_path(data_type: Theme.DataType) -> StringName:
