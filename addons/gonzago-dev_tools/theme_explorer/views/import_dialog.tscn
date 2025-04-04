@@ -183,6 +183,7 @@ hide_root = true
 layout_mode = 2
 
 [node name="Color" type="PanelContainer" parent="ImportTree/BottomBar"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_23lrh")
 
@@ -200,6 +201,7 @@ layout_mode = 2
 text = "0/100"
 
 [node name="Constant" type="PanelContainer" parent="ImportTree/BottomBar"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_23lrh")
 
@@ -217,6 +219,7 @@ layout_mode = 2
 text = "0/100"
 
 [node name="Font" type="PanelContainer" parent="ImportTree/BottomBar"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_23lrh")
 
@@ -234,6 +237,7 @@ layout_mode = 2
 text = "0/100"
 
 [node name="FontSize" type="PanelContainer" parent="ImportTree/BottomBar"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_23lrh")
 
@@ -251,6 +255,7 @@ layout_mode = 2
 text = "0/100"
 
 [node name="Icon" type="PanelContainer" parent="ImportTree/BottomBar"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_23lrh")
 
@@ -268,6 +273,7 @@ layout_mode = 2
 text = "0/100"
 
 [node name="StyleBox" type="PanelContainer" parent="ImportTree/BottomBar"]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_23lrh")
 
