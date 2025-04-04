@@ -94,6 +94,11 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 #       tr("View items as a list.")
                 #       get_theme_icon("FileThumbnail", "EditorIcons")
                 #       tr("View items as a grid of thumbnails.")
+            Theme.DATA_TYPE_CONSTANT:
+                var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_CONSTANT, _theme_type, theme_item)
+                item.set_text(1, str(value))
+                var suffix := ThemeUtil.get_constant_suffix(theme_item, value)
+                item.set_suffix(1, suffix)
 
         if item.visible:
             has_visibile_children = true
