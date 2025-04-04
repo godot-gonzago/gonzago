@@ -412,38 +412,38 @@ enum ConstantType {
     UNKNOWN = -1,
     PIXEL = 0,
     FACTOR = 1,
-    BOOLEAN = 2
+    FLAG = 2
 }
 
-# https://regex101.com/r/VGepRK/1
-# TODO: Fails on pixel or factor without preceding word, but works in online editor
-static var _constant_suffix_regex := RegEx.create_from_string(
-    r"(?(DEFINE)(?P<pp>h|v)(?P<ps>bottom|top|left|right|x|y)" + \
+# https://regex101.com/r/2vR47X/1
+# TODO: Guess format
+#       name ends with:
+#       px: size, height, width, margin, padding,
+#           separation, offset, spacing, thickness, border
+#           with optional prefix: h_, v_ (does not need checking)
+#           with optional suffix: _bottom, _top, _left, _right, _x, _y
+#       factor: scale, speed
+#       bool: if value is 0 or 1 (but only guessing)
+#             maybe if starts with: draw, modulate, align, center
+static var _constant_pixel_regex := RegEx.create_from_string(
+    r"(?(DEFINE)" + \
     r"(?P<p>size|height|width|margin|padding|separation|offset|spacing|thickness|border)" + \
-    r"(?P<f>scale|speed))" + \
-    r"^(?:\w+_)?(?:(?P<pixel>(?:(?P>pp)_)?(?P>p)(?:_(?P>ps))?)|(?P<factor>(?P>f)))$/i"
+    r"(?P<ps>bottom|top|left|right|x|y)" + \
+    r"(?P<f>scale|speed)" + \
+    r"(?P<b>draw|modulate|align|center))" + \
+    r"^(?:(?P<pixel>(?:\w+_)*(?P>p)(?:_(?P>ps))?)|(?P<factor>(?:\w+_)*(?P>f))|(?P<flag>(?P>b)(?:_\w+)*))$"
 )
 
 
-static func get_constant_suffix(
-    name: StringName,
-    value: int = -1
-) -> StringName:
-    # TODO: Guess format
-    #       name ends with:
-    #       px: size, height, width, margin, padding,
-    #           separation, offset, spacing, thickness, border
-    #           with optional prefix: h_, v_ (does not need checking)
-    #           with optional suffix: _bottom, _top, _left, _right, _x, _y
-    #       factor: scale, speed
-    #       bool: if value is 0 or 1 (but only guessing)
-    #             maybe if starts with: align_, center_
-    var regex_match := _constant_suffix_regex.search(name)
-    if regex_match:
-        if regex_match.get_start("pixel") > -1:
-             return StringName("px")
-        elif regex_match.get_start("factor") > -1:
-             return StringName("x")
-    return StringName()
+static func get_constant_type(name: StringName) -> ConstantType:
+    var regex_match := _constant_pixel_regex.search(name)
+    if regex_match and regex_match.get_group_count() > 0:
+        if regex_match.names.has("pixel"):
+            return ConstantType.PIXEL
+        elif regex_match.names.has("factor"):
+            return ConstantType.FACTOR
+        elif regex_match.names.has("flag"):
+            return ConstantType.FLAG
+    return ConstantType.UNKNOWN
 
 #endregion

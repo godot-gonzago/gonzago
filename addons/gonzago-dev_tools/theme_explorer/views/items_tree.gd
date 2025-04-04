@@ -97,8 +97,16 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
             Theme.DATA_TYPE_CONSTANT:
                 var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_CONSTANT, _theme_type, theme_item)
                 item.set_text(1, str(value))
-                var suffix := ThemeUtil.get_constant_suffix(theme_item, value)
-                item.set_suffix(1, suffix)
+                var constant_type := ThemeUtil.get_constant_type(theme_item)
+                match constant_type:
+                    ThemeUtil.ConstantType.PIXEL:
+                        item.set_suffix(1, "px")
+                    ThemeUtil.ConstantType.FACTOR:
+                        item.set_suffix(1, "x")
+                    ThemeUtil.ConstantType.FLAG:
+                        item.set_suffix(1, "flag")
+                    _:
+                        item.set_suffix(1, "")
 
         if item.visible:
             has_visibile_children = true
