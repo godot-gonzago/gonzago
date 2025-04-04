@@ -8,6 +8,55 @@ extends RefCounted
 
 #region Theme methods
 
+# https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
+class ThemeIterator extends RefCounted:
+    var _theme: Theme
+    var _include_base_theme: bool
+    
+    func _init(theme: Theme, include_base_theme := true) -> void:
+        if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+            _theme = theme
+            _include_base_theme = false
+            return
+        
+        _theme = theme
+        _include_base_theme = include_base_theme
+        
+    func _iter_init(iter: Array) -> bool:
+        iter[0] = _theme
+        return is_instance_valid(_theme)
+        
+    func _iter_next(iter: Array) -> bool:
+        var theme := iter[0] as Theme
+        if not theme or not _include_base_theme:
+            iter[0] = null
+            return false
+        
+        var default_theme := ThemeDB.get_default_theme()
+        if theme == default_theme:
+            iter[0] = null
+            return false
+        
+        var project_theme := ThemeDB.get_project_theme()
+        if project_theme and not theme == project_theme:
+            iter[0] = project_theme
+            return true
+        
+        iter[0] = default_theme
+        return true
+        
+    func _iter_get(current: Variant) -> Theme:
+        return current as Theme
+
+
+static func has_base_theme(theme: Theme) -> bool:
+    if theme.resource_path: return true
+    if Engine.is_editor_hint():
+        if theme == EditorInterface.get_editor_theme():
+            return false
+    return theme != ThemeDB.get_default_theme()
+
+
 static func is_base_theme(theme: Theme) -> bool:
     if theme.resource_path: return false
     if Engine.is_editor_hint():
@@ -16,25 +65,30 @@ static func is_base_theme(theme: Theme) -> bool:
     return theme == ThemeDB.get_default_theme()
 
 
-static func build_theme_stack(theme: Theme, include_base_theme := true) -> Array[Theme]:
-    var stack: Array[Theme] = [theme]
-    if not include_base_theme: return stack
-
+static func get_base_theme(theme: Theme) -> Theme:
     if Engine.is_editor_hint():
-        var editor_theme := EditorInterface.get_editor_theme()
-        if theme == editor_theme:
-            return stack
-
+        if theme == EditorInterface.get_editor_theme():
+            return null
+    
     var default_theme := ThemeDB.get_default_theme()
     if theme == default_theme:
-        return stack
-
+        return null
+    
     var project_theme := ThemeDB.get_project_theme()
     if project_theme and not theme == project_theme:
-        stack.append(project_theme)
+        return project_theme
 
-    stack.append(default_theme)
-    return stack
+    return default_theme
+
+
+static func has_project_theme() -> bool:
+    var project_theme := ThemeDB.get_project_theme()
+    return is_instance_valid(project_theme)
+
+
+static func is_project_theme(theme: Theme) -> bool:
+    if not theme.resource_path: return false
+    return theme == ThemeDB.get_project_theme()
 
 
 # TODO
@@ -48,6 +102,9 @@ static func get_theme_meta_data(
 
 
 #region Data type methods
+
+const _FALLBACK_COLOR := Color.WHITE
+const _FALLBACK_CONSTANT := 0
 
 const _DATA_TYPE_INFO: Dictionary[Theme.DataType, Dictionary] = {
     Theme.DATA_TYPE_COLOR: {
@@ -145,6 +202,17 @@ static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
     return ThemeDB.fallback_icon
 
 
+static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
+    match data_type:
+        Theme.DATA_TYPE_COLOR:     return _FALLBACK_COLOR
+        Theme.DATA_TYPE_CONSTANT:  return _FALLBACK_CONSTANT
+        Theme.DATA_TYPE_FONT:      return ThemeDB.fallback_font
+        Theme.DATA_TYPE_FONT_SIZE: return ThemeDB.fallback_font_size
+        Theme.DATA_TYPE_ICON:      return ThemeDB.fallback_icon
+        Theme.DATA_TYPE_STYLEBOX:  return ThemeDB.fallback_stylebox
+        _:                         return null
+
+
 # TODO
 static func get_data_type_meta_data(
     theme: Theme,
@@ -157,6 +225,44 @@ static func get_data_type_meta_data(
 #endregion
 
 #region Theme type methods
+
+# https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
+class ThemeTypeIterator extends RefCounted:
+    var _theme: Theme
+    var _theme_type: StringName
+    var _include_base_type := true
+    
+    func _init(theme: Theme, theme_type: StringName, include_base_type := true) -> void:
+        _theme = theme
+        _theme_type = theme_type
+        _include_base_type = include_base_type
+        
+    func _iter_init(iter: Array) -> bool:
+        iter[0] = _theme_type
+        if not _theme_type: return false
+        return true
+        
+    func _iter_next(iter: Array) -> bool:
+        var theme_type := iter[0] as StringName
+        if not theme_type or not _include_base_type:
+            iter[0] = StringName("")
+            return false
+        
+        if not _theme:
+            iter[0] = StringName("")
+            return false
+        
+        var base_type := _theme.get_type_variation_base(theme_type)
+        if not base_type:
+            iter[0] = StringName("")
+            return false
+        
+        iter[0] = base_type
+        return true
+        
+    func _iter_get(current: Variant) -> StringName:
+        return current as StringName
+
 
 static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
     var theme: Theme
@@ -175,8 +281,7 @@ static func get_type_list(
 ) -> PackedStringArray:
     var types := PackedStringArray()
 
-    var stack := build_theme_stack(theme, include_base_theme)
-    for base_theme in stack:
+    for base_theme in ThemeIterator.new(theme, include_base_theme):
         var base_types := base_theme.get_type_list()
         for base_type in base_types:
             if not with_variations and base_theme.get_type_variation_base(base_type):
@@ -196,8 +301,7 @@ static func get_type_variation_list(
 ) -> PackedStringArray:
     var variations := PackedStringArray()
 
-    var stack := build_theme_stack(theme, include_base_theme)
-    for base_theme in stack:
+    for base_theme in ThemeIterator.new(theme, include_base_theme):
         var base_variations := base_theme.get_type_variation_list(base_type)
         for base_variation in base_variations:
             if base_variation not in variations:
@@ -212,8 +316,7 @@ static func has_type(
     theme_type: StringName,
     include_base_theme := false
 ) -> bool:
-    var stack := build_theme_stack(theme, include_base_theme)
-    for base_theme in stack:
+    for base_theme in ThemeIterator.new(theme, include_base_theme):
         if theme_type in base_theme.get_type_list():
             return true
     return false
@@ -258,17 +361,12 @@ static func get_theme_item_list(
 ) -> PackedStringArray:
     var items := PackedStringArray()
 
-    var stack := build_theme_stack(theme, include_base_theme)
-    for base_theme in stack:
-        var base_type := theme_type
-        while base_type:
+    for base_theme in ThemeIterator.new(theme, include_base_theme):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_base_type):
             var base_type_items := base_theme.get_theme_item_list(data_type, base_type)
             for item in base_type_items:
                 if item not in items:
                     items.append(item)
-            if not include_base_type:
-                break
-            base_type = base_theme.get_type_variation_base(base_type)
 
     if sort: items.sort()
     return items
@@ -282,15 +380,10 @@ static func has_theme_item(
     include_base_type := false,
     include_base_theme := false
 ) -> bool:
-    var stack := build_theme_stack(theme, include_base_theme)
-    for base_theme in stack:
-        var base_type := theme_type
-        while base_type:
+    for base_theme in ThemeIterator.new(theme, include_base_theme):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_base_type):
             if base_theme.has_theme_item(data_type, name, base_type):
                 return true
-            if not include_base_type:
-                break
-            base_type = base_theme.get_type_variation_base(base_type)
     return false
 
 
@@ -302,33 +395,14 @@ static func get_theme_item(
     include_base_type := true,
     include_base_theme := true
 ) -> Variant:
-    var stack := build_theme_stack(theme, include_base_theme)
-    for base_theme in stack:
-        var base_type := theme_type
-        while base_type:
+    for base_theme in ThemeIterator.new(theme, include_base_theme):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_base_type):
             if base_theme.has_theme_item(data_type, name, base_type):
                 return base_theme.get_theme_item(data_type, name, base_type)
-            if not include_base_type:
-                break
-            base_type = base_theme.get_type_variation_base(base_type)
+    return get_data_type_fallback(data_type)
 
-    match data_type:
-        Theme.DATA_TYPE_COLOR:
-            return Color.WHITE
-        Theme.DATA_TYPE_CONSTANT:
-            return 0
-        Theme.DATA_TYPE_FONT:
-            return ThemeDB.fallback_font
-        Theme.DATA_TYPE_FONT_SIZE:
-            return ThemeDB.fallback_font_size
-        Theme.DATA_TYPE_ICON:
-            return ThemeDB.fallback_icon
-        Theme.DATA_TYPE_STYLEBOX:
-            return ThemeDB.fallback_stylebox
+# TODO: Add data type functions get_icon, has_icon etc.
 
-    return null
-
-# TODO: Add data type functions get_icon, etc.
 
 # TODO Build meta data for theme item, eg. icon width, height and resource location (path/embedded) etc.
 static func get_theme_item_meta_data(
