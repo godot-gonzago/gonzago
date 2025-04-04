@@ -94,7 +94,7 @@ static func is_project_theme(theme: Theme) -> bool:
 # TODO
 static func get_theme_meta_data(
     theme: Theme,
-    include_base_theme := true # TODO:
+    include_defaults := true # TODO:
 ) -> Dictionary:
     return {}
 
@@ -218,7 +218,7 @@ static func get_data_type_meta_data(
     theme: Theme,
     base_theme: Theme,
     data_type: Theme.DataType,
-    include_base_theme := true # TODO:
+    include_defaults := true # TODO:
 ) -> Dictionary:
     return {}
 
@@ -275,16 +275,16 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
 
 static func get_type_list(
     theme: Theme,
-    with_variations := false,
-    include_base_theme := true,
+    include_variations := false,
+    include_defaults := true,
     sort := true
 ) -> PackedStringArray:
     var types := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_base_theme):
+    for base_theme in ThemeIterator.new(theme, include_defaults):
         var base_types := base_theme.get_type_list()
         for base_type in base_types:
-            if not with_variations and base_theme.get_type_variation_base(base_type):
+            if not include_variations and base_theme.get_type_variation_base(base_type):
                 continue
             if base_type not in types:
                 types.append(base_type)
@@ -296,12 +296,12 @@ static func get_type_list(
 static func get_type_variation_list(
     theme: Theme,
     base_type: StringName,
-    include_base_theme := true,
+    include_defaults := true,
     sort := true
 ) -> PackedStringArray:
     var variations := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_base_theme):
+    for base_theme in ThemeIterator.new(theme, include_defaults):
         var base_variations := base_theme.get_type_variation_list(base_type)
         for base_variation in base_variations:
             if base_variation not in variations:
@@ -314,9 +314,9 @@ static func get_type_variation_list(
 static func has_type(
     theme: Theme,
     theme_type: StringName,
-    include_base_theme := false
+    include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_base_theme):
+    for base_theme in ThemeIterator.new(theme, include_defaults):
         if theme_type in base_theme.get_type_list():
             return true
     return false
@@ -332,7 +332,7 @@ static func get_theme_type_meta_data(
     theme: Theme,
     base_theme: Theme,
     theme_type: StringName,
-    include_base_theme := true # TODO:
+    include_defaults := true # TODO:
 ) -> Dictionary:
     return {}
 
@@ -355,14 +355,13 @@ static func get_theme_item_list(
     theme: Theme,
     data_type: Theme.DataType,
     theme_type: StringName,
-    include_base_type := true,
-    include_base_theme := true,
+    include_defaults := true,
     sort := true
 ) -> PackedStringArray:
     var items := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_base_theme):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_base_type):
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
             var base_type_items := base_theme.get_theme_item_list(data_type, base_type)
             for item in base_type_items:
                 if item not in items:
@@ -377,11 +376,10 @@ static func has_theme_item(
     data_type: Theme.DataType,
     theme_type: StringName,
     name: StringName,
-    include_base_type := false,
-    include_base_theme := false
+    include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_base_theme):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_base_type):
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
             if base_theme.has_theme_item(data_type, name, base_type):
                 return true
     return false
@@ -392,11 +390,10 @@ static func get_theme_item(
     data_type: Theme.DataType,
     theme_type: StringName,
     name: StringName,
-    include_base_type := true,
-    include_base_theme := true
+    include_defaults := true
 ) -> Variant:
-    for base_theme in ThemeIterator.new(theme, include_base_theme):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_base_type):
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
             if base_theme.has_theme_item(data_type, name, base_type):
                 return base_theme.get_theme_item(data_type, name, base_type)
     return get_data_type_fallback(data_type)
@@ -410,8 +407,7 @@ static func get_theme_item_meta_data(
     data_type: Theme.DataType,
     theme_type: StringName,
     name: StringName,
-    include_base_type := true, # TODO:
-    include_base_theme := true # TODO:
+    include_defaults := true # TODO:
 ) -> Dictionary:
     return {}
 
