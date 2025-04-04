@@ -1,11 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://rdphd1mywfyv"]
+[gd_scene load_steps=10 format=3 uid="uid://rdphd1mywfyv"]
 
 [ext_resource type="Script" uid="uid://uxfnpiu3xjmj" path="res://addons/gonzago-dev_tools/theme_explorer/views/main_view.gd" id="1_awcdo"]
 [ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_rxhlw"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_46j6x"]
-[ext_resource type="PackedScene" uid="uid://cdpq53utwr741" path="res://addons/gonzago-dev_tools/theme_explorer/views/types_tree.tscn" id="3_6kapw"]
-[ext_resource type="PackedScene" uid="uid://mhkkeep0sjyq" path="res://addons/gonzago-dev_tools/theme_explorer/views/items_tree.tscn" id="4_e8sr1"]
-[ext_resource type="PackedScene" uid="uid://bo6smsoi8sunw" path="res://addons/gonzago-dev_tools/theme_explorer/views/item_inspector.tscn" id="5_awcdo"]
+[ext_resource type="PackedScene" uid="uid://bptwrcywuaagc" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/items_view.tscn" id="4_ffulg"]
 
 [sub_resource type="Texture2D" id="Texture2D_2f41c"]
 resource_local_to_scene = false
@@ -103,24 +101,7 @@ popup/item_0/checkable = 1
 popup/item_0/checked = true
 popup/item_0/id = 0
 
-[node name="Split" type="HSplitContainer" parent="."]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="TypesTree" parent="Split" instance=ExtResource("3_6kapw")]
-layout_mode = 2
-
-[node name="Split" type="HSplitContainer" parent="Split"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 4.0
-
-[node name="ItemsTree" parent="Split/Split" instance=ExtResource("4_e8sr1")]
-layout_mode = 2
-size_flags_stretch_ratio = 2.0
-
-[node name="ItemInspector" parent="Split/Split" instance=ExtResource("5_awcdo")]
+[node name="ItemsView" parent="." instance=ExtResource("4_ffulg")]
 layout_mode = 2
 
 [connection signal="theme_selected" from="ToolBar/FileBar" to="." method="_on_theme_selected"]
-[connection signal="theme_type_selected" from="Split/TypesTree" to="." method="_on_types_tree_theme_type_selected"]

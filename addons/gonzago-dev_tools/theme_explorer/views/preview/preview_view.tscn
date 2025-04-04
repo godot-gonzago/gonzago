@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=3 uid="uid://cvosahu0nijik"]
 
-[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_d6b7v"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_gm82x"]
 
 [sub_resource type="Texture2D" id="Texture2D_wdocn"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_d6b7v")
+script = ExtResource("1_gm82x")
 use_editor_theme = true
 icon_name = "GuiVisibilityVisible"
 icon_type = "EditorIcons"
@@ -14,7 +14,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_d17au"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_d6b7v")
+script = ExtResource("1_gm82x")
 use_editor_theme = true
 icon_name = "Load"
 icon_type = "EditorIcons"
@@ -23,7 +23,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_2f41c"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_d6b7v")
+script = ExtResource("1_gm82x")
 use_editor_theme = true
 icon_name = "Tools"
 icon_type = "EditorIcons"
@@ -32,13 +32,13 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_8uq31"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_d6b7v")
+script = ExtResource("1_gm82x")
 use_editor_theme = true
 icon_name = "GuiTabMenuHl"
 icon_type = "EditorIcons"
 metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
-[node name="Preview" type="VBoxContainer"]
+[node name="PreviewView" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

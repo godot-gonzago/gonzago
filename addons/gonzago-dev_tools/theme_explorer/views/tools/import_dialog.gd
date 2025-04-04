@@ -1,8 +1,8 @@
 @tool
 extends AcceptDialog
 
-const ThemeUtil := preload("../theme_util.gd")
-const FileBar := preload("./file_bar.gd")
+const ThemeUtil := preload("../../theme_util.gd")
+const FileBar := preload("../file_bar.gd")
 
 @onready var _file_bar := get_node("ImportTree/FileBar") as FileBar
 @onready var _options_button := get_node("ImportTree/Toolbar/OptionsButton") as MenuButton

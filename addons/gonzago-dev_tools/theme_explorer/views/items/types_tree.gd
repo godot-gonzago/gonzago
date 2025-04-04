@@ -5,7 +5,7 @@ extends VBoxContainer
 #       LineEdit for type name. Base types as autocomplete?
 #       Direct base type selection when adding.
 
-const ThemeUtil := preload("../theme_util.gd")
+const ThemeUtil := preload("../../theme_util.gd")
 
 signal theme_type_selected(theme_type: StringName)
 

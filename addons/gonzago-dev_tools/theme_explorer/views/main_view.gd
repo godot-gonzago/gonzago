@@ -2,17 +2,17 @@
 extends VBoxContainer
 
 const FileBar := preload("./file_bar.gd")
-const TypesTree := preload("./types_tree.gd")
-const ItemsTree := preload("./items_tree.gd")
+const TypesTree := preload("./items/types_tree.gd")
+const ItemsTree := preload("./items/items_tree.gd")
 
-const ImportDialog := preload("./import_dialog.gd")
-const ImportDialogScene := preload("./import_dialog.tscn")
-const ExportDialog := preload("./export_dialog.gd")
-const ExportDialogScene := preload("./export_dialog.tscn")
+const ImportDialog := preload("./tools/import_dialog.gd")
+const ImportDialogScene := preload("./tools/import_dialog.tscn")
+const ExportDialog := preload("./tools/export_dialog.gd")
+const ExportDialogScene := preload("./tools/export_dialog.tscn")
 
 @onready var file_bar := get_node("ToolBar/FileBar") as FileBar
-@onready var type_tree := get_node("Split/TypesTree") as TypesTree
-@onready var items_tree := get_node("Split/Split/ItemsTree") as ItemsTree
+@onready var type_tree := get_node("ItemsView/TypesTree") as TypesTree
+@onready var items_tree := get_node("ItemsView/Split/ItemsTree") as ItemsTree
 @onready var tools_button := get_node("ToolBar/ToolsButton") as MenuButton
 
 

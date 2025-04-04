@@ -1,7 +1,7 @@
 @tool
 extends VBoxContainer
 
-const ThemeUtil := preload("../theme_util.gd")
+const ThemeUtil := preload("../../theme_util.gd")
 
 @onready var _tree := get_node("Tree") as Tree
 

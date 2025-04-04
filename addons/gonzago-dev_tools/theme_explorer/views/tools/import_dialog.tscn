@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://dd5vq37p0ovcx"]
 
 [ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.tscn" id="1_gxpm6"]
-[ext_resource type="Script" uid="uid://durgexe8t7ntp" path="res://addons/gonzago-dev_tools/theme_explorer/views/import_dialog.gd" id="1_tryw0"]
+[ext_resource type="Script" uid="uid://durgexe8t7ntp" path="res://addons/gonzago-dev_tools/theme_explorer/views/tools/import_dialog.gd" id="1_tryw0"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_tryw0"]
 [ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="4_na1j8"]
 
