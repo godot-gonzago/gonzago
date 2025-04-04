@@ -6,7 +6,7 @@ extends RefCounted
 ## TODO: Document according to
 ##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
-#region Theme methods
+#region Themes
 
 # https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
 class ThemeIterator extends RefCounted:
@@ -93,7 +93,7 @@ static func get_theme_meta_data(
 #endregion
 
 
-#region Data type methods
+#region Data types
 
 const _FALLBACK_COLOR := Color.WHITE
 const _FALLBACK_CONSTANT := 0
@@ -217,7 +217,7 @@ static func get_data_type_meta_data(
 
 #endregion
 
-#region Theme type methods
+#region Theme types
 
 # https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
 class ThemeTypeIterator extends RefCounted:
@@ -331,7 +331,7 @@ static func get_theme_type_meta_data(
 
 #endregion
 
-#region Theme item methods
+#region Theme items
 
 # Can be used as id
 static func get_theme_item_path(
@@ -406,7 +406,7 @@ static func get_theme_item_meta_data(
 
 #endregion
 
-#region Constant methods
+#region Constants
 
 enum ConstantType {
     UNKNOWN = -1,
@@ -425,7 +425,7 @@ enum ConstantType {
 #       factor: scale, speed
 #       bool: if value is 0 or 1 (but only guessing)
 #             maybe if starts with: draw, modulate, align, center
-static var _constant_pixel_regex := RegEx.create_from_string(
+static var _constant_type_regex := RegEx.create_from_string(
     r"(?(DEFINE)" + \
     r"(?P<p>size|height|width|margin|padding|separation|offset|spacing|thickness|border)" + \
     r"(?P<ps>bottom|top|left|right|x|y)" + \
@@ -436,7 +436,7 @@ static var _constant_pixel_regex := RegEx.create_from_string(
 
 
 static func get_constant_type(name: StringName) -> ConstantType:
-    var regex_match := _constant_pixel_regex.search(name)
+    var regex_match := _constant_type_regex.search(name)
     if regex_match and regex_match.get_group_count() > 0:
         if regex_match.names.has("pixel"):
             return ConstantType.PIXEL
