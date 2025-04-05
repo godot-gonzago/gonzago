@@ -54,4 +54,5 @@ layout_mode = 2
 size_flags_vertical = 3
 hide_root = true
 
+[connection signal="text_changed" from="Toolbar/Filter" to="." method="_on_filter_text_changed"]
 [connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]

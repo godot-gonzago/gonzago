@@ -71,3 +71,37 @@ static func get_tool_menu() -> ToolMenu:
         _tool_menu.name = "GonzagoEditorToolMenu"
         _tool_menu.unique_name_in_owner = true
     return _tool_menu
+
+
+#static func show_message(message: String, title: String = "Alert!") -> void:
+#    var dialog := AcceptDialog.new()
+#    dialog.title = title
+#    dialog.dialog_text = message
+#    dialog.confirmed.connect(dialog.queue_free)
+#    EditorInterface.popup_dialog_centered(dialog)
+
+
+#static func build_resource_filters_for_type(type: StringName) -> PackedStringArray:
+#    var filters := PackedStringArray()
+#    for e in ResourceLoader.get_recognized_extensions_for_type(type):
+#        filters.append("*.%s;%s" % [e, e.to_upper()])
+#    return filters
+
+
+#static func show_open_resource_file_dialog(type: StringName, callback: Callable) -> void:
+#    var filters := build_resource_filters_for_type(type)
+#    var dialog := EditorFileDialog.new()
+#    dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
+#    dialog.filters = filters
+#    dialog.file_selected.connect(callback, CONNECT_ONE_SHOT)
+#    dialog.file_selected.connect(dialog.queue_free)
+#    dialog.popup_file_dialog()
+
+#editor_theme.get_constant(&"thumb_size", &"Editor") # 64px
+#editor_theme.get_constant(&"class_icon_size", &"Editor") # 16px
+#editor_theme.get_constant(&"dark_theme", &"Editor") # 0/1
+#editor_theme.get_color(&"accent_color", &"Editor") # light blue
+#editor_theme.get_color(&"success_color", &"Editor") # light green
+#editor_theme.get_color(&"warning_color", &"Editor") # light yellow
+#editor_theme.get_color(&"error_color", &"Editor") # light red
+#editor_theme.get_icon(&"search", &"EditorIcons") # search icon

@@ -197,7 +197,8 @@ func _file_open_selected(path: String) -> void:
     if not theme: #ResourceLoader.exists(path, "Theme"):
         var message := AcceptDialog.new()
         message.title = tr("Type missmatch!")
-        message.get_label().text = tr("Selected file is not of type Theme!")
+        message.dialog_text = tr("Selected file is not of type Theme!")
+        message.confirmed.connect(message.queue_free)
         EditorInterface.popup_dialog_centered(message)
         #_file_open_dialog.set_deferred(&"current_file", path)
         #_file_open_dialog.call_deferred(&"popup_file_dialog")

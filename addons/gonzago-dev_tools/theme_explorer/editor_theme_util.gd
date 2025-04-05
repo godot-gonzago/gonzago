@@ -12,9 +12,8 @@ static func get_theme_name(theme: Theme) -> String:
     if not theme:
         return &"Missing Resource"
     
-    if Engine.is_editor_hint():
-        if theme == EditorInterface.get_editor_theme():
-            return &"Editor"
+    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+        return &"Editor"
             
     var default_theme := ThemeDB.get_default_theme()
     if theme == default_theme:
@@ -39,7 +38,6 @@ static func get_theme_icon(theme: Theme) -> Texture2D:
         return editor_theme.get_icon(&"MissingResource", &"EditorIcons")
     
     var is_readonly := theme == editor_theme
-    
     if not is_readonly:
         var default_theme := ThemeDB.get_default_theme()
         is_readonly = theme == default_theme

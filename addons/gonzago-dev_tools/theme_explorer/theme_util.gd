@@ -1,26 +1,32 @@
 @tool
 @static_unload
 extends RefCounted
-## Utility for GUI theme.
+## Utility for [Theme] resources.
 ##
-## TODO: Document according to
-##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
+## Provides utility functions for [Theme] resources.
+## Most functionality extends the default functions already provided by [Theme]
+## but generalizes their use.
+
+# TODO: Document according to
+#       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 #region Themes
 
-# https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
+## Hierarchical iterator for [Theme] resource.
+##
+## This iterator allows for iteration over a [Theme] and optionally its base themes.
+## If [param include_base_theme] is set to [code]true[/code] the iterator tries
+## to find the base themes next. For regular themes this is first the project theme
+## if available and then the default theme.
 class ThemeIterator extends RefCounted:
     var _theme: Theme
     var _include_base_theme: bool
     
     func _init(theme: Theme, include_base_theme := true) -> void:
-        if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
-            _theme = theme
-            _include_base_theme = false
-            return
-        
         _theme = theme
         _include_base_theme = include_base_theme
+        if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+            _include_base_theme = false
         
     func _iter_init(iter: Array) -> bool:
         iter[0] = _theme
@@ -50,17 +56,16 @@ class ThemeIterator extends RefCounted:
 
 
 static func has_base_theme(theme: Theme) -> bool:
-    if theme and theme.resource_path: return true
-    if Engine.is_editor_hint():
-        if theme == EditorInterface.get_editor_theme():
-            return false
+    if theme and theme.resource_path:
+        return true
+    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+        return false
     return theme != ThemeDB.get_default_theme()
 
 
 static func get_base_theme(theme: Theme) -> Theme:
-    if Engine.is_editor_hint():
-        if theme == EditorInterface.get_editor_theme():
-            return null
+    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+        return null
     
     var default_theme := ThemeDB.get_default_theme()
     if theme == default_theme:
@@ -71,12 +76,11 @@ static func get_base_theme(theme: Theme) -> Theme:
         return project_theme
 
     return default_theme
-    
-    
+
+
 static func is_readonly(theme: Theme) -> bool:
-    if Engine.is_editor_hint():
-        if theme == EditorInterface.get_editor_theme():
-            return true
+    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+        return true
     if theme == ThemeDB.get_default_theme():
         return true
     return false
@@ -213,7 +217,11 @@ static func is_valid_value_for_data_type(
 
 #region Theme types
 
-# https://forum.godotengine.org/t/deep-er-dive-on-godot-custom-iterators-and-the-mysterious-arg/92474
+## Hierarchical iterator for types in [Theme] resources.
+##
+## This iterator allows for iteration over types in a [Theme] and optionally its base types.
+## If [param include_base_type] is set to [code]true[/code] the iterator tries
+## to find the base types if the given [param theme_type] is a variation.
 class ThemeTypeIterator extends RefCounted:
     var _theme: Theme
     var _theme_type: StringName

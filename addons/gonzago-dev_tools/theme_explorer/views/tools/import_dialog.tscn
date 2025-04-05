@@ -150,7 +150,7 @@ layout_mode = 2
 [node name="Filter" type="LineEdit" parent="ImportTree/Toolbar"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Filter items..."
+placeholder_text = "Filter Items"
 clear_button_enabled = true
 right_icon = SubResource("Texture2D_gxpm6")
 select_all_on_focus = true
