@@ -7,9 +7,11 @@ extends VBoxContainer
 #       Direct base type selection when adding.
 
 const ThemeUtil := preload("../../theme_util.gd")
+const EditorThemeUtil := preload("../../editor_theme_util.gd")
 
 signal theme_type_selected(theme_type: StringName)
 
+@onready var _add_button := get_node("Toolbar/AddButton") as Button
 @onready var _tree := get_node("Tree") as Tree
 
 var _theme: Theme = null
@@ -33,6 +35,8 @@ func inspect(theme: Theme) -> void:
 
 
 func _build_tree() -> void:
+    _add_button.visible = not ThemeUtil.is_readonly(_theme)
+    
     _tree.clear()
     if not _theme: return
     
@@ -60,7 +64,7 @@ func _update_tree() -> void:
 func _update_types_items(parent: TreeItem) -> void:
     for item in parent.get_children():
         var type := item.get_text(0)
-        var icon := ThemeUtil.get_theme_type_icon(type)
+        var icon := EditorThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
         
         var color := Color.WHITE
@@ -75,3 +79,25 @@ func _on_tree_item_selected() -> void:
     var item := _tree.get_selected()
     var type := item.get_text(0)
     theme_type_selected.emit(type)
+
+
+func _on_filter_text_changed(new_text: String) -> void:
+    var root := _tree.get_root()
+    _filter_types_items(root, new_text)
+    
+func _filter_types_items(parent: TreeItem, filter: String) -> bool:
+    var has_visible_children := false
+    for item in parent.get_children():
+        if _filter_types_items(item, filter):
+            item.visible = true
+            has_visible_children = true
+            continue
+        
+        var type := item.get_text(0)
+        if not filter or type.containsn(filter):
+            item.visible = true
+            has_visible_children = true
+            continue
+        
+        item.visible = false
+    return has_visible_children

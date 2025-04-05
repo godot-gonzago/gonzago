@@ -71,13 +71,8 @@ static func get_base_theme(theme: Theme) -> Theme:
         return project_theme
 
     return default_theme
-
-
-static func is_project_theme(theme: Theme) -> bool:
-    if not theme or not theme.resource_path: return false
-    return theme == ThemeDB.get_project_theme()
-
-
+    
+    
 static func is_readonly(theme: Theme) -> bool:
     if Engine.is_editor_hint():
         if theme == EditorInterface.get_editor_theme():
@@ -87,172 +82,111 @@ static func is_readonly(theme: Theme) -> bool:
     return false
 
 
-static func get_theme_name(theme: Theme) -> String:
-    if Engine.is_editor_hint():
-        if theme == EditorInterface.get_editor_theme():
-            return &"Editor"
-            
-    var default_theme := ThemeDB.get_default_theme()
-    if theme == default_theme:
-        return &"Default"
+static func is_project_theme(theme: Theme) -> bool:
+    if not theme or not theme.resource_path: return false
+    return theme == ThemeDB.get_project_theme()
+
+
+# TODO:
+static func has_default_base_scale(theme: Theme, include_defaults := false) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        if base_theme.has_default_base_scale():
+            return true
+    return false
+
+# TODO:
+static func get_default_base_scale(theme: Theme, include_defaults := true) -> float:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        if base_theme.has_default_base_scale():
+            return base_theme.default_base_scale
+    return ThemeDB.fallback_base_scale
+
+# TODO:
+static func has_default_font(theme: Theme, include_defaults := false) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        if base_theme.has_default_font():
+            return true
+    return false
+
+# TODO:
+static func get_default_font(theme: Theme, include_defaults := true) -> Font:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        if base_theme.has_default_font():
+            return base_theme.default_font
+    return ThemeDB.fallback_font
     
-    var project_theme := ThemeDB.get_project_theme()
-    if project_theme and not theme == project_theme:
-        return &"Project"
+# TODO:
+static func has_default_font_size(theme: Theme, include_defaults := false) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        if base_theme.has_default_font_size():
+            return true
+    return false
 
-    if theme.resource_path:
-        return theme.resource_path.get_file()
-    
-    return StringName()
-
-
-static func get_theme_icon(theme: Theme) -> Texture2D:
-    var default_theme := ThemeDB.get_default_theme()
-    var is_readonly := theme == default_theme
-    var icon_source := default_theme
-    
-    if Engine.is_editor_hint():
-        var editor_theme := EditorInterface.get_editor_theme()
-        icon_source = editor_theme
-        if not is_readonly:
-            is_readonly = theme == editor_theme
-    
-    if is_readonly:
-        return icon_source.get_icon(&"GuiVisibilityXray", &"EditorIcons")
-    return icon_source.get_icon(&"Theme", &"EditorIcons")
-
-
-# TODO
-static func get_theme_meta_data(
-    theme: Theme,
-    include_defaults := true # TODO:
-) -> Dictionary:
-    return {}
+# TODO:
+static func get_default_font_size(theme: Theme, include_defaults := true) -> int:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        if base_theme.has_default_font_size():
+            return base_theme.default_font_size
+    return ThemeDB.fallback_font_size
 
 #endregion
 
-
 #region Data types
 
-const _FALLBACK_COLOR := Color.WHITE
-const _FALLBACK_CONSTANT := 0
-
-const _DATA_TYPE_INFO: Dictionary[Theme.DataType, Dictionary] = {
-    Theme.DATA_TYPE_COLOR: {
-        &"name": &"Colors",
-        &"property_path": &"colors",
-        &"tags": [&"colors"],
-        &"icon_name": &"Color",
-        &"icon_type": &"EditorIcons"
-    },
-    Theme.DATA_TYPE_CONSTANT: {
-        &"name": &"Constants",
-        &"property_path": &"constants",
-        &"tags": [&"constants"],
-        &"icon_name": &"MemberConstant",
-        &"icon_type": &"EditorIcons"
-    },
-    Theme.DATA_TYPE_FONT: {
-        &"name": &"Fonts",
-        &"property_path": &"font",
-        &"tags": [&"fonts"],
-        &"icon_name": &"FontItem",
-        &"icon_type": &"EditorIcons"
-    },
-    Theme.DATA_TYPE_FONT_SIZE: {
-        &"name": &"Font sizes",
-        &"property_path": &"font_sizes",
-        &"tags": [&"fonts", &"sizes"],
-        &"icon_name": &"FontSize",
-        &"icon_type": &"EditorIcons"
-    },
-    Theme.DATA_TYPE_ICON: {
-        &"name": &"Icons",
-        &"property_path": &"icons",
-        &"tags": [&"icons"],
-        &"icon_name": &"ImageTexture",
-        &"icon_type": &"EditorIcons"
-    },
-    Theme.DATA_TYPE_STYLEBOX: {
-        &"name": &"StyleBoxes",
-        &"property_path": &"styles",
-        &"tags": [&"styles", &"boxes"],
-        &"icon_name": &"StyleBoxFlat",
-        &"icon_type": &"EditorIcons"
-    },
-}
-
-
-static func get_data_type_name(data_type: Theme.DataType) -> StringName:
-    if _DATA_TYPE_INFO.has(data_type):
-        return _DATA_TYPE_INFO[data_type][&"name"]
-    return StringName()
-
-
 static func get_data_type_property_path(data_type: Theme.DataType) -> StringName:
-    if _DATA_TYPE_INFO.has(data_type):
-        return _DATA_TYPE_INFO[data_type][&"property_path"]
-    return StringName()
+    match data_type:
+        Theme.DATA_TYPE_COLOR:     return &"colors"
+        Theme.DATA_TYPE_CONSTANT:  return &"constants"
+        Theme.DATA_TYPE_FONT:      return &"font"
+        Theme.DATA_TYPE_FONT_SIZE: return &"font_sizes"
+        Theme.DATA_TYPE_ICON:      return &"icons"
+        Theme.DATA_TYPE_STYLEBOX:  return &"styles"
+        _:                         return StringName()
 
 
-# TODO: Fix
-#static func get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
-    #for data_type in Theme.DATA_TYPE_MAX:
-        #if _DATA_TYPE_INFO.has(data_type):
-            #return _DATA_TYPE_INFO[data_type].get(&"property_path", -1)
-    #return -1
+static func get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
+    if property_path:
+        property_path = property_path.trim_prefix("theme_override_")
+    match property_path:
+        &"colors":     return Theme.DATA_TYPE_COLOR
+        &"constants":  return Theme.DATA_TYPE_CONSTANT
+        &"font":       return Theme.DATA_TYPE_FONT
+        &"font_sizes": return Theme.DATA_TYPE_FONT_SIZE
+        &"icons":      return Theme.DATA_TYPE_ICON
+        &"styles":     return Theme.DATA_TYPE_STYLEBOX
+        _:             return -1
 
 
 static func get_data_type_override_property_path(data_type: Theme.DataType) -> StringName:
-    if _DATA_TYPE_INFO.has(data_type):
-        return StringName("theme_override_%s" % _DATA_TYPE_INFO[data_type][&"property_path"])
-    return StringName()
-
-
-static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
-    if _DATA_TYPE_INFO.has(data_type):
-        return _DATA_TYPE_INFO[data_type][&"tags"].duplicate()
-    return []
-
-
-static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
-    if not _DATA_TYPE_INFO.has(data_type):
-        return ThemeDB.fallback_icon
-
-    var icon_name: StringName = _DATA_TYPE_INFO[data_type][&"icon_name"]
-    var icon_type: StringName = _DATA_TYPE_INFO[data_type][&"icon_type"]
-
-    if Engine.is_editor_hint():
-        var editor_theme := EditorInterface.get_editor_theme()
-        if editor_theme.has_icon(icon_name, icon_type):
-            return editor_theme.get_icon(icon_name, icon_type)
-
-    var theme := ThemeDB.get_default_theme()
-    if theme.has_icon(icon_name, icon_type):
-        return theme.get_icon(icon_name, icon_type)
-
-    return ThemeDB.fallback_icon
+    var property_path := get_data_type_property_path(data_type)
+    if property_path:
+        return "theme_override_%s" % property_path
+    return StringName("")
 
 
 static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
     match data_type:
-        Theme.DATA_TYPE_COLOR:     return _FALLBACK_COLOR
-        Theme.DATA_TYPE_CONSTANT:  return _FALLBACK_CONSTANT
+        Theme.DATA_TYPE_COLOR:     return Color.BLACK
+        Theme.DATA_TYPE_CONSTANT:  return 0
         Theme.DATA_TYPE_FONT:      return ThemeDB.fallback_font
         Theme.DATA_TYPE_FONT_SIZE: return ThemeDB.fallback_font_size
         Theme.DATA_TYPE_ICON:      return ThemeDB.fallback_icon
         Theme.DATA_TYPE_STYLEBOX:  return ThemeDB.fallback_stylebox
         _:                         return null
-
-
-# TODO
-static func get_data_type_meta_data(
-    theme: Theme,
-    base_theme: Theme,
+        
+        
+static func is_valid_value_for_data_type(
     data_type: Theme.DataType,
-    include_defaults := true # TODO:
-) -> Dictionary:
-    return {}
+    value: Variant
+) -> bool:
+    match data_type:
+        Theme.DATA_TYPE_COLOR:     return typeof(value) == TYPE_COLOR
+        Theme.DATA_TYPE_CONSTANT:  return typeof(value) == TYPE_INT
+        Theme.DATA_TYPE_FONT:      return value is Font
+        Theme.DATA_TYPE_FONT_SIZE: return typeof(value) == TYPE_INT
+        Theme.DATA_TYPE_ICON:      return value is Texture2D
+        Theme.DATA_TYPE_STYLEBOX:  return value is StyleBox
+        _:                         return false
 
 #endregion
 
@@ -294,15 +228,6 @@ class ThemeTypeIterator extends RefCounted:
         
     func _iter_get(current: Variant) -> StringName:
         return current as StringName
-
-
-static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
-    var theme: Theme
-    if Engine.is_editor_hint(): theme = EditorInterface.get_editor_theme()
-    else: theme = ThemeDB.get_default_theme()
-    if theme.has_icon(theme_type, &"EditorIcons"):
-        return theme.get_icon(theme_type, &"EditorIcons")
-    return theme.get_icon(&"NodeDisabled", &"EditorIcons")
 
 
 static func get_type_list(
@@ -354,34 +279,13 @@ static func has_type(
     return false
 
 
-static func is_built_in_type(type: StringName, max_api_depth := ClassDB.API_EDITOR) -> bool:
+static func is_built_in_type(type: StringName, max_api_depth := ClassDB.API_EDITOR_EXTENSION) -> bool:
     var api_type := ClassDB.class_get_api_type(type)
     return api_type <= max_api_depth
-
-
-# TODO
-static func get_theme_type_meta_data(
-    theme: Theme,
-    base_theme: Theme,
-    theme_type: StringName,
-    include_defaults := true # TODO:
-) -> Dictionary:
-    return {}
 
 #endregion
 
 #region Theme items
-
-# Can be used as id
-static func get_theme_item_path(
-    data_type: Theme.DataType,
-    theme_type: StringName,
-    name: StringName
-) -> StringName:
-    return StringName("%s/%s/%s" % [
-        theme_type, get_data_type_property_path(data_type), name
-    ])
-
 
 static func get_theme_item_list(
     theme: Theme,
@@ -429,19 +333,78 @@ static func get_theme_item(
             if base_theme.has_theme_item(data_type, name, base_type):
                 return base_theme.get_theme_item(data_type, name, base_type)
     return get_data_type_fallback(data_type)
+    
 
-# TODO: Add data type functions get_icon, has_icon etc.
-
-
-# TODO Build meta data for theme item, eg. icon width, height and resource location (path/embedded) etc.
-static func get_theme_item_meta_data(
+# TODO:
+static func set_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
     theme_type: StringName,
     name: StringName,
-    include_defaults := true # TODO:
-) -> Dictionary:
-    return {}
+    value: Variant
+) -> void:
+    if not is_valid_value_for_data_type(data_type, value):
+        value = get_data_type_fallback(data_type)
+    theme.set_theme_item(data_type, name, theme_type, value)
+
+
+# TODO:
+static func clear_theme_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    theme_type: StringName,
+    name: StringName
+) -> void:
+    if theme.has_theme_item(data_type, name, theme_type):
+        theme.clear_theme_item(data_type, name, theme_type)
+        
+
+# TODO:
+static func rename_theme_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    theme_type: StringName,
+    old_name: StringName,
+    name: StringName,
+    include_defaults := true
+) -> void:
+    if theme.has_theme_item(data_type, name, theme_type):
+        theme.clear_theme_item(data_type, name, theme_type)
+    if not theme.has_theme_item(data_type, old_name, theme_type):
+        var value := get_theme_item(theme, data_type, theme_type, old_name, include_defaults)
+        theme.set_theme_item(data_type, name, theme_type, value)
+        return
+    theme.rename_theme_item(data_type, old_name, name, theme_type)
+
+
+#endregion
+
+#region Colors
+
+static func has_color(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := false
+) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_color(name, base_type):
+                return true
+    return false
+
+
+static func get_color(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := true
+) -> Color:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_color(name, base_type):
+                return base_theme.get_color(name, base_type)
+    return Color.BLACK
 
 #endregion
 
@@ -484,5 +447,147 @@ static func get_constant_type(name: StringName) -> ConstantType:
         elif regex_match.names.has("flag"):
             return ConstantType.FLAG
     return ConstantType.UNKNOWN
+
+
+static func has_constant(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := false
+) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_constant(name, base_type):
+                return true
+    return false
+
+
+static func get_constant(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := true
+) -> int:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_constant(name, base_type):
+                return base_theme.get_constant(name, base_type)
+    return 0
+
+#endregion
+
+#region Fonts
+
+static func has_font(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := false
+) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_font(name, base_type):
+                return true
+    return false
+
+
+static func get_font(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := true
+) -> Font:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_font(name, base_type):
+                return base_theme.get_font(name, base_type)
+    return ThemeDB.fallback_font
+
+#endregion
+
+#region Font sizes
+
+static func has_font_size(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := false
+) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_font_size(name, base_type):
+                return true
+    return false
+
+
+static func get_font_size(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := true
+) -> int:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_font_size(name, base_type):
+                return base_theme.get_font_size(name, base_type)
+    return ThemeDB.fallback_font_size
+
+#endregion
+
+#region Icons
+
+static func has_icon(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := false
+) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_color(name, base_type):
+                return true
+    return false
+
+
+static func get_icon(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := true
+) -> Texture2D:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_icon(name, base_type):
+                return base_theme.get_icon(name, base_type)
+    return ThemeDB.fallback_icon
+
+#endregion
+
+#region StyleBoxes
+
+static func has_stylebox(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := false
+) -> bool:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_stylebox(name, base_type):
+                return true
+    return false
+
+
+static func get_stylebox(
+    theme: Theme,
+    theme_type: StringName,
+    name: StringName,
+    include_defaults := true
+) -> StyleBox:
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if base_theme.has_stylebox(name, base_type):
+                return base_theme.get_stylebox(name, base_type)
+    return ThemeDB.fallback_stylebox
 
 #endregion

@@ -11,6 +11,7 @@ enum Mode {
 }
 
 const ThemeUtil := preload("../../theme_util.gd")
+const EditorThemeUtil := preload("../../editor_theme_util.gd")
 
 @onready var _hierarchy_button := get_node("Header/HierarchyButton") as OptionButton
 
@@ -80,20 +81,20 @@ func _update_inspector() -> void:
         
         match mode:
             Mode.THEME:
-                var icon := ThemeUtil.get_theme_icon(_theme)
-                var text := ThemeUtil.get_theme_name(_theme)
+                var icon := EditorThemeUtil.get_theme_icon(_theme)
+                var text := EditorThemeUtil.get_theme_name(_theme)
                 _hierarchy_button.set_item_icon(idx, icon)
                 _hierarchy_button.set_item_text(idx, text)
             Mode.THEME_TYPE:
-                var icon := ThemeUtil.get_theme_type_icon(_theme_type)
+                var icon := EditorThemeUtil.get_theme_type_icon(_theme_type)
                 _hierarchy_button.set_item_icon(idx, icon)
                 _hierarchy_button.set_item_text(idx, _theme_type)
             Mode.DATA_TYPE:
-                var icon := ThemeUtil.get_data_type_icon(_data_type)
-                var text := ThemeUtil.get_data_type_name(_data_type)
+                var icon := EditorThemeUtil.get_data_type_icon(_data_type)
+                var text := EditorThemeUtil.get_data_type_name(_data_type)
                 _hierarchy_button.set_item_icon(idx, icon)
                 _hierarchy_button.set_item_text(idx, text)
             Mode.THEME_ITEM:
-                var icon := ThemeUtil.get_data_type_icon(_data_type)
+                var icon := EditorThemeUtil.get_data_type_icon(_data_type)
                 _hierarchy_button.set_item_icon(idx, icon)
                 _hierarchy_button.set_item_text(idx, _theme_item)
