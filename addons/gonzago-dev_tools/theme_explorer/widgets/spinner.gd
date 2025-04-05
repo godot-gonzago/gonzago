@@ -76,27 +76,33 @@ func _notification(what: int) -> void:
 
 
 # TODO: Cannot override parent default value
+# TODO: Make custom control anyways with different modes like rotating image etc.
 func _init() -> void:
-    stretch_mode = STRETCH_KEEP_ASPECT_CENTERED
+    stretch_mode = _stretch_mode
 
-#var _stretch_mode := STRETCH_KEEP_ASPECT_CENTERED
+@export_storage var _stretch_mode: StretchMode = STRETCH_KEEP_ASPECT_CENTERED:
+    get:
+        return _stretch_mode
+    set(value):
+        _stretch_mode = value
+        stretch_mode = value
 
-#func _validate_property(property: Dictionary) -> void:
-    #if property.name == &"stretch_mode":
-        #property.usage = PROPERTY_USAGE_EDITOR
+func _validate_property(property: Dictionary) -> void:
+    if property.name == &"stretch_mode":
+        property.usage = PROPERTY_USAGE_EDITOR
 
-#func _get(property: StringName) -> Variant:
-    #match property:
-        #&"stretch_mode": return _stretch_mode
-        #_: return null
+func _get(property: StringName) -> Variant:
+    match property:
+        &"stretch_mode": return _stretch_mode
+        _: return null
 
-#func _set(property: StringName, value: Variant) -> bool:
-    #match property:
-        #&"stretch_mode":
-            #stretch_mode = value
-            #_stretch_mode = value
-            #return true
-        #_: return false
+func _set(property: StringName, value: Variant) -> bool:
+    match property:
+        &"stretch_mode":
+            _stretch_mode = value
+            stretch_mode = value
+            return true
+        _: return false
 
 #func _get_property_list() -> Array[Dictionary]:
     #return [
@@ -107,12 +113,12 @@ func _init() -> void:
         #}
     #]
 
-#func _property_can_revert(property: StringName) -> bool:
-    #match property:
-        #&"stretch_mode": return true
-        #_: return false
+func _property_can_revert(property: StringName) -> bool:
+    match property:
+        &"stretch_mode": return true
+        _: return false
 
-#func _property_get_revert(property: StringName) -> Variant:
-    #match property:
-        #&"stretch_mode": return STRETCH_KEEP_ASPECT_CENTERED
-        #_: return null
+func _property_get_revert(property: StringName) -> Variant:
+    match property:
+        &"stretch_mode": return STRETCH_KEEP_ASPECT_CENTERED
+        _: return null
