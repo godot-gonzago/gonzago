@@ -3,6 +3,7 @@ extends VBoxContainer
 
 # TODO: Add button like in default Theme editor add popup.
 #       LineEdit for type name. Base types as autocomplete?
+#       https://github.com/Lenrow/line-edit-complete-godot
 #       Direct base type selection when adding.
 
 const ThemeUtil := preload("../../theme_util.gd")
