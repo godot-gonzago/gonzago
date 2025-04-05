@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cvosahu0nijik"]
+[gd_scene load_steps=7 format=3 uid="uid://cvosahu0nijik"]
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_gm82x"]
+[ext_resource type="Script" uid="uid://dyvx8lqbx2q1q" path="res://addons/gonzago-dev_tools/theme_explorer/views/preview/preview_view.gd" id="1_ykohn"]
 
 [sub_resource type="Texture2D" id="Texture2D_wdocn"]
 resource_local_to_scene = false
@@ -46,6 +47,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_ykohn")
 
 [node name="FileBar" type="HBoxContainer" parent="."]
 layout_mode = 2

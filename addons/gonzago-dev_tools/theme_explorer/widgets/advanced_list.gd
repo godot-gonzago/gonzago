@@ -4,6 +4,7 @@ extends Container
 # https://github.com/godotengine/godot/blob/master/editor/editor_inspector.h
 # https://github.com/godotengine/godot/blob/master/editor/editor_inspector.cpp
 # https://github.com/SirLich/gd-explorer
+# https://github.com/wareya/ScrollListContainer/tree/main
 
 class Group extends Container:
     # TODO: Collapsable group like tree or inspector

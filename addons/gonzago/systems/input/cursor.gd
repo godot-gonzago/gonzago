@@ -2,6 +2,7 @@
 class_name GonzagoCursor
 extends CanvasLayer
 
+# https://github.com/DaviD4Chirino/awesome-custom-cursor
 
 @export var position: Node2D
 
