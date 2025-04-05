@@ -101,6 +101,11 @@ static func get_default_base_scale(theme: Theme, include_defaults := true) -> fl
         if base_theme.has_default_base_scale():
             return base_theme.default_base_scale
     return ThemeDB.fallback_base_scale
+    
+    
+# TODO: 0.0 will clear
+static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
+    theme.default_base_scale = value
 
 
 # TODO:
@@ -119,6 +124,12 @@ static func get_default_font(theme: Theme, include_defaults := true) -> Font:
     return ThemeDB.fallback_font
 
 
+
+# TODO: null will clear
+static func set_default_font(theme: Theme, value: Font = null) -> void:
+    theme.default_font = value
+
+
 # TODO:
 static func has_default_font_size(theme: Theme, include_defaults := false) -> bool:
     for base_theme in ThemeIterator.new(theme, include_defaults):
@@ -133,6 +144,11 @@ static func get_default_font_size(theme: Theme, include_defaults := true) -> int
         if base_theme.has_default_font_size():
             return base_theme.default_font_size
     return ThemeDB.fallback_font_size
+
+
+# TODO: -1 will clear
+static func set_default_font_size(theme: Theme, value: int = -1) -> void:
+    theme.default_font_size = value
 
 #endregion
 
