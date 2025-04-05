@@ -73,3 +73,46 @@ func _notification(what: int) -> void:
                 _last_tick = current_tick - tick_delta
                 _current_frame = wrapi(_current_frame + 1, 0, get_frame_count())
                 texture = get_frame(_current_frame)
+
+
+# TODO: Cannot override parent default value
+func _init() -> void:
+    stretch_mode = STRETCH_KEEP_ASPECT_CENTERED
+
+#var _stretch_mode := STRETCH_KEEP_ASPECT_CENTERED
+
+#func _validate_property(property: Dictionary) -> void:
+    #if property.name == &"stretch_mode":
+        #property.usage = PROPERTY_USAGE_EDITOR
+
+#func _get(property: StringName) -> Variant:
+    #match property:
+        #&"stretch_mode": return _stretch_mode
+        #_: return null
+
+#func _set(property: StringName, value: Variant) -> bool:
+    #match property:
+        #&"stretch_mode":
+            #stretch_mode = value
+            #_stretch_mode = value
+            #return true
+        #_: return false
+
+#func _get_property_list() -> Array[Dictionary]:
+    #return [
+        #{
+            #&"name": &"_stretch_mode",
+            #&"type": TYPE_INT,
+            #&"usage": PROPERTY_USAGE_NO_EDITOR
+        #}
+    #]
+
+#func _property_can_revert(property: StringName) -> bool:
+    #match property:
+        #&"stretch_mode": return true
+        #_: return false
+
+#func _property_get_revert(property: StringName) -> Variant:
+    #match property:
+        #&"stretch_mode": return STRETCH_KEEP_ASPECT_CENTERED
+        #_: return null

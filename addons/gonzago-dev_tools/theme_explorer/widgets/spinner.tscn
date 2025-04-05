@@ -3,5 +3,5 @@
 [ext_resource type="Script" uid="uid://bnlcihthrps4w" path="res://addons/gonzago-dev_tools/theme_explorer/widgets/spinner.gd" id="1_s1pe2"]
 
 [node name="Spinner" type="TextureRect"]
-stretch_mode = 4
+stretch_mode = 5
 script = ExtResource("1_s1pe2")
