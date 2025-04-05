@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bptwrcywuaagc"]
+[gd_scene load_steps=5 format=3 uid="uid://bptwrcywuaagc"]
 
+[ext_resource type="Script" uid="uid://dd44pss4hfxoy" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/items_view.gd" id="1_jqw67"]
 [ext_resource type="PackedScene" uid="uid://cdpq53utwr741" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/types_tree.tscn" id="1_p6vuk"]
 [ext_resource type="PackedScene" uid="uid://mhkkeep0sjyq" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/items_tree.tscn" id="2_jqw67"]
-[ext_resource type="PackedScene" uid="uid://bo6smsoi8sunw" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/item_inspector.tscn" id="3_y0g4u"]
+[ext_resource type="PackedScene" uid="uid://bo6smsoi8sunw" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/inspector.tscn" id="3_y0g4u"]
 
 [node name="ItemsView" type="HSplitContainer"]
 anchors_preset = 15
@@ -11,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
+script = ExtResource("1_jqw67")
 
 [node name="TypesTree" parent="." instance=ExtResource("1_p6vuk")]
 layout_mode = 2
@@ -24,5 +26,9 @@ size_flags_stretch_ratio = 4.0
 layout_mode = 2
 size_flags_stretch_ratio = 2.0
 
-[node name="ItemInspector" parent="Split" instance=ExtResource("3_y0g4u")]
+[node name="Inspector" parent="Split" instance=ExtResource("3_y0g4u")]
 layout_mode = 2
+
+[connection signal="theme_type_selected" from="TypesTree" to="." method="_on_types_tree_theme_type_selected"]
+[connection signal="data_type_selected" from="Split/ItemsTree" to="." method="_on_items_tree_data_type_selected"]
+[connection signal="theme_item_selected" from="Split/ItemsTree" to="." method="_on_items_tree_theme_item_selected"]

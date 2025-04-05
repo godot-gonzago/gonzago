@@ -3,6 +3,9 @@ extends VBoxContainer
 
 const ThemeUtil := preload("../../theme_util.gd")
 
+signal data_type_selected(data_type: Theme.DataType, theme_type: StringName)
+signal theme_item_selected(data_type: Theme.DataType, theme_type: StringName, theme_item: StringName)
+
 @onready var _tree := get_node("Tree") as Tree
 
 # TODO: Add Button like Manage Items menu in default Theme Menu
@@ -40,6 +43,8 @@ func _build_tree() -> void:
         item.set_text(0, ThemeUtil.get_data_type_name(data_type))
         item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
         item.visible = false
+        item.set_meta(&"theme_type", _theme_type)
+        item.set_meta(&"data_type", data_type)
 
     if not _theme: return
     if not _theme_type: return
@@ -57,6 +62,9 @@ func _build_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
         var item := parent.create_child()
         item.set_text(0, theme_item)
         item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
+        item.set_meta(&"theme_item", theme_item)
+        item.set_meta(&"theme_type", _theme_type)
+        item.set_meta(&"data_type", data_type)
     return theme_items.size() > 0
 
 
@@ -111,3 +119,16 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
         if item.visible:
             has_visibile_children = true
     return has_visibile_children
+
+
+func _on_tree_item_selected() -> void:
+    var item := _tree.get_selected()
+    
+    var theme_item := item.get_meta(&"theme_item", StringName())
+    var theme_type := item.get_meta(&"theme_type", StringName())
+    var data_type := item.get_meta(&"data_type", Theme.DATA_TYPE_MAX)
+    
+    if theme_item:
+        theme_item_selected.emit(data_type, theme_type, theme_item)
+    else:
+        data_type_selected.emit(data_type, theme_type)

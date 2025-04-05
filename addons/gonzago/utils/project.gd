@@ -1,4 +1,5 @@
 @tool
+@static_unload
 extends RefCounted
 ## Project related utilities.
 ##

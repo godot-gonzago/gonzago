@@ -2,8 +2,7 @@
 extends VBoxContainer
 
 const FileBar := preload("./file_bar.gd")
-const TypesTree := preload("./items/types_tree.gd")
-const ItemsTree := preload("./items/items_tree.gd")
+const ItemsView := preload("./items/items_view.gd")
 
 const ImportDialog := preload("./tools/import_dialog.gd")
 const ImportDialogScene := preload("./tools/import_dialog.tscn")
@@ -11,14 +10,11 @@ const ExportDialog := preload("./tools/export_dialog.gd")
 const ExportDialogScene := preload("./tools/export_dialog.tscn")
 
 @onready var file_bar := get_node("ToolBar/FileBar") as FileBar
-@onready var type_tree := get_node("ItemsView/TypesTree") as TypesTree
-@onready var items_tree := get_node("ItemsView/Split/ItemsTree") as ItemsTree
+@onready var items_view := get_node("ItemsView") as ItemsView
 @onready var tools_button := get_node("ToolBar/ToolsButton") as MenuButton
-
 
 var _import_dialog: ImportDialog
 var _export_dialog: ExportDialog
-
 
 var _theme: Theme
 
@@ -31,7 +27,7 @@ func _ready() -> void:
     tools_button.get_popup().index_pressed.connect(_on_tools_button_index_pressed)
     
     _theme = file_bar.get_current_theme()
-    type_tree.inspect(_theme)
+    items_view.inspect(_theme)
 
 
 func _notification(what: int) -> void:
@@ -51,9 +47,4 @@ func _on_tools_button_index_pressed(index: int) -> void:
 
 func _on_theme_selected(theme: Theme) -> void:
     _theme = theme
-    type_tree.inspect(_theme)
-    items_tree.inspect(_theme, StringName())
-
-
-func _on_types_tree_theme_type_selected(theme_type: StringName) -> void:
-    items_tree.inspect(_theme, theme_type)
+    items_view.inspect(_theme)
