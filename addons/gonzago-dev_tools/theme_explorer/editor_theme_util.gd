@@ -9,6 +9,9 @@ extends RefCounted
 #region Themes
 
 static func get_theme_name(theme: Theme) -> String:
+    if not theme:
+        return &"Missing Resource"
+    
     if Engine.is_editor_hint():
         if theme == EditorInterface.get_editor_theme():
             return &"Editor"
@@ -24,7 +27,7 @@ static func get_theme_name(theme: Theme) -> String:
     if theme.resource_path:
         return theme.resource_path.get_file()
     
-    return StringName()
+    return &"Theme"
 
 
 static func get_theme_icon(theme: Theme) -> Texture2D:
@@ -32,6 +35,9 @@ static func get_theme_icon(theme: Theme) -> Texture2D:
         return ThemeDB.fallback_icon
     
     var editor_theme := EditorInterface.get_editor_theme()
+    if not theme:
+        return editor_theme.get_icon(&"MissingResource", &"EditorIcons")
+    
     var is_readonly := theme == editor_theme
     
     if not is_readonly:
@@ -94,5 +100,54 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
     if editor_theme.has_icon(theme_type, &"EditorIcons"):
         return editor_theme.get_icon(theme_type, &"EditorIcons")
     return editor_theme.get_icon(&"NodeDisabled", &"EditorIcons")
+
+#endregion
+
+#region Constants
+
+enum ConstantType {
+    UNKNOWN = -1,
+    PIXEL = 0,
+    FACTOR = 1,
+    FLAG = 2
+}
+
+# https://regex101.com/r/2vR47X/1
+# TODO: Guess format
+#       name ends with:
+#       px: size, height, width, margin, padding,
+#           separation, offset, spacing, thickness, border
+#           with optional prefix: h_, v_ (does not need checking)
+#           with optional suffix: _bottom, _top, _left, _right, _x, _y
+#       factor: scale, speed
+#       bool: if value is 0 or 1 (but only guessing)
+#             maybe if starts with: draw, modulate, align, center
+static var _constant_type_regex := RegEx.create_from_string(
+    r"(?(DEFINE)" + \
+    r"(?P<p>size|height|width|margin|padding|separation|offset|spacing|thickness|border)" + \
+    r"(?P<ps>bottom|top|left|right|x|y)" + \
+    r"(?P<f>scale|speed)" + \
+    r"(?P<b>draw|modulate|align|center))" + \
+    r"^(?:(?P<pixel>(?:\w+_)*(?P>p)(?:_(?P>ps))?)|(?P<factor>(?:\w+_)*(?P>f))|(?P<flag>(?P>b)(?:_\w+)*))$"
+)
+
+
+static func get_constant_type(name: StringName) -> ConstantType:
+    var regex_match := _constant_type_regex.search(name)
+    if regex_match and regex_match.get_group_count() > 0:
+        if regex_match.names.has("pixel"):
+            return ConstantType.PIXEL
+        elif regex_match.names.has("factor"):
+            return ConstantType.FACTOR
+        elif regex_match.names.has("flag"):
+            return ConstantType.FLAG
+    return ConstantType.UNKNOWN
+    
+    
+static func get_constant_type_suffix(type: ConstantType) -> StringName:
+    match type:
+        ConstantType.PIXEL:  return &"px"
+        ConstantType.FACTOR: return &"x"
+        _:                   return StringName("")
 
 #endregion

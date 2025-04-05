@@ -94,12 +94,14 @@ static func has_default_base_scale(theme: Theme, include_defaults := false) -> b
             return true
     return false
 
+
 # TODO:
 static func get_default_base_scale(theme: Theme, include_defaults := true) -> float:
     for base_theme in ThemeIterator.new(theme, include_defaults):
         if base_theme.has_default_base_scale():
             return base_theme.default_base_scale
     return ThemeDB.fallback_base_scale
+
 
 # TODO:
 static func has_default_font(theme: Theme, include_defaults := false) -> bool:
@@ -108,19 +110,22 @@ static func has_default_font(theme: Theme, include_defaults := false) -> bool:
             return true
     return false
 
+
 # TODO:
 static func get_default_font(theme: Theme, include_defaults := true) -> Font:
     for base_theme in ThemeIterator.new(theme, include_defaults):
         if base_theme.has_default_font():
             return base_theme.default_font
     return ThemeDB.fallback_font
-    
+
+
 # TODO:
 static func has_default_font_size(theme: Theme, include_defaults := false) -> bool:
     for base_theme in ThemeIterator.new(theme, include_defaults):
         if base_theme.has_default_font_size():
             return true
     return false
+
 
 # TODO:
 static func get_default_font_size(theme: Theme, include_defaults := true) -> int:
@@ -279,13 +284,37 @@ static func has_type(
     return false
 
 
-static func is_built_in_type(type: StringName, max_api_depth := ClassDB.API_EDITOR_EXTENSION) -> bool:
+static func is_built_in_type(
+    type: StringName,
+    max_api_depth := ClassDB.API_EDITOR_EXTENSION
+) -> bool:
     var api_type := ClassDB.class_get_api_type(type)
     return api_type <= max_api_depth
 
 #endregion
 
 #region Theme items
+
+static func get_theme_item_type_list(
+    theme: Theme,
+    data_type: Theme.DataType,
+    include_variations := false,
+    include_defaults := true,
+    sort := true
+) -> PackedStringArray:
+    var types := PackedStringArray()
+
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        var base_types := base_theme.get_theme_item_type_list(data_type)
+        for base_type in base_types:
+            if not include_variations and base_theme.get_type_variation_base(base_type):
+                continue
+            if base_type not in types:
+                types.append(base_type)
+
+    if sort: types.sort()
+    return types
+
 
 static func get_theme_item_list(
     theme: Theme,
@@ -376,218 +405,466 @@ static func rename_theme_item(
         return
     theme.rename_theme_item(data_type, old_name, name, theme_type)
 
-
 #endregion
 
 #region Colors
 
-static func has_color(
+static func get_color_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_COLOR,
+        include_variations, include_defaults, sort
+    )
+
+
+static func get_color_list(
     theme: Theme,
     theme_type: StringName,
-    name: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme,
+        Theme.DATA_TYPE_COLOR, theme_type,
+        include_defaults, sort
+)
+
+
+static func has_color(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_color(name, base_type):
-                return true
-    return false
+    return has_theme_item(
+        theme,
+        Theme.DATA_TYPE_COLOR, theme_type, name,
+        include_defaults
+    )
 
 
 static func get_color(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := true
 ) -> Color:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_color(name, base_type):
-                return base_theme.get_color(name, base_type)
-    return Color.BLACK
+    var value := get_theme_item(
+        theme,
+        Theme.DATA_TYPE_COLOR, theme_type, name,
+        include_defaults
+    )
+    return value
+
+
+static func set_color(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
+    value: Color
+) -> void:
+    set_theme_item(theme, Theme.DATA_TYPE_COLOR, theme_type, name, value)
+
+
+static func clear_color(
+    theme: Theme,
+    theme_type: StringName, name: StringName
+) -> void:
+    clear_theme_item(theme, Theme.DATA_TYPE_COLOR, theme_type, name)
+
+
+static func rename_color(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_COLOR, theme_type,
+        old_name, name,
+        include_defaults
+    )
 
 #endregion
 
 #region Constants
 
-enum ConstantType {
-    UNKNOWN = -1,
-    PIXEL = 0,
-    FACTOR = 1,
-    FLAG = 2
-}
+static func get_constant_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_CONSTANT,
+        include_variations, include_defaults, sort
+    )
 
-# https://regex101.com/r/2vR47X/1
-# TODO: Guess format
-#       name ends with:
-#       px: size, height, width, margin, padding,
-#           separation, offset, spacing, thickness, border
-#           with optional prefix: h_, v_ (does not need checking)
-#           with optional suffix: _bottom, _top, _left, _right, _x, _y
-#       factor: scale, speed
-#       bool: if value is 0 or 1 (but only guessing)
-#             maybe if starts with: draw, modulate, align, center
-static var _constant_type_regex := RegEx.create_from_string(
-    r"(?(DEFINE)" + \
-    r"(?P<p>size|height|width|margin|padding|separation|offset|spacing|thickness|border)" + \
-    r"(?P<ps>bottom|top|left|right|x|y)" + \
-    r"(?P<f>scale|speed)" + \
-    r"(?P<b>draw|modulate|align|center))" + \
-    r"^(?:(?P<pixel>(?:\w+_)*(?P>p)(?:_(?P>ps))?)|(?P<factor>(?:\w+_)*(?P>f))|(?P<flag>(?P>b)(?:_\w+)*))$"
+
+static func get_constant_list(
+    theme: Theme,
+    theme_type: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme,
+        Theme.DATA_TYPE_CONSTANT, theme_type,
+        include_defaults, sort
 )
-
-
-static func get_constant_type(name: StringName) -> ConstantType:
-    var regex_match := _constant_type_regex.search(name)
-    if regex_match and regex_match.get_group_count() > 0:
-        if regex_match.names.has("pixel"):
-            return ConstantType.PIXEL
-        elif regex_match.names.has("factor"):
-            return ConstantType.FACTOR
-        elif regex_match.names.has("flag"):
-            return ConstantType.FLAG
-    return ConstantType.UNKNOWN
 
 
 static func has_constant(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_constant(name, base_type):
-                return true
-    return false
+    return has_theme_item(
+        theme,
+        Theme.DATA_TYPE_CONSTANT, theme_type, name,
+        include_defaults
+    )
 
 
 static func get_constant(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := true
 ) -> int:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_constant(name, base_type):
-                return base_theme.get_constant(name, base_type)
-    return 0
+    var value := get_theme_item(
+        theme,
+        Theme.DATA_TYPE_CONSTANT, theme_type, name,
+        include_defaults
+    )
+    return value
+
+
+static func set_constant(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
+    value: int
+) -> void:
+    set_theme_item(theme, Theme.DATA_TYPE_CONSTANT, theme_type, name, value)
+
+
+static func clear_constant(
+    theme: Theme,
+    theme_type: StringName, name: StringName
+) -> void:
+    clear_theme_item(theme, Theme.DATA_TYPE_CONSTANT, theme_type, name)
+
+
+static func rename_constant(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_CONSTANT, theme_type,
+        old_name, name,
+        include_defaults
+    )
 
 #endregion
 
 #region Fonts
 
-static func has_font(
+static func get_font_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_FONT,
+        include_variations, include_defaults, sort
+    )
+
+
+static func get_font_list(
     theme: Theme,
     theme_type: StringName,
-    name: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme,
+        Theme.DATA_TYPE_FONT, theme_type,
+        include_defaults, sort
+)
+
+
+static func has_font(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_font(name, base_type):
-                return true
-    return false
+    return has_theme_item(
+        theme,
+        Theme.DATA_TYPE_FONT, theme_type, name,
+        include_defaults
+    )
 
 
 static func get_font(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := true
 ) -> Font:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_font(name, base_type):
-                return base_theme.get_font(name, base_type)
-    return ThemeDB.fallback_font
+    var value := get_theme_item(
+        theme,
+        Theme.DATA_TYPE_FONT, theme_type, name,
+        include_defaults
+    )
+    return value
+
+
+static func set_font(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
+    value: Font
+) -> void:
+    set_theme_item(theme, Theme.DATA_TYPE_FONT, theme_type, name, value)
+
+
+static func clear_font(
+    theme: Theme,
+    theme_type: StringName, name: StringName
+) -> void:
+    clear_theme_item(theme, Theme.DATA_TYPE_FONT, theme_type, name)
+
+
+static func rename_font(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_FONT, theme_type,
+        old_name, name,
+        include_defaults
+    )
 
 #endregion
 
 #region Font sizes
 
-static func has_font_size(
+static func get_font_size_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_FONT_SIZE,
+        include_variations, include_defaults, sort
+    )
+
+
+static func get_font_size_list(
     theme: Theme,
     theme_type: StringName,
-    name: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme,
+        Theme.DATA_TYPE_FONT_SIZE, theme_type,
+        include_defaults, sort
+)
+
+
+static func has_font_size(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_font_size(name, base_type):
-                return true
-    return false
+    return has_theme_item(
+        theme,
+        Theme.DATA_TYPE_FONT_SIZE, theme_type, name,
+        include_defaults
+    )
 
 
 static func get_font_size(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := true
 ) -> int:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_font_size(name, base_type):
-                return base_theme.get_font_size(name, base_type)
-    return ThemeDB.fallback_font_size
+    var value := get_theme_item(
+        theme,
+        Theme.DATA_TYPE_FONT_SIZE, theme_type, name,
+        include_defaults
+    )
+    return value
+
+
+static func set_font_size(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
+    value: int
+) -> void:
+    set_theme_item(theme, Theme.DATA_TYPE_FONT_SIZE, theme_type, name, value)
+
+
+static func clear_font_size(
+    theme: Theme,
+    theme_type: StringName, name: StringName
+) -> void:
+    clear_theme_item(theme, Theme.DATA_TYPE_FONT_SIZE, theme_type, name)
+
+
+static func rename_font_size(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_FONT_SIZE, theme_type,
+        old_name, name,
+        include_defaults
+    )
 
 #endregion
 
 #region Icons
 
-static func has_icon(
+static func get_icon_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_ICON,
+        include_variations, include_defaults, sort
+    )
+
+
+static func get_icon_list(
     theme: Theme,
     theme_type: StringName,
-    name: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme,
+        Theme.DATA_TYPE_ICON, theme_type,
+        include_defaults, sort
+)
+
+
+static func has_icon(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_color(name, base_type):
-                return true
-    return false
+    return has_theme_item(
+        theme,
+        Theme.DATA_TYPE_ICON, theme_type, name,
+        include_defaults
+    )
 
 
 static func get_icon(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := true
 ) -> Texture2D:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_icon(name, base_type):
-                return base_theme.get_icon(name, base_type)
-    return ThemeDB.fallback_icon
+    var value := get_theme_item(
+        theme,
+        Theme.DATA_TYPE_ICON, theme_type, name,
+        include_defaults
+    )
+    return value
+
+
+static func set_icon(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
+    value: Texture2D
+) -> void:
+    set_theme_item(theme, Theme.DATA_TYPE_ICON, theme_type, name, value)
+
+
+static func clear_icon(
+    theme: Theme,
+    theme_type: StringName, name: StringName
+) -> void:
+    clear_theme_item(theme, Theme.DATA_TYPE_ICON, theme_type, name)
+
+
+static func rename_icon(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_ICON, theme_type,
+        old_name, name,
+        include_defaults
+    )
 
 #endregion
 
 #region StyleBoxes
 
-static func has_stylebox(
+static func get_stylebox_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_STYLEBOX,
+        include_variations, include_defaults, sort
+    )
+
+
+static func get_stylebox_list(
     theme: Theme,
     theme_type: StringName,
-    name: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme,
+        Theme.DATA_TYPE_STYLEBOX, theme_type,
+        include_defaults, sort
+)
+
+
+static func has_stylebox(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_stylebox(name, base_type):
-                return true
-    return false
+    return has_theme_item(
+        theme,
+        Theme.DATA_TYPE_STYLEBOX, theme_type, name,
+        include_defaults
+    )
 
 
 static func get_stylebox(
     theme: Theme,
-    theme_type: StringName,
-    name: StringName,
+    theme_type: StringName, name: StringName,
     include_defaults := true
 ) -> StyleBox:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_stylebox(name, base_type):
-                return base_theme.get_stylebox(name, base_type)
-    return ThemeDB.fallback_stylebox
+    var value := get_theme_item(
+        theme,
+        Theme.DATA_TYPE_STYLEBOX, theme_type, name,
+        include_defaults
+    )
+    return value
+
+
+static func set_stylebox(
+    theme: Theme,
+    theme_type: StringName, name: StringName,
+    value: StyleBox
+) -> void:
+    set_theme_item(theme, Theme.DATA_TYPE_STYLEBOX, theme_type, name, value)
+
+
+static func clear_stylebox(
+    theme: Theme,
+    theme_type: StringName, name: StringName
+) -> void:
+    clear_theme_item(theme, Theme.DATA_TYPE_STYLEBOX, theme_type, name)
+
+
+static func rename_stylebox(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_STYLEBOX, theme_type,
+        old_name, name,
+        include_defaults
+    )
 
 #endregion
