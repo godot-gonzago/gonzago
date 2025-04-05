@@ -3,8 +3,8 @@ extends TextureRect
 
 @export
 var _frames: Array[Texture2D] = []
-@export_range(0.05, 1.0, 0.05, "or_greater")
-var _interval := 0.2:
+@export_range(0.02, 0.5, 0.01, "or_greater")
+var _interval := 0.15:
     get = get_interval, set = set_interval
 
 var _current_frame := -1
