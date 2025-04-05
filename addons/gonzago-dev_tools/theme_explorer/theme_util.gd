@@ -73,14 +73,18 @@ static func get_base_theme(theme: Theme) -> Theme:
     return default_theme
 
 
-static func has_project_theme() -> bool:
-    var project_theme := ThemeDB.get_project_theme()
-    return is_instance_valid(project_theme)
-
-
 static func is_project_theme(theme: Theme) -> bool:
     if not theme or not theme.resource_path: return false
     return theme == ThemeDB.get_project_theme()
+
+
+static func is_readonly(theme: Theme) -> bool:
+    if Engine.is_editor_hint():
+        if theme == EditorInterface.get_editor_theme():
+            return true
+    if theme == ThemeDB.get_default_theme():
+        return true
+    return false
 
 
 static func get_theme_name(theme: Theme) -> String:
