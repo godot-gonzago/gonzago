@@ -3,16 +3,16 @@ extends VBoxContainer
 
 
 enum Mode {
-    NONE,
-    THEME,
-    THEME_TYPE,
-    DATA_TYPE,
-    THEME_ITEM
+    NONE = -1,
+    THEME = 0,
+    THEME_TYPE = 1,
+    DATA_TYPE = 2,
+    THEME_ITEM = 3
 }
 
 const ThemeUtil := preload("../../theme_util.gd")
 
-@onready var _label := get_node("Label") as Label
+@onready var _hierarchy_button := get_node("Header/HierarchyButton") as OptionButton
 
 var _mode: Mode = Mode.NONE
 var _theme: Theme = null
@@ -72,14 +72,28 @@ func inspect_theme_item(
 
 
 func _update_inspector() -> void:
-    match _mode:
-        Mode.THEME:
-            _label.text = "Theme"
-        Mode.THEME_TYPE:
-            _label.text = _theme_type
-        Mode.DATA_TYPE:
-            _label.text = ThemeUtil.get_data_type_name(_data_type)
-        Mode.THEME_ITEM:
-            _label.text = _theme_item
-        _:
-            _label.text = ""
+    _hierarchy_button.clear()
+    for mode in range(_mode, -1, -1):
+        var idx := _hierarchy_button.item_count
+        _hierarchy_button.add_item("")
+        _hierarchy_button.set_item_metadata(idx, mode)
+        
+        match mode:
+            Mode.THEME:
+                var icon := ThemeUtil.get_theme_icon(_theme)
+                var text := ThemeUtil.get_theme_name(_theme)
+                _hierarchy_button.set_item_icon(idx, icon)
+                _hierarchy_button.set_item_text(idx, text)
+            Mode.THEME_TYPE:
+                var icon := ThemeUtil.get_theme_type_icon(_theme_type)
+                _hierarchy_button.set_item_icon(idx, icon)
+                _hierarchy_button.set_item_text(idx, _theme_type)
+            Mode.DATA_TYPE:
+                var icon := ThemeUtil.get_data_type_icon(_data_type)
+                var text := ThemeUtil.get_data_type_name(_data_type)
+                _hierarchy_button.set_item_icon(idx, icon)
+                _hierarchy_button.set_item_text(idx, text)
+            Mode.THEME_ITEM:
+                var icon := ThemeUtil.get_data_type_icon(_data_type)
+                _hierarchy_button.set_item_icon(idx, icon)
+                _hierarchy_button.set_item_text(idx, _theme_item)

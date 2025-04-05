@@ -83,6 +83,41 @@ static func is_project_theme(theme: Theme) -> bool:
     return theme == ThemeDB.get_project_theme()
 
 
+static func get_theme_name(theme: Theme) -> String:
+    if Engine.is_editor_hint():
+        if theme == EditorInterface.get_editor_theme():
+            return &"Editor"
+            
+    var default_theme := ThemeDB.get_default_theme()
+    if theme == default_theme:
+        return &"Default"
+    
+    var project_theme := ThemeDB.get_project_theme()
+    if project_theme and not theme == project_theme:
+        return &"Project"
+
+    if theme.resource_path:
+        return theme.resource_path.get_file()
+    
+    return StringName()
+
+
+static func get_theme_icon(theme: Theme) -> Texture2D:
+    var default_theme := ThemeDB.get_default_theme()
+    var is_readonly := theme == default_theme
+    var icon_source := default_theme
+    
+    if Engine.is_editor_hint():
+        var editor_theme := EditorInterface.get_editor_theme()
+        icon_source = editor_theme
+        if not is_readonly:
+            is_readonly = theme == editor_theme
+    
+    if is_readonly:
+        return icon_source.get_icon(&"GuiVisibilityXray", &"EditorIcons")
+    return icon_source.get_icon(&"Theme", &"EditorIcons")
+
+
 # TODO
 static func get_theme_meta_data(
     theme: Theme,

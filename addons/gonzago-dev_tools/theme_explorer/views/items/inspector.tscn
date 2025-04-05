@@ -1,8 +1,26 @@
-[gd_scene load_steps=6 format=3 uid="uid://bo6smsoi8sunw"]
+[gd_scene load_steps=8 format=3 uid="uid://bo6smsoi8sunw"]
 
 [ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_ky6uh"]
 [ext_resource type="Script" uid="uid://bn16utcatxkgb" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/inspector.gd" id="1_wrjxo"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_wrjxo"]
+
+[sub_resource type="Texture2D" id="Texture2D_wrjxo"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_wrjxo")
+use_editor_theme = true
+icon_name = "Back"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_s8w17"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_wrjxo")
+use_editor_theme = true
+icon_name = "Forward"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
 [sub_resource type="StyleBox" id="StyleBox_2f41c"]
 resource_local_to_scene = false
@@ -36,9 +54,28 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_wrjxo")
 
-[node name="Label" type="Label" parent="."]
+[node name="Header" type="HBoxContainer" parent="."]
 layout_mode = 2
-text = "Name"
+
+[node name="HierarchyButton" type="OptionButton" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Hierarchy of inspected objects."
+text_overrun_behavior = 3
+fit_to_longest_item = false
+
+[node name="BackButton" type="Button" parent="Header"]
+layout_mode = 2
+tooltip_text = "Go to previously inspected object in history."
+icon = SubResource("Texture2D_wrjxo")
+flat = true
+
+[node name="ForwardButton" type="Button" parent="Header"]
+layout_mode = 2
+tooltip_text = "Go to next inspected object in history."
+disabled = true
+icon = SubResource("Texture2D_s8w17")
+flat = true
 
 [node name="PreviewBox" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(48, 48)
