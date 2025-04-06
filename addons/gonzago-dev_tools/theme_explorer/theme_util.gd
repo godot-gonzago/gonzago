@@ -433,18 +433,6 @@ static func rename_theme_item(
 
 #region Fonts & Font Sizes
 
-static func get_pairing_font_size_name(
-    theme: Theme,
-    theme_type: StringName,
-    font_name: StringName,
-    include_defaults := true
-) -> StringName:
-    var font_size_name := StringName(font_name + "_size")
-    if has_theme_item(theme, Theme.DATA_TYPE_FONT_SIZE, theme_type, font_size_name, include_defaults):
-        return font_size_name
-    return StringName("")
-
-
 static func get_pairing_font_size(
     theme: Theme,
     theme_type: StringName,
@@ -452,27 +440,13 @@ static func get_pairing_font_size(
     include_defaults := true
 ) -> int:
     var font_size_name := StringName(font_name + "_size")
-    return get_theme_item(
-        theme,
-        Theme.DATA_TYPE_FONT_SIZE,
-        theme_type,
-        font_size_name,
-        include_defaults
-    )
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if font_size_name in base_theme.get_font_size_list(base_type):
+                return base_theme.get_font_size(font_size_name, base_type)
+    return get_default_font_size(theme, include_defaults)
 
 
-static func get_pairing_font_name(
-    theme: Theme,
-    theme_type: StringName,
-    font_size_name: StringName,
-    include_defaults := true
-) -> StringName:
-    var font_name := StringName(font_size_name.trim_suffix("_size"))
-    if has_theme_item(theme, Theme.DATA_TYPE_FONT, theme_type, font_name, include_defaults):
-        return font_name
-    return StringName("")
-    
-    
 static func get_pairing_font(
     theme: Theme,
     theme_type: StringName,
@@ -480,12 +454,10 @@ static func get_pairing_font(
     include_defaults := true
 ) -> Font:
     var font_name := StringName(font_size_name.trim_suffix("_size"))
-    return get_theme_item(
-        theme,
-        Theme.DATA_TYPE_FONT,
-        theme_type,
-        font_name,
-        include_defaults
-    )
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if font_name in base_theme.get_font_list(base_type):
+                return base_theme.get_font(font_name, base_type)
+    return get_default_font(theme, include_defaults)
 
 #endregion
