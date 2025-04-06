@@ -119,15 +119,43 @@ func _draw_preview() -> void:
                 color
             )
         Theme.DATA_TYPE_CONSTANT:
-            pass
-        Theme.DATA_TYPE_FONT:
-            var font: Font = value as Font
-            var font_size := ThemeUtil.get_default_font_size(_theme)
-            #var font_size: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_FONT_SIZE, _theme_type, _theme_item)
+            var constant: int = value as int
+            var constant_type := EditorThemeUtil.get_constant_type(_theme_item)
+            var suffix := EditorThemeUtil.get_constant_type_suffix(constant_type)
+            var text := str(constant)
+            if suffix:
+                text += " " + suffix
+            if constant_type == EditorThemeUtil.ConstantType.FLAG:
+                text += " (%s)" % ["true" if constant > 0 else "false"]
+            var font := get_theme_default_font()
+            var font_size := get_theme_default_font_size()
             var pos: Vector2 = canvas_item_rect.position
             pos.y += font.get_ascent(font_size)
+            font.draw_string(
+                canvas_item,
+                pos,
+                text,
+                HORIZONTAL_ALIGNMENT_LEFT,
+                canvas_item_rect.size.x,
+                font_size,
+                Color.WHITE,
+                TextServer.JUSTIFICATION_CONSTRAIN_ELLIPSIS
+            )
+        Theme.DATA_TYPE_FONT, Theme.DATA_TYPE_FONT_SIZE:
+            var font: Font
+            var font_size: int
+            if _data_type == Theme.DATA_TYPE_FONT:
+                font = value as Font
+                font_size = ThemeUtil.get_pairing_font_size(_theme, _theme_type, _theme_item)
+            elif _data_type == Theme.DATA_TYPE_FONT_SIZE:
+                font = ThemeUtil.get_pairing_font(_theme, _theme_type, _theme_item)
+                font_size = value as int
+            var pos: Vector2 = canvas_item_rect.position
+            pos.y += font.get_ascent(font_size)
+            #font.get_multiline_string_size()
             var line_height := font.get_height(font_size)
-            var max_lines := ceili(canvas_item_rect.size.y / line_height)
+            var height := canvas_item_rect.size.y - font.get_descent(font_size)
+            var max_lines := ceili(height / line_height)
             font.draw_multiline_string(
                 canvas_item,
                 pos,
@@ -140,8 +168,6 @@ func _draw_preview() -> void:
                 TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE,
                 TextServer.JUSTIFICATION_CONSTRAIN_ELLIPSIS
             )
-        Theme.DATA_TYPE_FONT_SIZE:
-            pass
         Theme.DATA_TYPE_ICON:
             var icon: Texture2D = value as Texture2D
             var icon_size := icon.get_size()
