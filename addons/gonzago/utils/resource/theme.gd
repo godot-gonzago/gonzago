@@ -180,14 +180,14 @@ static func is_project_theme(theme: Theme) -> bool:
     return theme == ThemeDB.get_project_theme()
 
 
-static func has_default_base_scale(theme: Theme, include_defaults := false) -> bool:
-    for s in ThemeIterator.new(theme, include_defaults):
+static func has_default_base_scale(theme: Theme, include_base_themes := false) -> bool:
+    for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_base_scale(): return true
     return false
 
 
-static func get_default_base_scale(theme: Theme, include_defaults := true) -> float:
-    for s in ThemeIterator.new(theme, include_defaults):
+static func get_default_base_scale(theme: Theme, include_base_themes := true) -> float:
+    for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_base_scale(): return s.theme.default_base_scale
     return ThemeDB.fallback_base_scale
     
@@ -197,14 +197,14 @@ static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     theme.default_base_scale = value
 
 
-static func has_default_font(theme: Theme, include_defaults := false) -> bool:
-    for s in ThemeIterator.new(theme, include_defaults):
+static func has_default_font(theme: Theme, include_base_themes := false) -> bool:
+    for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font(): return true
     return false
 
 
-static func get_default_font(theme: Theme, include_defaults := true) -> Font:
-    for s in ThemeIterator.new(theme, include_defaults):
+static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
+    for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font(): return s.theme.default_font
     return ThemeDB.fallback_font
 
@@ -214,14 +214,14 @@ static func set_default_font(theme: Theme, value: Font = null) -> void:
     theme.default_font = value
 
 
-static func has_default_font_size(theme: Theme, include_defaults := false) -> bool:
-    for s in ThemeIterator.new(theme, include_defaults):
+static func has_default_font_size(theme: Theme, include_base_themes := false) -> bool:
+    for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font_size(): return true
     return false
 
 
-static func get_default_font_size(theme: Theme, include_defaults := true) -> int:
-    for s in ThemeIterator.new(theme, include_defaults):
+static func get_default_font_size(theme: Theme, include_base_themes := true) -> int:
+    for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font_size(): return s.theme.default_font_size
     return ThemeDB.fallback_font_size
 
@@ -296,12 +296,12 @@ static func is_valid_value_for_data_type(
 static func get_type_list(
     theme: Theme,
     include_variations := false,
-    include_defaults := true,
+    include_base_themes := true,
     sort := true
 ) -> PackedStringArray:
     var result := PackedStringArray()
 
-    for s in ThemeIterator.new(theme, include_defaults):
+    for s in ThemeIterator.new(theme, include_base_themes):
         for type in s.theme.get_type_list():
             if not include_variations and s.theme.get_type_variation_base(type):
                 continue
@@ -315,12 +315,12 @@ static func get_type_list(
 static func get_type_variation_list(
     theme: Theme,
     base_type: StringName,
-    include_defaults := true,
+    include_base_themes := true,
     sort := true
 ) -> PackedStringArray:
     var result := PackedStringArray()
 
-    for s in ThemeIterator.new(theme, include_defaults):
+    for s in ThemeIterator.new(theme, include_base_themes):
         for variation in s.theme.get_type_variation_list(base_type):
             if variation not in result:
                 result.append(variation)
@@ -332,9 +332,9 @@ static func get_type_variation_list(
 static func has_type(
     theme: Theme,
     theme_type: StringName,
-    include_defaults := false
+    include_base_themes := false
 ) -> bool:
-    for s in ThemeIterator.new(theme, include_defaults):
+    for s in ThemeIterator.new(theme, include_base_themes):
         if theme_type in s.theme.get_type_list(): return true
     return false
 
@@ -354,12 +354,12 @@ static func get_theme_item_type_list(
     theme: Theme,
     data_type: Theme.DataType,
     include_variations := false,
-    include_defaults := true,
+    include_base_themes := true,
     sort := true
 ) -> PackedStringArray:
     var result := PackedStringArray()
 
-    for s in ThemeIterator.new(theme, include_defaults):
+    for s in ThemeIterator.new(theme, include_base_themes):
         for type in s.theme.get_theme_item_type_list(data_type):
             if not include_variations and s.theme.get_type_variation_base(type):
                 continue
@@ -379,7 +379,7 @@ static func get_theme_item_list(
 ) -> PackedStringArray:
     var result := PackedStringArray()
 
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         for item in s.theme.get_theme_item_list(data_type, s.theme_type):
             if item not in result:
                 result.append(item)
@@ -395,7 +395,7 @@ static func has_theme_item(
     name: StringName,
     include_defaults := false
 ) -> bool:
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         if s.theme.has_theme_item(data_type, name, s.theme_type):
             return true
     return false
@@ -408,7 +408,7 @@ static func get_theme_item(
     name: StringName,
     include_defaults := true
 ) -> Variant:
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         if s.theme.has_theme_item(data_type, name, s.theme_type):
             return s.theme.get_theme_item(data_type, name, s.theme_type)
     return get_data_type_fallback(data_type)
@@ -454,6 +454,7 @@ static func rename_theme_item(
 
 #endregion
 
+# TODO: Copy for all types to match original Theme functionality?
 #region Colors
 
 static func get_colors_type_list(
@@ -535,7 +536,7 @@ static func has_pairing_font_size(
     include_defaults := false
 ) -> bool:
     var font_size_name := get_pairing_font_size_name(font_name)
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         if font_size_name in s.theme.get_font_size_list(s.theme_type):
             return true
     return false
@@ -548,7 +549,7 @@ static func get_pairing_font_size(
     include_defaults := true
 ) -> int:
     var font_size_name := get_pairing_font_size_name(font_name)
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         if font_size_name in s.theme.get_font_size_list(s.theme_type):
             return s.theme.get_font_size(font_size_name, s.theme_type)
     return get_default_font_size(theme, include_defaults)
@@ -568,7 +569,7 @@ static func has_pairing_font(
     include_defaults := false
 ) -> bool:
     var font_name := get_pairing_font_name(font_size_name)
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         if font_name in s.theme.get_font_list(s.theme_type):
             return true
     return false
@@ -581,7 +582,7 @@ static func get_pairing_font(
     include_defaults := true
 ) -> Font:
     var font_name := get_pairing_font_name(font_size_name)
-    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults):
+    for s in ThemeTypeIterator.new(theme, theme_type, include_defaults, include_defaults):
         if font_name in s.theme.get_font_list(s.theme_type):
             return s.theme.get_font(font_name, s.theme_type)
     return get_default_font(theme, include_defaults)
