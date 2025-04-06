@@ -101,6 +101,7 @@ func _on_tree_item_selected() -> void:
 func _on_filter_text_changed(new_text: String) -> void:
     var root := _tree.get_root()
     _filter_types_items(root, new_text)
+    
 
 func _filter_types_items(parent: TreeItem, filter: String) -> bool:
     var has_visible_children := false
@@ -124,14 +125,15 @@ func _on_tree_item_activated() -> void:
     var item := _tree.get_selected()
     var type := item.get_metadata(0) as StringName
     var is_default := not ThemeUtil.has_type(_theme, type)
-    item.set_editable(0, not is_default) # TODO: On gui input, F2 or double click
+    if not _is_read_only and not is_default:
+        _tree.edit_selected(true)
+        # TODO: On gui input, F2 or double click
 
 
 func _on_tree_item_edited() -> void:
     var item := _tree.get_edited()
     var type := item.get_metadata(0) as StringName
     push_warning("Hello!")
-    pass
 
 
 func _on_tree_button_clicked(
