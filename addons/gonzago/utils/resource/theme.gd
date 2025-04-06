@@ -10,7 +10,9 @@ extends RefCounted
 # TODO: Document according to
 #       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
-#region Themes
+const _ThemeUtil := preload("./theme.gd")
+
+#region Iterators
 
 ## Hierarchical iterator for [Theme] resource.
 ##
@@ -18,42 +20,113 @@ extends RefCounted
 ## If [param include_base_theme] is set to [code]true[/code] the iterator tries
 ## to find the base themes next. For regular themes this is first the project theme
 ## if available and then the default theme.
-class ThemeIterator extends RefCounted:
-    var _theme: Theme
+class _ThemeIterator extends RefCounted:
+    var _initial_theme: Theme
     var _include_base_theme: bool
     
     func _init(theme: Theme, include_base_theme := true) -> void:
-        _theme = theme
+        _initial_theme = theme
         _include_base_theme = include_base_theme
-        if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
-            _include_base_theme = false
         
     func _iter_init(iter: Array) -> bool:
-        iter[0] = _theme
-        return is_instance_valid(_theme)
+        iter[0] = _initial_theme
+        return is_instance_valid(_initial_theme)
         
     func _iter_next(iter: Array) -> bool:
         var theme := iter[0] as Theme
         if not theme or not _include_base_theme:
             iter[0] = null
             return false
-        
-        var default_theme := ThemeDB.get_default_theme()
-        if theme == default_theme:
-            iter[0] = null
-            return false
-        
-        var project_theme := ThemeDB.get_project_theme()
-        if project_theme and not theme == project_theme:
-            iter[0] = project_theme
-            return true
-        
-        iter[0] = default_theme
-        return true
+        theme = _ThemeUtil.get_base_theme(theme)
+        iter[0] = theme
+        return is_instance_valid(theme)
         
     func _iter_get(current: Variant) -> Theme:
         return current as Theme
 
+
+## Hierarchical iterator for types in [Theme] resources.
+##
+## This iterator allows for iteration over types in a [Theme] and optionally its base types.
+## If [param include_base_type] is set to [code]true[/code] the iterator tries
+## to find the base types if the given [param theme_type] is a variation.
+class _ThemeTypeIterator extends RefCounted:
+    var _theme: Theme
+    var _theme_type: StringName
+    var _include_base_type := true
+    
+    func _init(theme: Theme, theme_type: StringName, include_base_type := true) -> void:
+        _theme = theme
+        _theme_type = theme_type
+        _include_base_type = include_base_type
+    
+    func _iter_init(iter: Array) -> bool:
+        iter[0] = _theme_type
+        return is_instance_valid(_theme_type)
+    
+    func _iter_next(iter: Array) -> bool:
+        var theme_type := iter[0] as StringName
+        if not theme_type or not _theme or not _include_base_type:
+            iter[0] = &""
+            return false
+        
+        var base_type := _theme.get_type_variation_base(theme_type)
+        iter[0] = base_type
+        return is_instance_valid(base_type)
+        
+    func _iter_get(current: Variant) -> StringName:
+        return current as StringName
+
+
+class _DefaultsIterator extends RefCounted:
+    class State extends RefCounted:
+        var theme: Theme
+        var theme_type: StringName
+        
+        func _init(theme: Theme, theme_type: StringName) -> void:
+            self.theme = theme
+            self.theme_type = theme_type
+    
+    var _initial_theme: Theme
+    var _initial_theme_type: StringName
+    var _include_defaults: bool
+    
+    func _init(theme: Theme, theme_type: StringName, include_defaults := true) -> void:
+        _initial_theme = theme
+        _initial_theme_type = theme_type
+        _include_defaults = include_defaults
+        
+    func _iter_init(iter: Array) -> bool:
+        if not _initial_theme or not _initial_theme_type:
+            iter[0] = null
+            return false
+        iter[0] = State.new(_initial_theme, _initial_theme_type)
+        return true
+        
+    func _iter_next(iter: Array) -> bool:
+        var state := iter[0] as State
+        if not state or not _include_defaults:
+            iter[0] = null
+            return false
+        
+        state.theme_type = state.theme.get_type_variation_base(state.theme_type)
+        if state.theme_type:
+            return true
+        
+        state.theme = _ThemeUtil.get_base_theme(state.theme)
+        if state.theme:
+            state.theme_type = _initial_theme_type
+            return true
+        
+        iter[0] = null
+        return false
+        
+    func _iter_get(current: Variant) -> State:
+        return current as State
+
+#endregion
+
+#region Themes
 
 static func has_base_theme(theme: Theme) -> bool:
     if theme and theme.resource_path:
@@ -91,19 +164,15 @@ static func is_project_theme(theme: Theme) -> bool:
     return theme == ThemeDB.get_project_theme()
 
 
-# TODO:
 static func has_default_base_scale(theme: Theme, include_defaults := false) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if base_theme.has_default_base_scale():
-            return true
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if t.has_default_base_scale(): return true
     return false
 
 
-# TODO:
 static func get_default_base_scale(theme: Theme, include_defaults := true) -> float:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if base_theme.has_default_base_scale():
-            return base_theme.default_base_scale
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if t.has_default_base_scale(): return t.default_base_scale
     return ThemeDB.fallback_base_scale
     
     
@@ -112,19 +181,15 @@ static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     theme.default_base_scale = value
 
 
-# TODO:
 static func has_default_font(theme: Theme, include_defaults := false) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if base_theme.has_default_font():
-            return true
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if t.has_default_font(): return true
     return false
 
 
-# TODO:
 static func get_default_font(theme: Theme, include_defaults := true) -> Font:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if base_theme.has_default_font():
-            return base_theme.default_font
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if t.has_default_font(): return t.default_font
     return ThemeDB.fallback_font
 
 
@@ -133,19 +198,15 @@ static func set_default_font(theme: Theme, value: Font = null) -> void:
     theme.default_font = value
 
 
-# TODO:
 static func has_default_font_size(theme: Theme, include_defaults := false) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if base_theme.has_default_font_size():
-            return true
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if t.has_default_font_size(): return true
     return false
 
 
-# TODO:
 static func get_default_font_size(theme: Theme, include_defaults := true) -> int:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if base_theme.has_default_font_size():
-            return base_theme.default_font_size
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if t.has_default_font_size(): return t.default_font_size
     return ThemeDB.fallback_font_size
 
 
@@ -216,66 +277,23 @@ static func is_valid_value_for_data_type(
 
 #region Theme types
 
-## Hierarchical iterator for types in [Theme] resources.
-##
-## This iterator allows for iteration over types in a [Theme] and optionally its base types.
-## If [param include_base_type] is set to [code]true[/code] the iterator tries
-## to find the base types if the given [param theme_type] is a variation.
-class ThemeTypeIterator extends RefCounted:
-    var _theme: Theme
-    var _theme_type: StringName
-    var _include_base_type := true
-    
-    func _init(theme: Theme, theme_type: StringName, include_base_type := true) -> void:
-        _theme = theme
-        _theme_type = theme_type
-        _include_base_type = include_base_type
-        
-    func _iter_init(iter: Array) -> bool:
-        iter[0] = _theme_type
-        if not _theme_type: return false
-        return true
-        
-    func _iter_next(iter: Array) -> bool:
-        var theme_type := iter[0] as StringName
-        if not theme_type or not _include_base_type:
-            iter[0] = StringName("")
-            return false
-        
-        if not _theme:
-            iter[0] = StringName("")
-            return false
-        
-        var base_type := _theme.get_type_variation_base(theme_type)
-        if not base_type:
-            iter[0] = StringName("")
-            return false
-        
-        iter[0] = base_type
-        return true
-        
-    func _iter_get(current: Variant) -> StringName:
-        return current as StringName
-
-
 static func get_type_list(
     theme: Theme,
     include_variations := false,
     include_defaults := true,
     sort := true
 ) -> PackedStringArray:
-    var types := PackedStringArray()
+    var result := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        var base_types := base_theme.get_type_list()
-        for base_type in base_types:
-            if not include_variations and base_theme.get_type_variation_base(base_type):
+    for t in _ThemeIterator.new(theme, include_defaults):
+        for type in t.get_type_list():
+            if not include_variations and t.get_type_variation_base(type):
                 continue
-            if base_type not in types:
-                types.append(base_type)
+            if type not in result:
+                result.append(type)
 
-    if sort: types.sort()
-    return types
+    if sort: result.sort()
+    return result
 
 
 static func get_type_variation_list(
@@ -284,16 +302,15 @@ static func get_type_variation_list(
     include_defaults := true,
     sort := true
 ) -> PackedStringArray:
-    var variations := PackedStringArray()
+    var result := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        var base_variations := base_theme.get_type_variation_list(base_type)
-        for base_variation in base_variations:
-            if base_variation not in variations:
-                variations.append(base_variation)
+    for t in _ThemeIterator.new(theme, include_defaults):
+        for variation in t.get_type_variation_list(base_type):
+            if variation not in result:
+                result.append(variation)
 
-    if sort: variations.sort()
-    return variations
+    if sort: result.sort()
+    return result
 
 
 static func has_type(
@@ -301,9 +318,8 @@ static func has_type(
     theme_type: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        if theme_type in base_theme.get_type_list():
-            return true
+    for t in _ThemeIterator.new(theme, include_defaults):
+        if theme_type in t.get_type_list(): return true
     return false
 
 
@@ -325,18 +341,17 @@ static func get_theme_item_type_list(
     include_defaults := true,
     sort := true
 ) -> PackedStringArray:
-    var types := PackedStringArray()
+    var result := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        var base_types := base_theme.get_theme_item_type_list(data_type)
-        for base_type in base_types:
-            if not include_variations and base_theme.get_type_variation_base(base_type):
+    for t in _ThemeIterator.new(theme, include_defaults):
+        for type in t.get_theme_item_type_list(data_type):
+            if not include_variations and t.get_type_variation_base(type):
                 continue
-            if base_type not in types:
-                types.append(base_type)
+            if type not in result:
+                result.append(type)
 
-    if sort: types.sort()
-    return types
+    if sort: result.sort()
+    return result
 
 
 static func get_theme_item_list(
@@ -346,17 +361,15 @@ static func get_theme_item_list(
     include_defaults := true,
     sort := true
 ) -> PackedStringArray:
-    var items := PackedStringArray()
+    var result := PackedStringArray()
 
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            var base_type_items := base_theme.get_theme_item_list(data_type, base_type)
-            for item in base_type_items:
-                if item not in items:
-                    items.append(item)
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        for item in s.theme.get_theme_item_list(data_type, s.theme_type):
+            if item not in result:
+                result.append(item)
 
-    if sort: items.sort()
-    return items
+    if sort: result.sort()
+    return result
 
 
 static func has_theme_item(
@@ -366,10 +379,9 @@ static func has_theme_item(
     name: StringName,
     include_defaults := false
 ) -> bool:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_theme_item(data_type, name, base_type):
-                return true
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        if s.theme.has_theme_item(data_type, name, s.theme_type):
+            return true
     return false
 
 
@@ -380,14 +392,12 @@ static func get_theme_item(
     name: StringName,
     include_defaults := true
 ) -> Variant:
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if base_theme.has_theme_item(data_type, name, base_type):
-                return base_theme.get_theme_item(data_type, name, base_type)
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        if s.theme.has_theme_item(data_type, name, s.theme_type):
+            return s.theme.get_theme_item(data_type, name, s.theme_type)
     return get_data_type_fallback(data_type)
     
 
-# TODO:
 static func set_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -400,7 +410,6 @@ static func set_theme_item(
     theme.set_theme_item(data_type, name, theme_type, value)
 
 
-# TODO:
 static func clear_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -411,7 +420,6 @@ static func clear_theme_item(
         theme.clear_theme_item(data_type, name, theme_type)
         
 
-# TODO:
 static func rename_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -430,6 +438,74 @@ static func rename_theme_item(
 
 #endregion
 
+#region Colors
+
+static func get_colors_type_list(
+    theme: Theme,
+    include_variations := false, include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_type_list(
+        theme, Theme.DATA_TYPE_COLOR,
+        include_variations, include_defaults, sort
+    )
+
+
+static func get_color_list(
+    theme: Theme, theme_type: StringName,
+    include_defaults := true, sort := true
+) -> PackedStringArray:
+    return get_theme_item_list(
+        theme, Theme.DATA_TYPE_COLOR, theme_type,
+        include_defaults, sort
+    )
+
+
+static func has_color(
+    theme: Theme, theme_type: StringName, name: StringName,
+    include_defaults := false
+) -> bool:
+    return has_theme_item(
+        theme, Theme.DATA_TYPE_COLOR, theme_type, name,
+        include_defaults
+    )
+
+
+static func get_color(
+    theme: Theme, theme_type: StringName, name: StringName,
+    include_defaults := true
+) -> Color:
+    return get_theme_item(
+        theme, Theme.DATA_TYPE_COLOR, theme_type, name,
+        include_defaults
+    ) as Color
+    
+
+static func set_color(
+    theme: Theme, theme_type: StringName, name: StringName, value: Color
+) -> void:
+    theme.set_color(name, theme_type, value)
+
+
+static func clear_color(
+    theme: Theme, theme_type: StringName, name: StringName
+) -> void:
+    if theme.has_color(name, theme_type):
+        theme.clear_color(name, theme_type)
+        
+
+static func rename_color(
+    theme: Theme,
+    theme_type: StringName, old_name: StringName, name: StringName,
+    include_defaults := true
+) -> void:
+    rename_theme_item(
+        theme, Theme.DATA_TYPE_COLOR,
+        theme_type, old_name, name,
+        include_defaults
+    )
+
+#endregion
+
 #region Fonts
 
 static func get_pairing_font_size_name(font_name: StringName) -> StringName:
@@ -443,10 +519,9 @@ static func has_pairing_font_size(
     include_defaults := false
 ) -> bool:
     var font_size_name := get_pairing_font_size_name(font_name)
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if font_size_name in base_theme.get_font_size_list(base_type):
-                return true
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        if font_size_name in s.theme.get_font_size_list(s.theme_type):
+            return true
     return false
 
 
@@ -457,10 +532,9 @@ static func get_pairing_font_size(
     include_defaults := true
 ) -> int:
     var font_size_name := get_pairing_font_size_name(font_name)
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if font_size_name in base_theme.get_font_size_list(base_type):
-                return base_theme.get_font_size(font_size_name, base_type)
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        if font_size_name in s.theme.get_font_size_list(s.theme_type):
+            return s.theme.get_font_size(font_size_name, s.theme_type)
     return get_default_font_size(theme, include_defaults)
 
 #endregion
@@ -478,10 +552,9 @@ static func has_pairing_font(
     include_defaults := false
 ) -> bool:
     var font_name := get_pairing_font_name(font_size_name)
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if font_name in base_theme.get_font_list(base_type):
-                return true
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        if font_name in s.theme.get_font_list(s.theme_type):
+            return true
     return false
 
 
@@ -492,10 +565,9 @@ static func get_pairing_font(
     include_defaults := true
 ) -> Font:
     var font_name := get_pairing_font_name(font_size_name)
-    for base_theme in ThemeIterator.new(theme, include_defaults):
-        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
-            if font_name in base_theme.get_font_list(base_type):
-                return base_theme.get_font(font_name, base_type)
+    for s in _DefaultsIterator.new(theme, theme_type, include_defaults):
+        if font_name in s.theme.get_font_list(s.theme_type):
+            return s.theme.get_font(font_name, s.theme_type)
     return get_default_font(theme, include_defaults)
 
 #endregion
