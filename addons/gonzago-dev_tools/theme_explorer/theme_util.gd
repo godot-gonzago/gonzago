@@ -431,7 +431,25 @@ static func rename_theme_item(
 
 #endregion
 
-#region Fonts & Font Sizes
+#region Fonts
+
+static func get_pairing_font_size_name(font_name: StringName) -> StringName:
+    return font_name + "_size"
+
+
+static func has_pairing_font_size(
+    theme: Theme,
+    theme_type: StringName,
+    font_name: StringName,
+    include_defaults := false
+) -> bool:
+    var font_size_name := get_pairing_font_size_name(font_name)
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if font_size_name in base_theme.get_font_size_list(base_type):
+                return true
+    return false
+
 
 static func get_pairing_font_size(
     theme: Theme,
@@ -439,12 +457,33 @@ static func get_pairing_font_size(
     font_name: StringName,
     include_defaults := true
 ) -> int:
-    var font_size_name := StringName(font_name + "_size")
+    var font_size_name := get_pairing_font_size_name(font_name)
     for base_theme in ThemeIterator.new(theme, include_defaults):
         for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
             if font_size_name in base_theme.get_font_size_list(base_type):
                 return base_theme.get_font_size(font_size_name, base_type)
     return get_default_font_size(theme, include_defaults)
+
+#endregion
+
+#region Font Sizes
+
+static func get_pairing_font_name(font_size_name: StringName) -> StringName:
+    return font_size_name.trim_suffix("_size")
+
+
+static func has_pairing_font(
+    theme: Theme,
+    theme_type: StringName,
+    font_size_name: StringName,
+    include_defaults := false
+) -> bool:
+    var font_name := get_pairing_font_name(font_size_name)
+    for base_theme in ThemeIterator.new(theme, include_defaults):
+        for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
+            if font_name in base_theme.get_font_list(base_type):
+                return true
+    return false
 
 
 static func get_pairing_font(
@@ -453,7 +492,7 @@ static func get_pairing_font(
     font_size_name: StringName,
     include_defaults := true
 ) -> Font:
-    var font_name := StringName(font_size_name.trim_suffix("_size"))
+    var font_name := get_pairing_font_name(font_size_name)
     for base_theme in ThemeIterator.new(theme, include_defaults):
         for base_type in ThemeTypeIterator.new(base_theme, theme_type, include_defaults):
             if font_name in base_theme.get_font_list(base_type):
