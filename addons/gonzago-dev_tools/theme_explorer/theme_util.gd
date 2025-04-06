@@ -78,7 +78,7 @@ static func get_base_theme(theme: Theme) -> Theme:
     return default_theme
 
 
-static func is_readonly(theme: Theme) -> bool:
+static func is_read_only(theme: Theme) -> bool:
     if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
         return true
     if theme == ThemeDB.get_default_theme():

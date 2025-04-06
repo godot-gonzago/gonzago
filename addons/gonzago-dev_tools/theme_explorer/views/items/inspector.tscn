@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bo6smsoi8sunw"]
+[gd_scene load_steps=7 format=3 uid="uid://bo6smsoi8sunw"]
 
 [ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="1_ky6uh"]
 [ext_resource type="Script" uid="uid://bn16utcatxkgb" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/inspector.gd" id="1_wrjxo"]
@@ -34,15 +34,6 @@ use_editor_theme = true
 stylebox_name = "hover"
 stylebox_type = "Button"
 metadata/_custom_type_script = "uid://cpbyfhnvp7snj"
-
-[sub_resource type="Texture2D" id="Texture2D_fqxdc"]
-resource_local_to_scene = false
-resource_name = ""
-script = ExtResource("2_wrjxo")
-use_editor_theme = true
-icon_name = "Godot"
-icon_type = "EditorIcons"
-metadata/_custom_type_script = "uid://fkalipf2jmdp"
 
 [node name="Inspector" type="VBoxContainer"]
 anchors_preset = 15
@@ -83,12 +74,10 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_2f41c")
 
-[node name="Icon" type="TextureRect" parent="PreviewBox"]
-custom_minimum_size = Vector2(48, 48)
+[node name="Preview" type="Control" parent="PreviewBox"]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 mouse_filter = 2
-texture = SubResource("Texture2D_fqxdc")
-stretch_mode = 3
 
 [node name="MetaData" type="ItemList" parent="."]
 layout_mode = 2

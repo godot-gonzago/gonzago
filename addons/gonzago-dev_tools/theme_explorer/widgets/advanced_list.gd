@@ -16,3 +16,7 @@ class Item extends Container:
     #       Control on the right side
     #       Thumbnail drawing registerable callback in thumbnail mode
     pass
+
+
+func _init() -> void:
+    set_notify_transform(true)

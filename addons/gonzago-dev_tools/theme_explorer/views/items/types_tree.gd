@@ -15,7 +15,7 @@ signal theme_type_selected(theme_type: StringName)
 @onready var _tree := get_node("Tree") as Tree
 
 var _theme: Theme = null
-
+var _is_read_only: bool = true
 
 func _notification(what: int) -> void:
     match what:
@@ -30,12 +30,13 @@ func _notification(what: int) -> void:
 func inspect(theme: Theme) -> void:
     if _theme == theme: return
     _theme = theme
+    _is_read_only = ThemeUtil.is_read_only(_theme)
     if is_node_ready():
         _build_tree()
 
 
 func _build_tree() -> void:
-    _add_button.visible = not ThemeUtil.is_readonly(_theme)
+    _add_button.visible = not _is_read_only
     
     _tree.clear()
     if not _theme: return
@@ -67,9 +68,9 @@ func _update_types_items(parent: TreeItem) -> void:
         var icon := EditorThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
         
-        var color := Color.WHITE
+        var color := get_theme_color(&"font_color", &"Tree")
         if not ThemeUtil.has_type(_theme, type):
-            color = color.darkened(0.5)
+            color = get_theme_color(&"font_disabled_color", &"Tree")
         item.set_custom_color(0, color)
         
         _update_types_items(item)
