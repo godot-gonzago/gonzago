@@ -1,5 +1,4 @@
 @tool
-class_name GonzagoMainEditorPlugin
 extends EditorPlugin
 ## Gonzago core editor plugin.
 ##
@@ -29,23 +28,8 @@ signal enabled
 signal disabled
 
 
-static func get_plugin_instance_or_null() -> GonzagoMainEditorPlugin:
-    var tree := Engine.get_main_loop() as SceneTree
-    var owner := tree.root
-    var plugin := owner.get_node_or_null("%GonzagoMainEditorPlugin") as GonzagoMainEditorPlugin
-    return plugin
-
-
-func _init() -> void:
-    name = "GonzagoMainEditorPlugin"
-    unique_name_in_owner = true
-
-
 func _enter_tree() -> void:
-    print("Enter tree GonzagoMainEditorPlugin")
-
-    var root := get_tree().root
-    owner = root
+    #print("Enter tree GonzagoMainEditorPlugin")
 
     if not ProjectSettings.has_setting("application/boot_splash/screens"):
         ProjectSettings.set("application/boot_splash/screens", [
@@ -68,17 +52,19 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
-    print("Exit tree GonzagoMainEditorPlugin")
+    #print("Exit tree GonzagoMainEditorPlugin")
     pass
 
 
 func _enable_plugin() -> void:
-    print("Enabled GonzagoMainEditorPlugin")
+    #print("Enabled GonzagoMainEditorPlugin")
+    add_autoload_singleton("GonzagoEngine", "res://addons/gonzago/core/engine.gd")
     EditorInterface.set_plugin_enabled("gonzago/editor/plugins", true)
     EditorInterface.set_plugin_enabled("gonzago/editor/interfaces", true)
 
 
 func _disable_plugin() -> void:
-    print("Disabled GonzagoMainEditorPlugin")
+    #print("Disabled GonzagoMainEditorPlugin")
     EditorInterface.set_plugin_enabled("gonzago/editor/interfaces", false)
     EditorInterface.set_plugin_enabled("gonzago/editor/plugins", false)
+    remove_autoload_singleton("GonzagoEngine")

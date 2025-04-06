@@ -5,6 +5,7 @@ extends GonzagoEditorPlugin
 ## TODO: Document according to
 ##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
+# # https://github.com/godotengine/godot/blob/master/editor/plugins/theme_editor_plugin.cpp
 
 const ThemeExplorer := preload("./views_old/explorer.tscn")
 const MainView := preload("./views/main_view.tscn")

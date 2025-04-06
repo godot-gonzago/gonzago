@@ -28,6 +28,10 @@ boot_splash/screens=["res://addons/gonzago/assets/godot-logo.svg", "res://addons
 
 buses/default_bus_layout="res://addons/gonzago/assets/default_bus_layout.tres"
 
+[autoload]
+
+GonzagoEngine="*res://addons/gonzago/core/engine.gd"
+
 [debug]
 
 gdscript/warnings/untyped_declaration=1
