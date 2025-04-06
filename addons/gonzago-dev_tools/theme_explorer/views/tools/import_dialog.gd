@@ -1,8 +1,7 @@
 @tool
 extends AcceptDialog
 
-const ThemeUtil := preload("../../theme_util.gd")
-const EditorThemeUtil := preload("../../editor_theme_util.gd")
+const ThemeUtil := Gonzago.ThemeUtil
 const FileBar := preload("../file_bar.gd")
 
 @onready var _file_bar := get_node("ImportTree/FileBar") as FileBar
@@ -63,8 +62,8 @@ func _options_about_to_popup() -> void:
     for data_type in Theme.DATA_TYPE_MAX:
         var idx := select_sub_menu.item_count
         select_sub_menu.add_icon_item(
-            EditorThemeUtil.get_data_type_icon(data_type),
-            "%d %s" % [count[data_type], EditorThemeUtil.get_data_type_name(data_type)]
+            ThemeUtil.get_data_type_icon(data_type),
+            "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
         )
         select_sub_menu.set_item_disabled(idx, count[data_type] == 0)
     
@@ -84,8 +83,8 @@ func _options_about_to_popup() -> void:
     for data_type in Theme.DATA_TYPE_MAX:
         var idx := select_with_sub_menu.item_count
         select_with_sub_menu.add_icon_item(
-            EditorThemeUtil.get_data_type_icon(data_type),
-            "%d %s" % [count[data_type], EditorThemeUtil.get_data_type_name(data_type)]
+            ThemeUtil.get_data_type_icon(data_type),
+            "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
         )
         select_with_sub_menu.set_item_disabled(idx, count[data_type] == 0)
     
@@ -105,8 +104,8 @@ func _options_about_to_popup() -> void:
     for data_type in Theme.DATA_TYPE_MAX:
         var idx := deselect_sub_menu.item_count
         deselect_sub_menu.add_icon_item(
-            EditorThemeUtil.get_data_type_icon(data_type),
-            "%d %s" % [count[data_type], EditorThemeUtil.get_data_type_name(data_type)]
+            ThemeUtil.get_data_type_icon(data_type),
+            "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
         )
         deselect_sub_menu.set_item_disabled(idx, count[data_type] == 0)
     
@@ -136,7 +135,7 @@ func _build_tree() -> void:
                 continue
             
             var data_type_root := type_item.create_child()
-            data_type_root.set_text(0, EditorThemeUtil.get_data_type_name(data_type))
+            data_type_root.set_text(0, ThemeUtil.get_data_type_name(data_type))
             data_type_root.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
             data_type_root.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
             data_type_root.set_metadata(0, data_type)
@@ -155,12 +154,12 @@ func _update_tree() -> void:
     var root := _tree.get_root()
     for item in root.get_children():
         var type := item.get_text(0)
-        var icon := EditorThemeUtil.get_theme_type_icon(type)
+        var icon := ThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
         
         for data_type_item in item.get_children():
             var data_type: int = data_type_item.get_metadata(0)
-            data_type_item.set_icon(0, EditorThemeUtil.get_data_type_icon(data_type))
+            data_type_item.set_icon(0, ThemeUtil.get_data_type_icon(data_type))
 
 # TODO: data_type_item.propagate_check(1)
 # TODO: theme_tree_item.set_indeterminate(1, true)

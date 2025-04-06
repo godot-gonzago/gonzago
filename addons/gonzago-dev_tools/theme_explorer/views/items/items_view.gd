@@ -1,6 +1,8 @@
 @tool
 extends HSplitContainer
 
+
+const NodeUtil := Gonzago.NodeUtil
 const TypesTree := preload("./types_tree.gd")
 const ItemsTree := preload("./items_tree.gd")
 const Inspector := preload("./inspector.gd")

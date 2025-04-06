@@ -2,6 +2,7 @@
 extends VBoxContainer
 
 
+const NodeUtil := Gonzago.NodeUtil
 const ThemeTree := preload("./theme_tree.gd")
 const TypeGroup := preload("./type_group.gd")
 

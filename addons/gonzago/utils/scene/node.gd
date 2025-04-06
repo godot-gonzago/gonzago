@@ -1,6 +1,5 @@
 @tool
 @static_unload
-class_name NodeUtil
 extends RefCounted
 ## Utility functions for nodes.
 ##

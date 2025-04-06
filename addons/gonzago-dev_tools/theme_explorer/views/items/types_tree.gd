@@ -6,8 +6,7 @@ extends VBoxContainer
 #       https://github.com/Lenrow/line-edit-complete-godot
 #       Direct base type selection when adding.
 
-const ThemeUtil := preload("../../theme_util.gd")
-const EditorThemeUtil := preload("../../editor_theme_util.gd")
+const ThemeUtil := Gonzago.ThemeUtil
 
 signal theme_type_selected(theme_type: StringName)
 
@@ -67,7 +66,7 @@ func _update_tree() -> void:
 func _update_types_items(parent: TreeItem) -> void:
     for item in parent.get_children():
         var type := item.get_text(0)
-        var icon := EditorThemeUtil.get_theme_type_icon(type)
+        var icon := ThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
         
         var is_default := not ThemeUtil.has_type(_theme, type)

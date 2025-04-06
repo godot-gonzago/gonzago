@@ -3,6 +3,8 @@ extends LineEdit
 
 # https://forum.godotengine.org/t/how-to-dynamically-show-search-results-of-lineedit/42058/5
 
+const NodeUtil := Gonzago.NodeUtil
+
 var _popup: PopupMenu
 
 var _selected_idx := -1

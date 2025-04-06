@@ -1,6 +1,7 @@
 @tool
 extends VBoxContainer
 
+const NodeUtil := Gonzago.NodeUtil
 const DataTypeGroup := preload("./data_type_group.gd")
 
 # TODO: Consolidate into one view where data types are draw automaticall (without nodes)

@@ -2,6 +2,8 @@
 extends HBoxContainer
 
 
+const NodeUtil := Gonzago.NodeUtil
+
 signal theme_selected(theme: Theme)
 
 var _file_tabs: TabBar

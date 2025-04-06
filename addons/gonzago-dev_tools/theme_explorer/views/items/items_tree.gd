@@ -1,8 +1,7 @@
 @tool
 extends VBoxContainer
 
-const ThemeUtil := preload("../../theme_util.gd")
-const EditorThemeUtil := preload("../../editor_theme_util.gd")
+const ThemeUtil := Gonzago.ThemeUtil
 
 signal data_type_selected(data_type: Theme.DataType, theme_type: StringName)
 signal theme_item_selected(data_type: Theme.DataType, theme_type: StringName, theme_item: StringName)
@@ -41,7 +40,7 @@ func _build_tree() -> void:
     var root := _tree.create_item()
     for data_type in Theme.DATA_TYPE_MAX:
         var item := root.create_child()
-        item.set_text(0, EditorThemeUtil.get_data_type_name(data_type))
+        item.set_text(0, ThemeUtil.get_data_type_name(data_type))
         item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
         item.visible = false
         item.set_meta(&"theme_type", _theme_type)
@@ -73,7 +72,7 @@ func _update_tree() -> void:
     var root := _tree.get_root()
     for data_type in Theme.DATA_TYPE_MAX:
         var item := root.get_child(data_type)
-        var icon := EditorThemeUtil.get_data_type_icon(data_type)
+        var icon := ThemeUtil.get_data_type_icon(data_type)
         item.set_icon(0, icon)
         item.visible = _update_types_items(item, data_type)
 
@@ -106,10 +105,10 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
             Theme.DATA_TYPE_CONSTANT:
                 var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_CONSTANT, _theme_type, theme_item)
                 item.set_text(1, str(value))
-                var constant_type := EditorThemeUtil.get_constant_type(theme_item)
-                item.set_suffix(1, EditorThemeUtil.get_constant_type_suffix(constant_type))
+                var constant_type := ThemeUtil.get_constant_type(theme_item)
+                item.set_suffix(1, ThemeUtil.get_constant_type_suffix(constant_type))
                 # TODO: Remove, only for testing
-                if constant_type == EditorThemeUtil.ConstantType.FLAG:
+                if constant_type == ThemeUtil.ConstantType.FLAG:
                     item.set_suffix(1, "flag")
 
         if item.visible:

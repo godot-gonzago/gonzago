@@ -2,8 +2,8 @@
 extends Tree
 
 
-const ThemeUtil := preload("../theme_util.gd")
-const EditorThemeUtil := preload("../editor_theme_util.gd")
+const NodeUtil := Gonzago.NodeUtil
+const ThemeUtil := Gonzago.ThemeUtil
 
 var _theme: Theme = null
 
@@ -49,7 +49,7 @@ func _init() -> void:
     data_root.add_button(0, ThemeDB.fallback_icon)
     for data_type in Theme.DATA_TYPE_MAX:
         var item := data_root.create_child()
-        item.set_text(0, EditorThemeUtil.get_data_type_name(data_type))
+        item.set_text(0, ThemeUtil.get_data_type_name(data_type))
         item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
 
     var types_root := root.create_child()
@@ -142,7 +142,7 @@ func _update_tree() -> void:
     data_root.set_button(0, 0, visibility_icon)
     for data_type in Theme.DATA_TYPE_MAX:
         var data_type_item := data_root.get_child(data_type)
-        var data_type_icon := EditorThemeUtil.get_data_type_icon(data_type)
+        var data_type_icon := ThemeUtil.get_data_type_icon(data_type)
         data_type_item.set_icon(0, data_type_icon)
 
     var types_root_icon := get_theme_icon("ClassList", "EditorIcons")
@@ -155,6 +155,6 @@ func _update_tree() -> void:
 func _update_types_items(parent: TreeItem) -> void:
     for item in parent.get_children():
         var type := item.get_text(0)
-        var icon := EditorThemeUtil.get_theme_type_icon(type)
+        var icon := ThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
         _update_types_items(item)

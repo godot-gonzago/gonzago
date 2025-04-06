@@ -1,6 +1,8 @@
 @tool
 extends TextureRect
 
+const NodeUtil := Gonzago.NodeUtil
+
 @export
 var _frames: Array[Texture2D] = []
 @export_range(0.02, 0.5, 0.01, "or_greater")
