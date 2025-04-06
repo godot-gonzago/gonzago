@@ -1,6 +1,8 @@
 @tool
 extends TextureRect
 
+# https://nicegui.io/documentation/spinner
+
 const NodeUtil := Gonzago.NodeUtil
 
 @export

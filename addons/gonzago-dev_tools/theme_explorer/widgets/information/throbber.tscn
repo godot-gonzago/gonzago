@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsgyupn64225p"]
+
+[ext_resource type="Script" uid="uid://bnlcihthrps4w" path="res://addons/gonzago-dev_tools/theme_explorer/widgets/information/throbber.gd" id="1_b37op"]
+
+[node name="Throbber" type="TextureRect"]
+script = ExtResource("1_b37op")
