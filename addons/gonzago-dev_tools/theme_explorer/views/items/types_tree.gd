@@ -52,6 +52,8 @@ func _build_types_items(parent: TreeItem, types: PackedStringArray) -> void:
         var type_item := parent.create_child()
         type_item.set_text(0, type)
         type_item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
+        if not _is_read_only:
+            type_item.add_button(0, ThemeDB.fallback_icon, 0)
         var variations := ThemeUtil.get_type_variation_list(_theme, type)
         if variations.size() > 0:
             _build_types_items(type_item, variations)
@@ -68,10 +70,17 @@ func _update_types_items(parent: TreeItem) -> void:
         var icon := EditorThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
         
+        var is_default := not ThemeUtil.has_type(_theme, type)
         var color := get_theme_color(&"font_color", &"Tree")
-        if not ThemeUtil.has_type(_theme, type):
+        if is_default:
             color = get_theme_color(&"font_disabled_color", &"Tree")
         item.set_custom_color(0, color)
+        
+        if not _is_read_only:
+            if is_default:
+                item.set_button(0, 0, get_theme_icon(&"Add", &"EditorIcons"))
+            else:
+                item.set_button(0, 0, get_theme_icon(&"Remove", &"EditorIcons"))
         
         _update_types_items(item)
 
@@ -102,3 +111,27 @@ func _filter_types_items(parent: TreeItem, filter: String) -> bool:
         
         item.visible = false
     return has_visible_children
+
+
+func _on_tree_item_activated() -> void:
+    var item := _tree.get_selected()
+    var type := item.get_text(0)
+    var is_default := not ThemeUtil.has_type(_theme, type)
+    item.set_editable(0, not is_default) # TODO: On gui input, F2 or double click
+
+
+func _on_tree_item_edited() -> void:
+    var item := _tree.get_edited()
+    push_warning("Hello!")
+    pass
+
+
+func _on_tree_button_clicked(
+    item: TreeItem,
+    column: int,
+    id: int,
+    mouse_button_index: int
+ ) -> void:
+    var type := item.get_text(0)
+    var is_default := not ThemeUtil.has_type(_theme, type)
+    pass

@@ -52,7 +52,11 @@ flat = true
 [node name="Tree" type="Tree" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
+allow_rmb_select = true
 hide_root = true
 
 [connection signal="text_changed" from="Toolbar/Filter" to="." method="_on_filter_text_changed"]
+[connection signal="button_clicked" from="Tree" to="." method="_on_tree_button_clicked"]
+[connection signal="item_activated" from="Tree" to="." method="_on_tree_item_activated"]
+[connection signal="item_edited" from="Tree" to="." method="_on_tree_item_edited"]
 [connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]
