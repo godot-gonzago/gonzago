@@ -1,11 +1,11 @@
 [gd_scene load_steps=12 format=3 uid="uid://b6va6h6o2vtkx"]
 
-[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_r62uk"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_s0pyk"]
 
 [sub_resource type="Texture2D" id="Texture2D_gk0a7"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "arrow"
 icon_type = "Tree"
@@ -14,7 +14,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_r62uk"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "Color"
 icon_type = "EditorIcons"
@@ -23,7 +23,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_64bs5"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "GuiTabMenuHl"
 icon_type = "EditorIcons"
@@ -32,7 +32,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_572sa"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "GuiScrollArrowRight"
 icon_type = "EditorIcons"
@@ -41,7 +41,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_mwras"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "Add"
 icon_type = "EditorIcons"
@@ -50,7 +50,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_6fyeu"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "Edit"
 icon_type = "EditorIcons"
@@ -59,7 +59,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_onexg"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "Remove"
 icon_type = "EditorIcons"
@@ -68,7 +68,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_5ocu0"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "FontItem"
 icon_type = "EditorIcons"
@@ -77,7 +77,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_6eseb"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "Image"
 icon_type = "EditorIcons"
@@ -86,7 +86,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [sub_resource type="Texture2D" id="Texture2D_reuky"]
 resource_local_to_scene = false
 resource_name = ""
-script = ExtResource("1_r62uk")
+script = ExtResource("1_s0pyk")
 use_editor_theme = true
 icon_name = "StyleBoxFlat"
 icon_type = "EditorIcons"
