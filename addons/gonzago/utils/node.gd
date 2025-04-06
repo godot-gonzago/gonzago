@@ -6,7 +6,7 @@ extends RefCounted
 ##
 ## TODO: Document according to
 ##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
-
+##       https://github.com/WagnerGFX/gdscript_utilities/blob/main/addons/gdscript_utilities/scripts/packedscene_utils.gd
 
 static func is_node_being_edited(node: Node) -> bool:
     if not Engine.is_editor_hint() or not node.is_inside_tree():
