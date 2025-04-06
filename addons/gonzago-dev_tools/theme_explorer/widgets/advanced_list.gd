@@ -5,6 +5,7 @@ extends Container
 # https://github.com/godotengine/godot/blob/master/editor/editor_inspector.cpp
 # https://github.com/SirLich/gd-explorer
 # https://github.com/wareya/ScrollListContainer/tree/main
+# https://docs.godotengine.org/en/stable/classes/class_editorproperty.html
 
 enum DisplayMode {
     DISPLAY_MODE_LIST,
