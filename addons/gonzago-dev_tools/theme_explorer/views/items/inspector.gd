@@ -110,6 +110,7 @@ func _draw_preview() -> void:
     var canvas_item_rect := Rect2(Vector2.ZERO, _preview.size)
     var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_type, _theme_item)
     
+    # TODO: Externalize into draw util or something
     match _data_type:
         Theme.DATA_TYPE_COLOR:
             var color: Color = value as Color
