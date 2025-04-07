@@ -9,7 +9,7 @@ var _menu: MenuButton
 func _init() -> void:
     _menu = MenuButton.new()
     _menu.tooltip_text = "Gonzago"
-    _menu.icon = load("res://addons/gonzago/editor/icons/gonzago.svg") as Texture2D
+    _menu.icon = load("uid://641b4h8qe3jb") as Texture2D
     _menu.flat = false
     add_child(_menu, false, Node.INTERNAL_MODE_BACK)
     

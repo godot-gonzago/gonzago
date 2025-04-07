@@ -9,7 +9,13 @@ extends RefCounted
 
 #region Utils
 
-const EditorSettingsUtil := preload("./utils/editor_settings.gd")
-const FileSystemUtil := preload("./utils/file_system.gd")
+const EditorSettingsUtil := preload("uid://c77um0n8vpuew")
+const FileSystemUtil := preload("uid://bdl38mynm4ur8")
+
+#endregion
+
+#region Assets
+
+static var GonzagoIcon := preload("uid://641b4h8qe3jb") as Texture2D
 
 #endregion

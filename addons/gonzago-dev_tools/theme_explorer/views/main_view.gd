@@ -1,13 +1,13 @@
 @tool
 extends VBoxContainer
 
-const FileBar := preload("./file_bar.gd")
-const ItemsView := preload("./items/items_view.gd")
+const FileBar := preload("uid://bagfm53o5qr5m")
+const ItemsView := preload("uid://dd44pss4hfxoy")
 
-const ImportDialog := preload("./tools/import_dialog.gd")
-const ImportDialogScene := preload("./tools/import_dialog.tscn")
-const ExportDialog := preload("./tools/export_dialog.gd")
-const ExportDialogScene := preload("./tools/export_dialog.tscn")
+const ImportDialog := preload("uid://durgexe8t7ntp")
+const ImportDialogScene := preload("uid://dd5vq37p0ovcx")
+const ExportDialog := preload("uid://kapj306un40d")
+const ExportDialogScene := preload("uid://cjcaygvr2l8je")
 
 @onready var file_bar := get_node("ToolBar/FileBar") as FileBar
 @onready var items_view := get_node("ItemsView") as ItemsView

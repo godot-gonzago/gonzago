@@ -7,8 +7,8 @@ extends GonzagoEditorPlugin
 
 # # https://github.com/godotengine/godot/blob/master/editor/plugins/theme_editor_plugin.cpp
 
-const ThemeExplorer := preload("./views_old/explorer.tscn")
-const MainView := preload("./views/main_view.tscn")
+const ThemeExplorer := preload("uid://mpanmyvqc6u5")
+const MainView := preload("uid://rdphd1mywfyv")
 
 var _include_old := true
 

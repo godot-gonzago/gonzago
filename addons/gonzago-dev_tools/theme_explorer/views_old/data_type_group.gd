@@ -4,7 +4,7 @@ extends HBoxContainer
 
 const NodeUtil := Gonzago.NodeUtil
 const ThemeUtil := Gonzago.ThemeUtil
-const Item := preload("./item.gd")
+const Item := preload("uid://di7kjwc4di3jr")
 
 # TODO: Consolidate into one view where data types are draw automaticall (without nodes)
 #       Only children should be items (or a context menu)

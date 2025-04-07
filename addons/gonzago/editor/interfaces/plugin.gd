@@ -2,9 +2,9 @@
 extends EditorPlugin
 
 
-const MainScreen := preload("./main_screen.gd")
-const Quickbar := preload("./quickbar.gd")
-const ToolMenu := preload("./tool_menu.gd")
+const MainScreen := preload("uid://by3djuu8xgi3u")
+const Quickbar := preload("uid://caojpa8dr04qw")
+const ToolMenu := preload("uid://cg0jn6fcroft")
 
 
 var _main_screen: MainScreen
@@ -73,4 +73,4 @@ func _get_plugin_name() -> String:
 
 
 func _get_plugin_icon() -> Texture2D:
-    return load("res://addons/gonzago/editor/icons/gonzago.svg") as Texture2D # ./editor/icons/gonzago.svg
+    return GonzagoEditor.GonzagoIcon

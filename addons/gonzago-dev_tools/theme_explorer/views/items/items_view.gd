@@ -3,9 +3,9 @@ extends HSplitContainer
 
 
 const NodeUtil := Gonzago.NodeUtil
-const TypesTree := preload("./types_tree.gd")
-const ItemsTree := preload("./items_tree.gd")
-const Inspector := preload("./inspector.gd")
+const TypesTree := preload("uid://l7b0tpeh875")
+const ItemsTree := preload("uid://cbpfi4h7r3ny4")
+const Inspector := preload("uid://bn16utcatxkgb")
 
 @onready var type_tree := get_node("TypesTree") as TypesTree
 @onready var items_tree := get_node("Split/ItemsTree") as ItemsTree

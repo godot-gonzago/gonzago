@@ -3,8 +3,8 @@ extends VBoxContainer
 
 
 const NodeUtil := Gonzago.NodeUtil
-const ThemeTree := preload("./theme_tree.gd")
-const TypeGroup := preload("./type_group.gd")
+const ThemeTree := preload("uid://bb74umkal8gb5")
+const TypeGroup := preload("uid://c4yptv0vcidky")
 
 # TODO: Create central theme cache where every ui can reference an instance of an object
 #       Filtering can be done through this. Nodes/Controls can be linked to the cache objects

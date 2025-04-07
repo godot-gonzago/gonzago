@@ -2,7 +2,7 @@
 extends VBoxContainer
 
 const NodeUtil := Gonzago.NodeUtil
-const DataTypeGroup := preload("./data_type_group.gd")
+const DataTypeGroup := preload("uid://b12t18ypjfwyh")
 
 # TODO: Consolidate into one view where data types are draw automaticall (without nodes)
 #       Only children should be items (or a context menu)

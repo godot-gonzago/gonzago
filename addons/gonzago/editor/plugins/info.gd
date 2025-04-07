@@ -1,7 +1,7 @@
 @tool
 extends RefCounted
 
-const PluginInfo := preload("./info.gd")
+const PluginInfo := preload("uid://bjnsf004547o3") # Self
 
 var config_path: String
 var plugin_id: StringName # TODO: Get by plugin id

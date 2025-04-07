@@ -6,7 +6,7 @@ extends GonzagoEditorPlugin
 ##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 
-const PluginRefresher := preload("./plugin_refresher.gd")
+const PluginRefresher := preload("uid://bp0cchpkdvjn")
 
 
 var _plugin_refresher: PluginRefresher

@@ -8,7 +8,7 @@ extends RefCounted
 const PLUGINS_ROOT := "res://addons/"
 const CONFIG_FILE_NAME := "plugin.cfg"
 
-const PluginInfo := preload("./info.gd")
+const PluginInfo := preload("uid://bjnsf004547o3")
 
 static var _plugins_cache_dirty := true
 

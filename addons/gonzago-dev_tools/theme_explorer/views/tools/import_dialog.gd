@@ -2,7 +2,7 @@
 extends AcceptDialog
 
 const ThemeUtil := Gonzago.ThemeUtil
-const FileBar := preload("../file_bar.gd")
+const FileBar := preload("uid://bagfm53o5qr5m")
 
 @onready var _file_bar := get_node("ImportTree/FileBar") as FileBar
 @onready var _options_button := get_node("ImportTree/Toolbar/OptionsButton") as MenuButton

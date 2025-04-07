@@ -8,14 +8,14 @@ extends RefCounted
 ##       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
 ## Class reference of Gonzago editor control used for main screen plugin.
-const MainScreen := preload("./main_screen.gd")
+const MainScreen := preload("uid://by3djuu8xgi3u")
 ## Class reference of Gonzago editor control used for quickbar in the top right corner.
-const Quickbar := preload("./quickbar.gd")
+const Quickbar := preload("uid://caojpa8dr04qw")
 ## Class reference of Gonzago editor tool menu under
 ## [code]Project > Tools[/code] that allows for submenus.
-const ToolMenu := preload("./tool_menu.gd")
+const ToolMenu := preload("uid://cg0jn6fcroft")
 ## Class reference of Gonzago editor control used for about dialog.
-const AboutDialog := preload("./about_dialog.gd")
+const AboutDialog := preload("uid://bphkpt6yskpj5")
 
 static var _main_screen: MainScreen
 static var _quickbar: Quickbar
@@ -33,7 +33,7 @@ static func get_main_screen() -> MainScreen:
     var owner := EditorInterface.get_editor_main_screen()
     _main_screen = owner.get_node_or_null("%GonzagoEditorMainScreen") as MainScreen
     if not _main_screen:
-            _main_screen = preload("./main_screen.tscn").instantiate() as MainScreen # TODO: Only for testing. Replace with script!
+            _main_screen = preload("uid://5l2hll0j34o0").instantiate() as MainScreen # TODO: Only for testing. Replace with script!
             _main_screen.name = "GonzagoEditorMainScreen"
             _main_screen.unique_name_in_owner = true
     return _main_screen
