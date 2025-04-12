@@ -110,6 +110,18 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 # TODO: Remove, only for testing
                 if constant_type == ThemeUtil.ConstantType.FLAG:
                     item.set_suffix(1, "flag")
+            Theme.DATA_TYPE_FONT:
+                pass
+            Theme.DATA_TYPE_FONT_SIZE:
+                var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_FONT_SIZE, _theme_type, theme_item)
+                item.set_text(1, str(value))
+                item.set_suffix(1, "pt")
+            Theme.DATA_TYPE_ICON:
+                var value: Texture2D = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_ICON, _theme_type, theme_item)
+                item.set_icon(1, value)
+                item.set_icon_max_width(1, 16)
+            Theme.DATA_TYPE_STYLEBOX:
+                pass
 
         if item.visible:
             has_visibile_children = true

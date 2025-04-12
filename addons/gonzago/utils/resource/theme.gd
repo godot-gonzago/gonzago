@@ -234,37 +234,6 @@ static func set_default_font_size(theme: Theme, value: int = -1) -> void:
 
 #region Data types
 
-static func get_data_type_property_path(data_type: Theme.DataType) -> StringName:
-    match data_type:
-        Theme.DATA_TYPE_COLOR:     return &"colors"
-        Theme.DATA_TYPE_CONSTANT:  return &"constants"
-        Theme.DATA_TYPE_FONT:      return &"font"
-        Theme.DATA_TYPE_FONT_SIZE: return &"font_sizes"
-        Theme.DATA_TYPE_ICON:      return &"icons"
-        Theme.DATA_TYPE_STYLEBOX:  return &"styles"
-        _:                         return StringName()
-
-
-static func get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
-    if property_path:
-        property_path = property_path.trim_prefix("theme_override_")
-    match property_path:
-        &"colors":     return Theme.DATA_TYPE_COLOR
-        &"constants":  return Theme.DATA_TYPE_CONSTANT
-        &"font":       return Theme.DATA_TYPE_FONT
-        &"font_sizes": return Theme.DATA_TYPE_FONT_SIZE
-        &"icons":      return Theme.DATA_TYPE_ICON
-        &"styles":     return Theme.DATA_TYPE_STYLEBOX
-        _:             return -1
-
-
-static func get_data_type_override_property_path(data_type: Theme.DataType) -> StringName:
-    var property_path := get_data_type_property_path(data_type)
-    if property_path:
-        return "theme_override_%s" % property_path
-    return StringName("")
-
-
 static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return Color.BLACK
@@ -349,37 +318,6 @@ static func is_built_in_type(
 #endregion
 
 #region Theme items
-
-static func get_theme_item_property_path(
-    data_type: Theme.DataType,
-    theme_type: StringName,
-    name: StringName
-) -> StringName:
-    return "%s/%s/%s" % [
-        theme_type,
-        get_data_type_property_path(data_type),
-        name
-    ]
-
-
-static func get_theme_item_type_from_property_path(
-    property_path: StringName
-) -> StringName:
-    return property_path.get_slice("/", 0)
-
-
-static func get_theme_item_data_type_from_property_path(
-    property_path: StringName
-) -> Theme.DataType:
-    var data_type := property_path.get_slice("/", 1)
-    return get_data_type_from_property_path(data_type)
-
-
-static func get_theme_item_name_from_property_path(
-    property_path: StringName
-) -> StringName:
-    return property_path.get_slice("/", 2)
-
 
 static func get_theme_item_type_list(
     theme: Theme,
@@ -619,6 +557,96 @@ static func get_pairing_font(
 
 #endregion
 
+#region Property paths
+
+static func _get_data_type_property_path(data_type: Theme.DataType) -> StringName:
+    match data_type:
+        Theme.DATA_TYPE_COLOR:     return &"colors"
+        Theme.DATA_TYPE_CONSTANT:  return &"constants"
+        Theme.DATA_TYPE_FONT:      return &"font"
+        Theme.DATA_TYPE_FONT_SIZE: return &"font_sizes"
+        Theme.DATA_TYPE_ICON:      return &"icons"
+        Theme.DATA_TYPE_STYLEBOX:  return &"styles"
+        _:                         return &""
+
+
+static func _get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
+    match property_path:
+        &"colors":     return Theme.DATA_TYPE_COLOR
+        &"constants":  return Theme.DATA_TYPE_CONSTANT
+        &"font":       return Theme.DATA_TYPE_FONT
+        &"font_sizes": return Theme.DATA_TYPE_FONT_SIZE
+        &"icons":      return Theme.DATA_TYPE_ICON
+        &"styles":     return Theme.DATA_TYPE_STYLEBOX
+        _:             return -1
+
+
+static func _get_data_type_override_property_path(data_type: Theme.DataType) -> StringName:
+    var property_path := _get_data_type_property_path(data_type)
+    if property_path:
+        return "theme_override_%s" % property_path
+    return &""
+    
+    
+static func _get_data_type_from_override_property_path(property_path: StringName) -> Theme.DataType:
+    return _get_data_type_from_property_path(property_path.trim_prefix("theme_override_"))
+    
+
+static func get_theme_item_property_path(
+    data_type: Theme.DataType,
+    theme_type: StringName,
+    name: StringName
+) -> StringName:
+    return "%s/%s/%s" % [
+        theme_type,
+        _get_data_type_property_path(data_type),
+        name
+    ]
+
+
+static func get_theme_item_type_from_property_path(
+    property_path: StringName
+) -> StringName:
+    return property_path.get_slice("/", 0)
+
+
+static func get_theme_item_data_type_from_property_path(
+    property_path: StringName
+) -> Theme.DataType:
+    var data_type := property_path.get_slice("/", 1)
+    return _get_data_type_from_property_path(data_type)
+
+
+static func get_theme_item_name_from_property_path(
+    property_path: StringName
+) -> StringName:
+    return property_path.get_slice("/", 2)
+
+
+static func get_theme_item_override_property_path(
+    data_type: Theme.DataType,
+    name: StringName
+) -> StringName:
+    return "%s/%s" % [
+        _get_data_type_property_path(data_type),
+        name
+    ]
+    
+    
+static func get_theme_item_data_type_from_override_property_path(
+    property_path: StringName
+) -> Theme.DataType:
+    var data_type := property_path.get_slice("/", 0)
+    return _get_data_type_from_override_property_path(data_type)
+
+
+static func get_theme_item_name_from_override_property_path(
+    property_path: StringName
+) -> StringName:
+    return property_path.get_slice("/", 1)
+
+#endregion
+
 #region Themes (Editor utilities)
 
 static func get_theme_name(theme: Theme) -> String:
@@ -759,6 +787,6 @@ static func get_constant_type_suffix(type: ConstantType) -> StringName:
     match type:
         ConstantType.PIXEL:  return &"px"
         ConstantType.FACTOR: return &"x"
-        _:                   return StringName("")
+        _:                   return &""
 
 #endregion
