@@ -27,6 +27,6 @@ func _gui_input(event: InputEvent) -> void:
     if not capture_clear_input or text.is_empty():
         return
 
-    if event is InputEventKey and event.keycode == KEY_ESCAPE and event.is_pressed() and not event.is_echo():
+    if event.is_action_pressed("ui_cancel"):
         text = ""
         accept_event()
