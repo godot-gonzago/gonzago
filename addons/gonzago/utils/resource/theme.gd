@@ -350,6 +350,37 @@ static func is_built_in_type(
 
 #region Theme items
 
+static func get_theme_item_property_path(
+    data_type: Theme.DataType,
+    theme_type: StringName,
+    name: StringName
+) -> StringName:
+    return "%s/%s/%s" % [
+        theme_type,
+        get_data_type_property_path(data_type),
+        name
+    ]
+
+
+static func get_theme_item_type_from_property_path(
+    property_path: StringName
+) -> StringName:
+    return property_path.get_slice("/", 0)
+
+
+static func get_theme_item_data_type_from_property_path(
+    property_path: StringName
+) -> Theme.DataType:
+    var data_type := property_path.get_slice("/", 1)
+    return get_data_type_from_property_path(data_type)
+
+
+static func get_theme_item_name_from_property_path(
+    property_path: StringName
+) -> StringName:
+    return property_path.get_slice("/", 2)
+
+
 static func get_theme_item_type_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -465,7 +496,6 @@ static func get_colors_type_list(
         theme, Theme.DATA_TYPE_COLOR,
         include_variations, include_defaults, sort
     )
-
 
 static func get_color_list(
     theme: Theme, theme_type: StringName,
