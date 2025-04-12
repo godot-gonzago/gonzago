@@ -390,7 +390,6 @@ func _build_meta_data() -> void:
                     )
                     _add_string_value_meta_child(root, "Path", icon.resource_path)
                     
-                    _add_string_value_meta_child(root, "Path", icon.resource_path)
                     if icon:
                         _add_string_value_meta_child(root, "Size", str(icon.get_size()))
                         _add_string_value_meta_child(root, "Width", str(icon.get_width()))
