@@ -144,8 +144,39 @@ class ThemeTypeIterator extends RefCounted:
 
 #region Themes
 
+enum ThemeType {
+    NONE = -1,
+    MEMORY = 0,
+    RESOURCE = 1,
+    PROJECT = 2,
+    DEFAULT = 3,
+    EDITOR = 4
+}
+
+
+static func get_theme_type(theme: Theme) -> ThemeType:
+    if not theme:
+        return ThemeType.NONE
+    
+    if theme.resource_path:
+        var project_theme := ThemeDB.get_project_theme()
+        if project_theme and theme == project_theme:
+            return ThemeType.PROJECT
+        return ThemeType.RESOURCE
+    
+    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+        return ThemeType.EDITOR
+    
+    if theme == ThemeDB.get_default_theme():
+        return ThemeType.DEFAULT
+    
+    return ThemeType.MEMORY
+
+
 static func has_base_theme(theme: Theme) -> bool:
-    if theme and theme.resource_path:
+    if not theme:
+        return false
+    if theme.resource_path:
         return true
     if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
         return false
@@ -153,6 +184,9 @@ static func has_base_theme(theme: Theme) -> bool:
 
 
 static func get_base_theme(theme: Theme) -> Theme:
+    if not theme:
+        return null
+    
     if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
         return null
     
@@ -163,21 +197,18 @@ static func get_base_theme(theme: Theme) -> Theme:
     var project_theme := ThemeDB.get_project_theme()
     if project_theme and not theme == project_theme:
         return project_theme
-
+    
     return default_theme
 
 
-static func is_read_only(theme: Theme) -> bool:
+static func is_built_in_theme(theme: Theme) -> bool:
+    if not theme:
+        return false
     if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
         return true
     if theme == ThemeDB.get_default_theme():
         return true
     return false
-
-
-static func is_project_theme(theme: Theme) -> bool:
-    if not theme or not theme.resource_path: return false
-    return theme == ThemeDB.get_project_theme()
 
 
 static func has_default_base_scale(theme: Theme, include_base_themes := false) -> bool:
@@ -194,7 +225,12 @@ static func get_default_base_scale(theme: Theme, include_base_themes := true) ->
     
 # TODO: 0.0 will clear
 static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
-    theme.default_base_scale = value
+    if theme and not is_built_in_theme(theme):
+        theme.default_base_scale = maxf(0.0, value)
+    
+    
+static func clear_default_base_scale(theme: Theme) -> void:
+    set_default_base_scale(theme, 0.0)
 
 
 static func has_default_font(theme: Theme, include_base_themes := false) -> bool:
@@ -211,7 +247,12 @@ static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
 
 # TODO: null will clear
 static func set_default_font(theme: Theme, value: Font = null) -> void:
-    theme.default_font = value
+    if theme and not is_built_in_theme(theme):
+        theme.default_font = value
+        
+        
+static func clear_default_font(theme: Theme) -> void:
+    set_default_font(theme, null)
 
 
 static func has_default_font_size(theme: Theme, include_base_themes := false) -> bool:
@@ -226,9 +267,15 @@ static func get_default_font_size(theme: Theme, include_base_themes := true) -> 
     return ThemeDB.fallback_font_size
 
 
-# TODO: -1 will clear
+# TODO: -1 will clear (value smaller 1 will clear)
 static func set_default_font_size(theme: Theme, value: int = -1) -> void:
-    theme.default_font_size = value
+    if theme and not is_built_in_theme(theme):
+        if value < 1: value = -1
+        theme.default_font_size = value
+
+
+static func clear_default_font_size(theme: Theme) -> void:
+    set_default_font_size(theme, -1)
 
 #endregion
 
@@ -312,7 +359,9 @@ static func is_built_in_type(
     type: StringName,
     max_api_depth := ClassDB.API_EDITOR_EXTENSION
 ) -> bool:
-    var api_type := ClassDB.class_get_api_type(type)
+    var api_type := ClassDB.APIType.API_NONE
+    if ClassDB.class_exists(type):
+        api_type = ClassDB.class_get_api_type(type)
     return api_type <= max_api_depth
 
 #endregion
@@ -357,6 +406,26 @@ static func get_theme_item_list(
     return result
 
 
+# https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
+#static func is_class_item(
+#    theme: Theme,
+#    data_type: Theme.DataType,
+#    theme_type: StringName,
+#    name: StringName
+#) -> bool:
+#    return false
+
+
+# https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items   
+#static func is_custom_item(
+#    theme: Theme,
+#    data_type: Theme.DataType,
+#    theme_type: StringName,
+#    name: StringName
+#) -> bool:
+#    return false
+
+
 static func has_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -390,6 +459,7 @@ static func set_theme_item(
     name: StringName,
     value: Variant
 ) -> void:
+    if not theme: return
     if not is_valid_value_for_data_type(data_type, value):
         value = get_data_type_fallback(data_type)
     theme.set_theme_item(data_type, name, theme_type, value)
@@ -401,6 +471,7 @@ static func clear_theme_item(
     theme_type: StringName,
     name: StringName
 ) -> void:
+    if not theme: return
     if theme.has_theme_item(data_type, name, theme_type):
         theme.clear_theme_item(data_type, name, theme_type)
         
@@ -413,12 +484,17 @@ static func rename_theme_item(
     name: StringName,
     include_defaults := true
 ) -> void:
+    if not theme:
+        return
+    
     if theme.has_theme_item(data_type, name, theme_type):
         theme.clear_theme_item(data_type, name, theme_type)
+    
     if not theme.has_theme_item(data_type, old_name, theme_type):
         var value := get_theme_item(theme, data_type, theme_type, old_name, include_defaults)
         theme.set_theme_item(data_type, name, theme_type, value)
         return
+    
     theme.rename_theme_item(data_type, old_name, name, theme_type)
 
 #endregion
@@ -468,13 +544,14 @@ static func get_color(
 static func set_color(
     theme: Theme, theme_type: StringName, name: StringName, value: Color
 ) -> void:
-    theme.set_color(name, theme_type, value)
+    if theme:
+        theme.set_color(name, theme_type, value)
 
 
 static func clear_color(
     theme: Theme, theme_type: StringName, name: StringName
 ) -> void:
-    if theme.has_color(name, theme_type):
+    if theme and theme.has_color(name, theme_type):
         theme.clear_color(name, theme_type)
         
 
@@ -581,17 +658,6 @@ static func _get_data_type_from_property_path(property_path: StringName) -> Them
         _:             return -1
 
 
-static func _get_data_type_override_property_path(data_type: Theme.DataType) -> StringName:
-    var property_path := _get_data_type_property_path(data_type)
-    if property_path:
-        return "theme_override_%s" % property_path
-    return &""
-    
-    
-static func _get_data_type_from_override_property_path(property_path: StringName) -> Theme.DataType:
-    return _get_data_type_from_property_path(property_path.trim_prefix("theme_override_"))
-    
-
 static func get_theme_item_property_path(
     data_type: Theme.DataType,
     theme_type: StringName,
@@ -621,23 +687,25 @@ static func get_theme_item_name_from_property_path(
     property_path: StringName
 ) -> StringName:
     return property_path.get_slice("/", 2)
+    
 
-
+# TODO: name.is_valid_ascii_identifier()
 static func get_theme_item_override_property_path(
     data_type: Theme.DataType,
     name: StringName
 ) -> StringName:
     return "%s/%s" % [
-        _get_data_type_property_path(data_type),
+        "theme_override_%s" % _get_data_type_property_path(data_type),
         name
     ]
-    
-    
+
+
 static func get_theme_item_data_type_from_override_property_path(
     property_path: StringName
 ) -> Theme.DataType:
-    var data_type := property_path.get_slice("/", 0)
-    return _get_data_type_from_override_property_path(data_type)
+    return _get_data_type_from_property_path(
+        property_path.get_slice("/", 0).trim_prefix("theme_override_")
+    )
 
 
 static func get_theme_item_name_from_override_property_path(
@@ -678,13 +746,9 @@ static func get_theme_icon(theme: Theme) -> Texture2D:
     if not theme:
         return editor_theme.get_icon(&"MissingResource", &"EditorIcons")
     
-    var is_readonly := theme == editor_theme
-    if not is_readonly:
-        var default_theme := ThemeDB.get_default_theme()
-        is_readonly = theme == default_theme
-        
-    if is_readonly:
+    if is_built_in_theme(theme):
         return editor_theme.get_icon(&"GuiVisibilityXray", &"EditorIcons")
+    
     return editor_theme.get_icon(&"Theme", &"EditorIcons")
 
 #endregion

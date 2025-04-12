@@ -17,6 +17,7 @@ const ThemeUtil := Gonzago.ThemeUtil
 @onready var _editor := get_node("Editor") as Control
 @onready var _preview_box := get_node("PreviewBox") as PanelContainer
 @onready var _preview := get_node("PreviewBox/Preview") as Control
+@onready var _meta_data := get_node("MetaData") as Tree
 
 var _mode: Mode = Mode.NONE
 var _theme: Theme = null
@@ -47,6 +48,8 @@ func _notification(what: int) -> void:
                 _editor.add_child(_color_picker)
                 _editor.add_child(_spin_box)
                 _editor.add_child(_resource_picker)
+                
+                _meta_data
                 
                 _preview.draw.connect(_draw_preview)
                 _update_inspector()
@@ -132,6 +135,7 @@ func _update_inspector() -> void:
                 _preview_box.visible = true
                 _preview.queue_redraw()
                 _update_theme_item_inspector()
+    _build_meta_data()
                 
                 
 func _update_theme_item_inspector() -> void:
@@ -163,7 +167,8 @@ func _update_theme_item_inspector() -> void:
             var icon: Texture2D = value as Texture2D
             _resource_picker.visible = true
             _resource_picker.base_type = "Texture2D"
-            _resource_picker.edited_resource = icon
+            if icon.resource_path:
+                _resource_picker.edited_resource = icon
         Theme.DATA_TYPE_STYLEBOX:
             var style_box: StyleBox = value as StyleBox
             _resource_picker.visible = true
@@ -263,3 +268,194 @@ func _draw_preview() -> void:
                 #-style_box.get_margin(SIDE_BOTTOM)
             #)
             style_box.draw(canvas_item, canvas_item_rect)
+
+func _build_meta_data() -> void:
+    _meta_data.clear()
+    var root := _meta_data.create_item()
+    
+    match _mode:
+        Mode.THEME:
+            var is_built_in := ThemeUtil.is_built_in_theme(_theme)
+            _add_checked_value_meta_child(root, "Is Built In", is_built_in)
+            var has_base_theme := ThemeUtil.has_base_theme(_theme)
+            _add_checked_value_meta_child(root, "Has Base Theme", has_base_theme)
+            
+            var has_default_base_scale := ThemeUtil.has_default_base_scale(_theme)
+            _add_checked_value_meta_child(root, "Has Default Base Scale", has_default_base_scale)
+            var default_base_scale := ThemeUtil.get_default_base_scale(_theme, true)
+            _add_ranged_value_meta_child(root, "Default Base Scale", default_base_scale)
+            var has_default_font := ThemeUtil.has_default_font(_theme)
+            _add_checked_value_meta_child(root, "Has Default Font", has_default_font)
+            #var default_font := ThemeUtil.get_default_font(_theme)
+            var has_default_font_size := ThemeUtil.has_default_font_size(_theme)
+            _add_checked_value_meta_child(root, "Has Default Font Size", has_default_font_size)
+            var default_font_size := ThemeUtil.get_default_font_size(_theme, true)
+            _add_ranged_value_meta_child(root, "Default Font Size", default_font_size)
+        Mode.THEME_TYPE:
+            _add_string_value_meta_child(
+                root, "Name", _theme_type,
+                ThemeUtil.get_theme_type_icon(_theme_type),
+            )
+            _add_checked_value_meta_child(
+                root, "Is Built-In Type",
+                ThemeUtil.is_built_in_type(_theme_type)
+            )
+            _add_checked_value_meta_child(
+                root, "Is Default",
+                not ThemeUtil.has_type(_theme, _theme_type)
+            )
+            
+            var variation_base := _theme.get_type_variation_base(_theme_type)
+            var is_variation := not variation_base.is_empty()
+            _add_checked_value_meta_child(
+                root, "Is Variation", is_variation)
+            if is_variation:
+                _add_string_value_meta_child(
+                    root,
+                    "Variation Base",
+                    variation_base,
+                    ThemeUtil.get_theme_type_icon(variation_base)
+                )
+            
+            for data_type in Theme.DATA_TYPE_MAX:
+                var data_type_name := ThemeUtil.get_data_type_name(data_type)
+                var total_items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type, true, false)
+                var items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type, false, false)
+                
+                var total_count := total_items.size()
+                var items_count := items.size()
+                var defaults_count := total_count - items_count
+                
+                var total_item := _add_string_value_meta_child(
+                    root,
+                    "Total %s" % data_type_name,
+                    str(total_count)
+                )
+                _add_string_value_meta_child(total_item, "Default %s" % data_type_name, str(defaults_count))
+                _add_string_value_meta_child(total_item, data_type_name, str(items_count))
+        Mode.DATA_TYPE:
+            var total_items := ThemeUtil.get_theme_item_list(_theme, _data_type, _theme_type, true, false)
+            var items := ThemeUtil.get_theme_item_list(_theme, _data_type, _theme_type, false, false)
+            
+            var total_count := total_items.size()
+            var items_count := items.size()
+            var defaults_count := total_count - items_count
+            
+            _add_string_value_meta_child(root, "Total Items", str(total_count))
+            _add_string_value_meta_child(root, "Default Items", str(defaults_count))
+            _add_string_value_meta_child(root, "Items", str(items_count))
+        Mode.THEME_ITEM:
+            var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_type, _theme_item)
+            _add_string_value_meta_child(
+                root, "Name", _theme_item,
+            )
+            _add_checked_value_meta_child(
+                root, "Is Default",
+                not ThemeUtil.has_theme_item(_theme, _data_type, _theme_type, _theme_item)
+            )
+            
+            match _data_type:
+                Theme.DATA_TYPE_COLOR:
+                    var color: Color = value as Color
+                    _add_string_value_meta_child(root, "HTML", color.to_html())
+                Theme.DATA_TYPE_CONSTANT:
+                    var constant: int = value as int
+                Theme.DATA_TYPE_FONT:
+                    var font: Font = value as Font
+                    _add_string_value_meta_child(
+                        root,
+                        "Type",
+                         font.get_class() if font else "None"
+                    )
+                    _add_string_value_meta_child(root, "Path", font.resource_path)
+                    
+                    var has_pairing_font_size := ThemeUtil.has_pairing_font_size(_theme, _theme_type, _theme_item)
+                    _add_checked_value_meta_child(root, "Has Pairing Font Size", has_pairing_font_size)
+                    if has_pairing_font_size:
+                        var pairing_font_size_name = ThemeUtil.get_pairing_font_size_name(_theme_item)
+                        _add_string_value_meta_child(root, "Pairing Font Size Name", pairing_font_size_name)
+                Theme.DATA_TYPE_FONT_SIZE:
+                    var font_size: int = value as int
+                    var has_pairing_font := ThemeUtil.has_pairing_font(_theme, _theme_type, _theme_item)
+                    _add_checked_value_meta_child(root, "Has Pairing Font", has_pairing_font)
+                    if has_pairing_font:
+                        var pairing_font_name = ThemeUtil.get_pairing_font_name(_theme_item)
+                        _add_string_value_meta_child(root, "Pairing Font Name", pairing_font_name)
+                Theme.DATA_TYPE_ICON:
+                    var icon: Texture2D = value as Texture2D
+                    _add_string_value_meta_child(
+                        root,
+                        "Type",
+                         icon.get_class() if icon else "None"
+                    )
+                    _add_string_value_meta_child(root, "Path", icon.resource_path)
+                    
+                    _add_string_value_meta_child(root, "Path", icon.resource_path)
+                    if icon:
+                        _add_string_value_meta_child(root, "Size", str(icon.get_size()))
+                        _add_string_value_meta_child(root, "Width", str(icon.get_width()))
+                        _add_string_value_meta_child(root, "Height", str(icon.get_height()))
+                        _add_checked_value_meta_child(root, "Has Alpha", icon.has_alpha())
+                    if icon is ImageTexture:
+                        _add_string_value_meta_child(root, "Format", str(icon.get_format())) # TODO:
+                Theme.DATA_TYPE_STYLEBOX:
+                    var style_box: StyleBox = value as StyleBox
+                    _add_string_value_meta_child(
+                        root,
+                        "Type",
+                        style_box.get_class() if style_box else "None"
+                    )
+                    _add_string_value_meta_child(root, "Path", style_box.resource_path)
+                    
+                    # float get_content_margin(margin: Side)
+                    # float get_margin(margin: Side)
+                    # Vector2 get_minimum_size()
+                    if style_box is StyleBoxFlat:
+                        pass # TODO
+                    if style_box is StyleBoxLine:
+                        pass # TODO
+                    if style_box is StyleBoxTexture:
+                        pass # TODO
+
+
+func _add_labeled_meta_child(root: TreeItem, label: String) -> TreeItem:
+    var item := root.create_child()
+    item.set_text(0, label)
+    return item
+    
+
+func _add_string_value_meta_child(
+    root: TreeItem,
+    label: String,
+    value: String,
+    icon: Texture2D = null
+) -> TreeItem:
+    var item := _add_labeled_meta_child(root, label)
+    item.set_text(1, value)
+    if item:
+        item.set_icon(1, icon)
+    return item
+
+
+func _add_ranged_value_meta_child(
+    root: TreeItem,
+    label: String,
+    value: float,
+    min := 0.0,
+    max := 100.0,
+    step := 1.0,
+    expr := false
+) -> TreeItem:
+    var item := _add_labeled_meta_child(root, label)
+    item.set_cell_mode(1, TreeItem.CELL_MODE_RANGE)
+    item.set_range_config(1, min, max, step, expr)
+    item.set_range(1, value)
+    return item
+
+
+func _add_checked_value_meta_child(root: TreeItem, label: String, value: bool) -> TreeItem:
+    var item := _add_labeled_meta_child(root, label)
+    item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
+    item.set_text(1, "Yes" if value else "No")
+    item.set_checked(1, value)
+    return item

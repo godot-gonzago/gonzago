@@ -29,7 +29,7 @@ func _notification(what: int) -> void:
 func inspect(theme: Theme) -> void:
     if _theme == theme: return
     _theme = theme
-    _is_read_only = ThemeUtil.is_read_only(_theme)
+    _is_read_only = ThemeUtil.is_built_in_theme(_theme)
     if is_node_ready():
         _build_tree()
 

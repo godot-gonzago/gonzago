@@ -82,8 +82,8 @@ mouse_filter = 2
 [node name="Editor" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="MetaData" type="ItemList" parent="."]
+[node name="MetaData" type="Tree" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-item_count = 1
-item_0/text = "asdf"
+columns = 2
+hide_root = true
