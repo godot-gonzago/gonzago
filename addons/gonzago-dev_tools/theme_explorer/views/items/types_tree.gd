@@ -98,27 +98,33 @@ func _on_tree_item_selected() -> void:
     theme_type_selected.emit(type)
 
 
-func _on_filter_text_changed(new_text: String) -> void:
+func _on_filters_changed(filters: PackedStringArray) -> void:
     var root := _tree.get_root()
-    _filter_types_items(root, new_text)
-    
+    _filter_types_items(root, filters)
 
-func _filter_types_items(parent: TreeItem, filter: String) -> bool:
+
+func _filter_types_items(parent: TreeItem, filters: PackedStringArray) -> bool:
     var has_visible_children := false
     for item in parent.get_children():
-        if _filter_types_items(item, filter):
-            item.visible = true
+        if _filter_types_items(item, filters):
             has_visible_children = true
-            continue
-
-        var type := item.get_text(0)
-        if not filter or type.containsn(filter):
-            item.visible = true
-            has_visible_children = true
-            continue
-
-        item.visible = false
-    return has_visible_children
+    
+    if has_visible_children:
+        parent.visible = true
+        return true
+    
+    if filters.is_empty():
+        parent.visible = true
+        return true
+            
+    var type := parent.get_text(0)
+    for filter in filters:
+        if type.containsn(filter):
+            parent.visible = true
+            return true
+            
+    parent.visible = false
+    return false
 
 
 func _on_tree_item_activated() -> void:

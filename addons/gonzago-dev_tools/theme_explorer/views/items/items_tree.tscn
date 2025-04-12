@@ -2,15 +2,7 @@
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_kv3cv"]
 [ext_resource type="Script" uid="uid://cbpfi4h7r3ny4" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/items_tree.gd" id="1_neqrd"]
-
-[sub_resource type="Texture2D" id="Texture2D_m6l8n"]
-resource_local_to_scene = false
-resource_name = ""
-script = ExtResource("1_kv3cv")
-use_editor_theme = true
-icon_name = "Search"
-icon_type = "EditorIcons"
-metadata/_custom_type_script = "uid://fkalipf2jmdp"
+[ext_resource type="PackedScene" uid="uid://d2ovmh6pepier" path="res://addons/gonzago-dev_tools/theme_explorer/views/filter.tscn" id="3_vwjwr"]
 
 [sub_resource type="Texture2D" id="Texture2D_6q1ra"]
 resource_local_to_scene = false
@@ -124,14 +116,9 @@ script = ExtResource("1_neqrd")
 [node name="Toolbar" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Filter" type="LineEdit" parent="Toolbar"]
+[node name="Filter" parent="Toolbar" instance=ExtResource("3_vwjwr")]
 layout_mode = 2
-size_flags_horizontal = 3
 placeholder_text = "Filter Items"
-clear_button_enabled = true
-right_icon = SubResource("Texture2D_m6l8n")
-select_all_on_focus = true
-caret_blink = true
 
 [node name="AddButton" type="MenuButton" parent="Toolbar"]
 layout_mode = 2
