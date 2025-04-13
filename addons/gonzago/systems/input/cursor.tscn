@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c5hdb2peyatb3"]
 
 [ext_resource type="Script" uid="uid://dn4lpougxx70d" path="res://addons/gonzago/systems/input/cursor.gd" id="1_ju7yl"]
-[ext_resource type="Texture2D" uid="uid://ble3iwpcmop27" path="res://addons/gonzago/assets/icons/gonzago_icon.svg" id="2_sj25e"]
+[ext_resource type="Texture2D" uid="uid://ble3iwpcmop27" path="res://addons/gonzago/assets/icons/gonzago.svg" id="2_sj25e"]
 
 [node name="Cursor" type="CanvasLayer" node_paths=PackedStringArray("position")]
 layer = 128

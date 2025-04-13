@@ -33,8 +33,8 @@ func _enter_tree() -> void:
 
     if not ProjectSettings.has_setting("application/boot_splash/screens"):
         ProjectSettings.set("application/boot_splash/screens", [
-            "res://addons/gonzago/assets/logos/godot_logo.svg",
-            "res://addons/gonzago/assets/logos/gonzago_logo.svg"
+            "res://addons/gonzago/assets/logos/godot.svg",
+            "res://addons/gonzago/assets/logos/gonzago.svg"
         ])
         ProjectSettings.set_as_basic("application/boot_splash/screens", true)
         ProjectSettings.add_property_info({
