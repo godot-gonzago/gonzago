@@ -1,5 +1,58 @@
-[gd_scene format=3 uid="uid://cgeju5r3y1u0u"]
+[gd_scene load_steps=4 format=3 uid="uid://cgeju5r3y1u0u"]
 
-[node name="ItemsListItem" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_4vb1u"]
+
+[sub_resource type="Texture2D" id="Texture2D_ginvy"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_4vb1u")
+use_editor_theme = true
+icon_name = "Add"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[sub_resource type="Texture2D" id="Texture2D_4vb1u"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_4vb1u")
+use_editor_theme = true
+icon_name = "Remove"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="ItemsListItem" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="LabelContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="Label" type="Label" parent="LabelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Editable Label"
+text_overrun_behavior = 3
+
+[node name="OverrideButton" type="Button" parent="LabelContainer"]
+layout_mode = 2
+tooltip_text = "Override Item"
+icon = SubResource("Texture2D_ginvy")
+flat = true
+
+[node name="RemoveButton" type="Button" parent="LabelContainer"]
+layout_mode = 2
+tooltip_text = "Remove Item"
+icon = SubResource("Texture2D_4vb1u")
+flat = true
+
+[node name="ControlContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="ControlContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

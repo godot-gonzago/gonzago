@@ -139,3 +139,12 @@ func _on_tree_item_selected() -> void:
         theme_item_selected.emit(data_type, theme_type, theme_item)
     else:
         data_type_selected.emit(data_type, theme_type)
+
+#region List
+
+enum DisplayMode {
+    DISPLAY_MODE_LIST,
+    DISPLAY_MODE_THUMBNAIL
+}
+
+#endregion

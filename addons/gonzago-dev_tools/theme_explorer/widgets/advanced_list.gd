@@ -1,5 +1,5 @@
 @tool
-extends Container
+extends Control
 
 # https://github.com/godotengine/godot/blob/master/editor/editor_inspector.h
 # https://github.com/godotengine/godot/blob/master/editor/editor_inspector.cpp
