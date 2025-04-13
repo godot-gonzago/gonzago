@@ -80,6 +80,12 @@ custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 mouse_filter = 2
 
+[node name="PreviewTexture" type="TextureRect" parent="PreviewBox"]
+visible = false
+layout_mode = 2
+expand_mode = 3
+stretch_mode = 5
+
 [node name="Editor" type="VBoxContainer" parent="."]
 layout_mode = 2
 
@@ -88,3 +94,12 @@ layout_mode = 2
 size_flags_vertical = 3
 columns = 2
 hide_root = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MetaDataList" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

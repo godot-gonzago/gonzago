@@ -17,7 +17,9 @@ const ThemeUtil := Gonzago.ThemeUtil
 @onready var _editor := get_node("Editor") as Control
 @onready var _preview_box := get_node("PreviewBox") as PanelContainer
 @onready var _preview := get_node("PreviewBox/Preview") as Control
+@onready var _preview_texture := get_node("PreviewBox/PreviewTexture") as TextureRect
 @onready var _meta_data := get_node("MetaData") as Tree
+@onready var _meta_data_list := get_node("ScrollContainer/MetaDataList") as VBoxContainer
 
 var _mode: Mode = Mode.NONE
 var _theme: Theme = null
@@ -155,10 +157,39 @@ func _update_inspector() -> void:
                 _hierarchy_button.set_item_text(idx, _theme_item)
                 _preview_box.visible = true
                 _preview.queue_redraw()
+                #_queue_resource_preview()
                 _update_theme_item_inspector()
     _build_meta_data()
-                
-                
+    #_build_meta_data_list()
+
+
+func _queue_resource_preview() -> void:
+    if not Engine.is_editor_hint():
+        return
+    
+    var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
+    if not value is Resource:
+        return
+    
+    _preview_box.visible = true
+    var resource_preview := EditorInterface.get_resource_previewer()
+    resource_preview.queue_edited_resource_preview(
+        value,
+        self,
+        "_on_resource_preview_ready",
+        null
+    )
+
+
+func _on_resource_preview_ready(
+    path: String,
+    preview: Texture2D,
+    thumbnail_preview: Texture2D,
+    userdata: Variant
+) -> void:
+    _preview_texture.texture = preview
+    
+
 func _update_theme_item_inspector() -> void:
     var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
     # TODO: Handle editable
@@ -474,3 +505,64 @@ func _add_checked_value_meta_child(root: TreeItem, label: String, value: bool) -
     item.set_text(1, "Yes" if value else "No")
     item.set_checked(1, value)
     return item
+
+
+func _build_meta_data_list() -> void:
+    for child in _meta_data_list.get_children():
+        child.queue_free()
+        
+    if not Engine.is_editor_hint():
+        return
+        
+    var inspector := EditorInterface.get_inspector()
+        
+    match _mode:
+        Mode.THEME:
+            for property in _theme.get_property_list():
+                var usage: PropertyUsageFlags = property.get("usage", PROPERTY_USAGE_NONE)
+                if (usage & PROPERTY_USAGE_EDITOR) != PROPERTY_USAGE_EDITOR:
+                    continue
+                
+                var property_name: String = property.get("name", "")
+                if not property_name in ["default_base_scale", "default_font", "default_font_size"]:
+                    continue
+                
+                var cls_name: StringName = property.get("class_name", &"")
+                var type: Variant.Type = property.get("type", TYPE_NIL)
+                var hint: PropertyHint = property.get("hint", PROPERTY_HINT_NONE)
+                var hint_string: String = property.get("hint_string", "")
+                
+                var editor := inspector.instantiate_property_editor(
+                    _theme, type, property_name, hint, hint_string, usage,
+                    false
+                )
+                editor.label = property_name.capitalize()
+                #editor.read_only = true
+                add_child(editor)
+        Mode.THEME_TYPE:
+            pass
+        Mode.DATA_TYPE:
+            pass
+        Mode.THEME_ITEM:
+            var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
+            
+            match _data_type:
+                Theme.DATA_TYPE_COLOR:
+                    var color: Color = value as Color
+                Theme.DATA_TYPE_CONSTANT:
+                    var constant: int = value as int
+                Theme.DATA_TYPE_FONT:
+                    var font: Font = value as Font
+                Theme.DATA_TYPE_FONT_SIZE:
+                    var font_size: int = value as int
+                Theme.DATA_TYPE_ICON:
+                    var icon: Texture2D = value as Texture2D
+                Theme.DATA_TYPE_STYLEBOX:
+                    var style_box: StyleBox = value as StyleBox
+                    
+                    if style_box is StyleBoxFlat:
+                        pass # TODO
+                    if style_box is StyleBoxLine:
+                        pass # TODO
+                    if style_box is StyleBoxTexture:
+                        pass # TODO
