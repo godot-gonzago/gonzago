@@ -90,7 +90,7 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
 
         match data_type:
             Theme.DATA_TYPE_COLOR:
-                var value: Color = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_COLOR, _theme_type, theme_item)
+                var value: Color = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_COLOR, theme_item, _theme_type)
                 item.set_custom_bg_color(1, value)
                 #item.set_cell_mode(1, TreeItem.CELL_MODE_CUSTOM)
                 # TODO: This is not possible with tree.
@@ -103,7 +103,7 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 #       get_theme_icon("FileThumbnail", "EditorIcons")
                 #       tr("View items as a grid of thumbnails.")
             Theme.DATA_TYPE_CONSTANT:
-                var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_CONSTANT, _theme_type, theme_item)
+                var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_CONSTANT, theme_item, _theme_type)
                 item.set_text(1, str(value))
                 var constant_type := ThemeUtil.get_constant_type(theme_item)
                 item.set_suffix(1, ThemeUtil.get_constant_type_suffix(constant_type))
@@ -113,11 +113,11 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
             Theme.DATA_TYPE_FONT:
                 pass
             Theme.DATA_TYPE_FONT_SIZE:
-                var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_FONT_SIZE, _theme_type, theme_item)
+                var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_FONT_SIZE, theme_item, _theme_type)
                 item.set_text(1, str(value))
                 item.set_suffix(1, "pt")
             Theme.DATA_TYPE_ICON:
-                var value: Texture2D = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_ICON, _theme_type, theme_item)
+                var value: Texture2D = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_ICON, theme_item, _theme_type)
                 item.set_icon(1, value)
                 item.set_icon_max_width(1, 16)
             Theme.DATA_TYPE_STYLEBOX:

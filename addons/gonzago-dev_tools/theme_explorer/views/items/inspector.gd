@@ -139,7 +139,7 @@ func _update_inspector() -> void:
                 
                 
 func _update_theme_item_inspector() -> void:
-    var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_type, _theme_item)
+    var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
     # TODO: Handle editable
     match _data_type:
         Theme.DATA_TYPE_COLOR:
@@ -179,7 +179,7 @@ func _update_theme_item_inspector() -> void:
 func _draw_preview() -> void:
     var canvas_item := _preview.get_canvas_item()
     var canvas_item_rect := Rect2(Vector2.ZERO, _preview.size)
-    var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_type, _theme_item)
+    var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
     
     # TODO: Externalize into draw util or something
     match _data_type:
@@ -218,9 +218,9 @@ func _draw_preview() -> void:
             var font_size: int
             if _data_type == Theme.DATA_TYPE_FONT:
                 font = value as Font
-                font_size = ThemeUtil.get_pairing_font_size(_theme, _theme_type, _theme_item)
+                font_size = ThemeUtil.get_pairing_font_size(_theme, _theme_item, _theme_type)
             elif _data_type == Theme.DATA_TYPE_FONT_SIZE:
-                font = ThemeUtil.get_pairing_font(_theme, _theme_type, _theme_item)
+                font = ThemeUtil.get_pairing_font(_theme, _theme_item, _theme_type)
                 font_size = value as int
             var pos: Vector2 = canvas_item_rect.position
             pos.y += font.get_ascent(font_size)
@@ -345,13 +345,13 @@ func _build_meta_data() -> void:
             _add_string_value_meta_child(root, "Default Items", str(defaults_count))
             _add_string_value_meta_child(root, "Items", str(items_count))
         Mode.THEME_ITEM:
-            var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_type, _theme_item)
+            var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
             _add_string_value_meta_child(
                 root, "Name", _theme_item,
             )
             _add_checked_value_meta_child(
                 root, "Is Default",
-                not ThemeUtil.has_theme_item(_theme, _data_type, _theme_type, _theme_item)
+                not ThemeUtil.has_theme_item(_theme, _data_type, _theme_item, _theme_type)
             )
             
             match _data_type:
@@ -369,14 +369,14 @@ func _build_meta_data() -> void:
                     )
                     _add_string_value_meta_child(root, "Path", font.resource_path)
                     
-                    var has_pairing_font_size := ThemeUtil.has_pairing_font_size(_theme, _theme_type, _theme_item)
+                    var has_pairing_font_size := ThemeUtil.has_pairing_font_size(_theme, _theme_item, _theme_type)
                     _add_checked_value_meta_child(root, "Has Pairing Font Size", has_pairing_font_size)
                     if has_pairing_font_size:
                         var pairing_font_size_name = ThemeUtil.get_pairing_font_size_name(_theme_item)
                         _add_string_value_meta_child(root, "Pairing Font Size Name", pairing_font_size_name)
                 Theme.DATA_TYPE_FONT_SIZE:
                     var font_size: int = value as int
-                    var has_pairing_font := ThemeUtil.has_pairing_font(_theme, _theme_type, _theme_item)
+                    var has_pairing_font := ThemeUtil.has_pairing_font(_theme, _theme_item, _theme_type)
                     _add_checked_value_meta_child(root, "Has Pairing Font", has_pairing_font)
                     if has_pairing_font:
                         var pairing_font_name = ThemeUtil.get_pairing_font_name(_theme_item)
