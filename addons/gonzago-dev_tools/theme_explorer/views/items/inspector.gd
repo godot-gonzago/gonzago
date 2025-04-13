@@ -188,7 +188,7 @@ func _on_resource_preview_ready(
     userdata: Variant
 ) -> void:
     _preview_texture.texture = preview
-    
+
 
 func _update_theme_item_inspector() -> void:
     var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
