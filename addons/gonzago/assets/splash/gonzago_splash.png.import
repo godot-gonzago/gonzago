@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ble3iwpcmop27"
-path="res://.godot/imported/gonzago-icon.svg-95d79eeef3a97ad59d608dc707cc57c0.ctex"
+uid="uid://cva8q8h421dtk"
+path="res://.godot/imported/gonzago_splash.png-764ce08c475bc60b291fb92280838a7b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/gonzago/assets/gonzago-icon.svg"
-dest_files=["res://.godot/imported/gonzago-icon.svg-95d79eeef3a97ad59d608dc707cc57c0.ctex"]
+source_file="res://addons/gonzago/assets/splash/gonzago_splash.png"
+dest_files=["res://.godot/imported/gonzago_splash.png-764ce08c475bc60b291fb92280838a7b.ctex"]
 
 [params]
 
@@ -32,6 +32,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

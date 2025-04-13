@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b2yapabtwdbpc"]
 
-[ext_resource type="Script" uid="uid://bagfm53o5qr5m" path="res://addons/gonzago-dev_tools/theme_explorer/views/file_bar.gd" id="1_rct3o"]
+[ext_resource type="Script" uid="uid://bagfm53o5qr5m" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/file_bar.gd" id="1_rct3o"]
 
 [node name="FileBar" type="HBoxContainer"]
 anchors_preset = 10

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dot2oyoe55qju"]
 
 [ext_resource type="Script" uid="uid://br1ec5u31sec" path="res://addons/gonzago/systems/splash/splash.gd" id="1_ek2mg"]
-[ext_resource type="Texture2D" uid="uid://b813k2vpmbb6m" path="res://addons/gonzago/assets/gonzago-logo.svg" id="2_ugksx"]
+[ext_resource type="Texture2D" uid="uid://b813k2vpmbb6m" path="res://addons/gonzago/assets/logos/gonzago_logo.svg" id="2_ugksx"]
 
 [node name="Splash" type="CanvasLayer"]
 layer = 127

@@ -33,13 +33,13 @@ func _enter_tree() -> void:
 
     if not ProjectSettings.has_setting("application/boot_splash/screens"):
         ProjectSettings.set("application/boot_splash/screens", [
-            "res://addons/gonzago/assets/godot-logo.svg",
-            "res://addons/gonzago/assets/gonzago-logo.svg"
+            "res://addons/gonzago/assets/logos/godot_logo.svg",
+            "res://addons/gonzago/assets/logos/gonzago_logo.svg"
         ])
         ProjectSettings.set_as_basic("application/boot_splash/screens", true)
         ProjectSettings.add_property_info({
             "name": "application/boot_splash/screens",
-            "type": TYPE_PACKED_STRING_ARRAY ,
+            "type": TYPE_PACKED_STRING_ARRAY,
             "hint": PROPERTY_HINT_TYPE_STRING,
             "hint_string": "%d/%d:%s" % [
                 TYPE_STRING,

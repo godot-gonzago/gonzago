@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="1_kufiq"]
 [ext_resource type="Script" uid="uid://l7b0tpeh875" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/types_tree.gd" id="1_snoxk"]
-[ext_resource type="PackedScene" uid="uid://d2ovmh6pepier" path="res://addons/gonzago-dev_tools/theme_explorer/views/filter.tscn" id="2_re7pq"]
+[ext_resource type="PackedScene" uid="uid://d2ovmh6pepier" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/filter.tscn" id="2_re7pq"]
 
 [sub_resource type="Texture2D" id="Texture2D_n3c0w"]
 resource_local_to_scene = false

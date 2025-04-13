@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://oi77wsyiytwx"]
 
-[ext_resource type="Texture2D" uid="uid://b813k2vpmbb6m" path="res://addons/gonzago/assets/gonzago-logo.svg" id="1_knspl"]
+[ext_resource type="Texture2D" uid="uid://b813k2vpmbb6m" path="res://addons/gonzago/assets/logos/gonzago_logo.svg" id="1_knspl"]
 [ext_resource type="Script" uid="uid://bphkpt6yskpj5" path="res://addons/gonzago/editor/interfaces/about_dialog.gd" id="2_ilpvj"]
 [ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="3_00hbb"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="3_y4vjp"]
