@@ -1,0 +1,159 @@
+@tool
+extends Control
+
+# https://github.com/godotengine/godot/blob/master/scene/gui/tree.h
+# https://github.com/godotengine/godot/blob/master/scene/gui/tree.cpp
+# https://github.com/godotengine/godot/blob/master/scene/gui/item_list.h
+# https://github.com/godotengine/godot/blob/master/scene/gui/item_list.cpp
+# https://github.com/godotengine/godot/blob/master/scene/gui/tree.cpp#L3603
+# https://github.com/godotengine/godot/blob/master/scene/gui/tree.cpp#L4379
+
+signal data_type_selected(data_type: Theme.DataType, theme_type: StringName)
+signal theme_item_selected(data_type: Theme.DataType, theme_type: StringName, theme_item: StringName)
+
+enum DisplayMode {
+    DISPLAY_MODE_LIST,
+    DISPLAY_MODE_THUMBNAIL
+}
+
+#region Caching
+
+class _ThemeCache extends RefCounted:
+    var panel: StyleBox
+    var focus: StyleBox
+    
+    var h_separation: int
+    var v_separation: int
+    
+    # TODO: ?
+    # TODO: var inner_item_margin_bottom: int = get_theme_constant(&"inner_item_margin_bottom", &"Tree")
+    # TODO: var inner_item_margin_left: int = get_theme_constant(&"inner_item_margin_left", &"Tree")
+    # TODO: var inner_item_margin_right: int = get_theme_constant(&"inner_item_margin_right", &"Tree")
+    # TODO: var inner_item_margin_top: int = get_theme_constant(&"inner_item_margin_top", &"Tree")
+    
+    var cursor: StyleBox
+    var cursor_unfocused: StyleBox
+    var hovered: StyleBox
+    var hovered_dimmed: StyleBox
+    var selected: StyleBox
+    var selected_focus: StyleBox
+    
+    var font: Font
+    var font_size: int
+    var font_color: Color
+    var font_disabled_color: Color
+    var font_hovered_color: Color
+    var font_hovered_dimmed_color: Color
+    var font_selected_color: Color
+    
+    var arrow: Texture2D
+    var arrow_collapsed: Texture2D
+    var arrow_collapsed_mirrored: Texture2D
+    
+    var button_hover: StyleBox
+    var button_pressed: StyleBox
+    var button_margin: int
+    var button_collapsed: Texture2D
+    
+    var max_control_panel: StyleBox
+    var max_control_font: Font
+    var max_control_font_size: int
+
+
+var _theme_cache := _ThemeCache.new()
+
+func _update_theme_cache() -> void:
+    _theme_cache.panel = get_theme_stylebox(&"panel", &"Tree")
+    _theme_cache.focus = get_theme_stylebox(&"focus", &"Tree")
+    
+    _theme_cache.h_separation = get_theme_constant(&"h_separation", &"Tree")
+    _theme_cache.v_separation = get_theme_constant(&"v_separation", &"Tree")
+    
+    _theme_cache.cursor = get_theme_stylebox(&"cursor", &"Tree")
+    _theme_cache.cursor_unfocused = get_theme_stylebox(&"cursor_unfocused", &"Tree")
+    _theme_cache.hovered = get_theme_stylebox(&"hovered", &"Tree")
+    _theme_cache.hovered_dimmed = get_theme_stylebox(&"hovered_dimmed", &"Tree")
+    _theme_cache.selected = get_theme_stylebox(&"selected", &"Tree")
+    _theme_cache.selected_focus = get_theme_stylebox(&"selected_focus", &"Tree")
+    
+    _theme_cache.font = get_theme_font(&"font", &"Tree")
+    _theme_cache.font_size = get_theme_font_size(&"font_size", &"Tree")
+    _theme_cache.font_color = get_theme_color(&"font_color", &"Tree")
+    _theme_cache.font_disabled_color = get_theme_color(&"font_disabled_color", &"Tree")
+    _theme_cache.font_hovered_color = get_theme_color(&"font_hovered_color", &"Tree")
+    _theme_cache.font_hovered_dimmed_color = get_theme_color(&"font_hovered_dimmed_color", &"Tree")
+    _theme_cache.font_selected_color = get_theme_color(&"font_selected_color", &"Tree")
+    
+    _theme_cache.arrow = get_theme_icon(&"arrow", &"Tree")
+    _theme_cache.arrow_collapsed = get_theme_icon(&"arrow_collapsed", &"Tree")
+    _theme_cache.arrow_collapsed_mirrored = get_theme_icon(&"arrow_collapsed_mirrored", &"Tree")
+    
+    _theme_cache.button_hover = get_theme_stylebox(&"button_hover", &"Tree")
+    _theme_cache.button_pressed = get_theme_stylebox(&"button_pressed", &"Tree")
+    _theme_cache.button_margin = get_theme_constant(&"button_margin", &"Tree")
+    _theme_cache.button_collapsed = get_theme_icon(&"menu_hightlight", &"TabContainer")
+    
+    _theme_cache.max_control_panel = get_theme_stylebox(&"normal", &"ColorPickerButton")
+    _theme_cache.max_control_font = get_theme_font(&"font", &"ColorPickerButton")
+    _theme_cache.max_control_font_size = get_theme_font_size(&"font_size", &"ColorPickerButton")
+
+
+class _SizeCache extends RefCounted:
+    var scroll_rect: Rect2
+    var content_rect: Rect2
+    var content_height: Rect2
+    
+    var list_item_size: Vector2
+    var min_cell_size: Vector2
+    
+    # TODO: Make grid, store cell span in group
+    #       cell height is based on item height,
+    #       cell width is also based on item height but as width or
+    #       based on half thumn width?
+    #       collapse buttons into popup menu if more than one?
+    #       make label editable if not default? buttons next to it (will take one cell height)
+    #       store in group if item control is visible (will take one cell height)
+    #       group stores cell width span (1-3), group stores preview cell height span (0-3?)
+    #       order in thumb mode is preview, control, editable label + buttons (collapsed)
+    #       order in list mode is editable label + buttons (not collapsed), control
+    #       store control width ratio in group?
+    #       store callback for preview drawing in group (control and rect)? add function to force redraw?
+    #       always expand when scroll is not visible to avoid massive reordering
+    #       add text when no items are visible
+    #       add text when no items are present
+    #       autohide groups when no visible children
+    #       add tooltip callback? (to group?)
+    #       add context menu callback? (to group?)
+    
+var _size_cache := _SizeCache.new()
+
+func _update_size_cache() -> void:
+    var rect := get_rect()
+    # TODO:
+    
+#endregion
+
+var _scroll_bar := VScrollBar.new()
+
+
+func _init() -> void:
+    #_scroll_bar.top_level = true
+    #_scroll_bar.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
+    _scroll_bar.page = 20
+    add_child(_scroll_bar)
+
+func _notification(what: int) -> void:
+    match what:
+        NOTIFICATION_READY:
+            pass
+        NOTIFICATION_THEME_CHANGED:
+            _scroll_bar.set_anchors_and_offsets_preset(
+                PRESET_RIGHT_WIDE,
+                PRESET_MODE_MINSIZE,
+                get_theme_constant("scrollbar_v_separation", "Tree")
+            )
+        NOTIFICATION_DRAW:
+            var rect := Rect2(Vector2.ZERO, size)
+            draw_style_box(get_theme_stylebox("panel", "Tree"), rect)
+            if has_focus():
+                draw_style_box(get_theme_stylebox("focus", "Tree"), rect)

@@ -20,6 +20,7 @@ const VariantUtil := preload("uid://jhwgwna1yvl")
 const StringUtil := preload("uid://dwrtug1qdumht")
 const ArrayUtil := preload("uid://ck86wp0vihbmi")
 const DictionaryUtil := preload("uid://cnx2fdk5112q6")
+const BitmaskUtil := preload("uid://bu33pjmob30e5")
 
 const NodeUtil := preload("uid://bpxw7qtl8y5sb")
 const ControlUtil := preload("uid://bpslqqsphuldy")

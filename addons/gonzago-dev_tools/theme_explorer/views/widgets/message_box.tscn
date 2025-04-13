@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfemi7pfxbc4p"]
+
+[ext_resource type="Script" uid="uid://kxasjqh1gf3b" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/message_box.gd" id="1_f0qla"]
+
+[node name="MessageBox" type="AcceptDialog"]
+position = Vector2i(0, 36)
+script = ExtResource("1_f0qla")
+
+[node name="Container" type="HBoxContainer" parent="."]
+visible = false
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 92.0
+offset_bottom = 51.0
+
+[node name="Icon" type="TextureRect" parent="Container"]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="Container"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+
+[connection signal="canceled" from="." to="." method="queue_free"]
+[connection signal="confirmed" from="." to="." method="queue_free"]

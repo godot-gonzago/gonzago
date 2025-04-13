@@ -10,6 +10,8 @@ extends RefCounted
 # TODO: Document according to
 #       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
 
+# TODO: Editor theme is also based on default theme!!!
+
 const _ThemeUtil := preload("./theme.gd")
 
 #region Iterators
