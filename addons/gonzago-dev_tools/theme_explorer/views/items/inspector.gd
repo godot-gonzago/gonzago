@@ -26,19 +26,33 @@ var _theme_type: StringName = StringName()
 var _theme_item: StringName = StringName()
 
 var _color_picker := ColorPickerButton.new()
-var _spin_box := SpinBox.new()
-var _resource_picker := EditorResourcePicker.new()
+var _constant_spin_box := SpinBox.new()
+var _font_resource_picker := EditorResourcePicker.new()
+var _font_size_spin_box := SpinBox.new()
+var _icon_resource_picker := EditorResourcePicker.new()
+var _style_box_resource_picker := EditorResourcePicker.new()
 
 
 func _init() -> void:
     _color_picker.visible = false
     _color_picker.text = "Color"
-    _spin_box.visible = false
-    _spin_box.rounded = true
-    _spin_box.min_value = 0.0
-    _spin_box.max_value = 100.0
-    _spin_box.allow_greater = true
-    _resource_picker.visible = false
+    _constant_spin_box.visible = false
+    _constant_spin_box.rounded = true
+    _constant_spin_box.min_value = 0.0
+    _constant_spin_box.max_value = 128.0
+    _constant_spin_box.allow_greater = true
+    _font_resource_picker.visible = false
+    _font_resource_picker.base_type = "Font"
+    _font_size_spin_box.visible = false
+    _font_size_spin_box.suffix = "pt"
+    _font_size_spin_box.rounded = true
+    _font_size_spin_box.min_value = 1.0
+    _font_size_spin_box.max_value = 128.0
+    _font_size_spin_box.allow_greater = true
+    _icon_resource_picker.visible = false
+    _icon_resource_picker.base_type = "Texture2D" # TODO: Disable unnecessairy display of icon with scaling
+    _style_box_resource_picker.visible = false
+    _style_box_resource_picker.base_type = "StyleBox"
 
 
 func _notification(what: int) -> void:
@@ -46,8 +60,11 @@ func _notification(what: int) -> void:
         NOTIFICATION_READY:
             if not NodeUtil.is_node_being_edited(self):
                 _editor.add_child(_color_picker)
-                _editor.add_child(_spin_box)
-                _editor.add_child(_resource_picker)
+                _editor.add_child(_constant_spin_box)
+                _editor.add_child(_font_resource_picker)
+                _editor.add_child(_font_size_spin_box)
+                _editor.add_child(_icon_resource_picker)
+                _editor.add_child(_style_box_resource_picker)
                 
                 _meta_data
                 
@@ -101,12 +118,16 @@ func inspect_theme_item(
 func _update_inspector() -> void:
     _hierarchy_button.clear()
     
-    _color_picker.visible = false
-    _spin_box.visible = false
-    _resource_picker.visible = false
-    _resource_picker.edited_resource = null
-    _resource_picker.base_type = ""
     _preview_box.visible = false
+    _color_picker.visible = false
+    _constant_spin_box.visible = false
+    _font_resource_picker.visible = false
+    _font_resource_picker.edited_resource = null
+    _font_size_spin_box.visible = false
+    _icon_resource_picker.visible = false
+    _icon_resource_picker.edited_resource = null
+    _style_box_resource_picker.visible = false
+    _style_box_resource_picker.edited_resource = null
     
     for mode in range(_mode, -1, -1):
         var idx := _hierarchy_button.item_count
@@ -150,30 +171,25 @@ func _update_theme_item_inspector() -> void:
             var constant: int = value as int
             var constant_type := ThemeUtil.get_constant_type(_theme_item)
             var suffix := ThemeUtil.get_constant_type_suffix(constant_type)
-            _spin_box.visible = true
-            _spin_box.value = constant
-            _spin_box.suffix = suffix
+            _constant_spin_box.visible = true
+            _constant_spin_box.value = constant
+            _constant_spin_box.suffix = suffix
         Theme.DATA_TYPE_FONT:
             var font: Font = value as Font
-            _resource_picker.visible = true
-            _resource_picker.base_type = "Font"
-            _resource_picker.edited_resource = font
+            _font_resource_picker.visible = true
+            _font_resource_picker.edited_resource = font
         Theme.DATA_TYPE_FONT_SIZE:
             var font_size: int = value as int
-            _spin_box.visible = true
-            _spin_box.value = font_size
-            _spin_box.suffix = "pt"
+            _font_size_spin_box.visible = true
+            _font_size_spin_box.value = font_size
         Theme.DATA_TYPE_ICON:
             var icon: Texture2D = value as Texture2D
-            _resource_picker.visible = true
-            _resource_picker.base_type = "Texture2D"
-            if icon.resource_path:
-                _resource_picker.edited_resource = icon
+            _icon_resource_picker.visible = true
+            _icon_resource_picker.edited_resource = icon
         Theme.DATA_TYPE_STYLEBOX:
             var style_box: StyleBox = value as StyleBox
-            _resource_picker.visible = true
-            _resource_picker.base_type = "StyleBox"
-            _resource_picker.edited_resource = style_box
+            _style_box_resource_picker.visible = true
+            _style_box_resource_picker.edited_resource = style_box
             
     
 func _draw_preview() -> void:
