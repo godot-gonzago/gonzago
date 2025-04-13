@@ -398,6 +398,28 @@ static func get_type_variation_list(
     return result
 
 
+#static func get_type_variation_base(
+#    theme: Theme,
+#    theme_type: StringName,
+#    include_base_themes := true
+#) -> StringName:
+#    for s in ThemeIterator.new(theme, include_base_themes):
+#        var variation_base := s.theme.get_type_variation_base(theme_type)
+#        if variation_base:
+#            return variation_base
+#    return &""
+
+
+#static func get_default_theme_for_type(
+#    theme: Theme,
+#    theme_type: StringName
+#) -> Theme:
+#    for s in ThemeIterator.new(theme, true):
+#        if theme_type in s.theme.get_type_list():
+#            return s.theme
+#    return null
+
+
 static func has_type(
     theme: Theme,
     theme_type: StringName,
@@ -457,6 +479,30 @@ static func get_theme_item_list(
 
     if sort: result.sort()
     return result
+
+
+#static func get_default_theme_for_theme_item(
+#    theme: Theme,
+#    data_type: Theme.DataType,
+#    name: StringName,
+#    theme_type: StringName
+#) -> Theme:
+#    for s in DefaultsIterator.new(theme, theme_type, true):
+#        if s.theme.has_theme_item(data_type, name, s.theme_type):
+#            return s.theme
+#    return null
+    
+    
+#static func get_default_type_for_theme_item(
+#    theme: Theme,
+#    data_type: Theme.DataType,
+#    name: StringName,
+#    theme_type: StringName
+#) -> StringName:
+#    for s in DefaultsIterator.new(theme, theme_type, true):
+#        if s.theme.has_theme_item(data_type, name, s.theme_type):
+#            return s.theme_type
+#    return &""
 
 
 # https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
