@@ -198,6 +198,7 @@ class DefaultsIterator extends RefCounted:
 #region Themes
 
 ## The type of a [Theme] resource.
+## To get the theme type use [method get_theme_type].
 enum ThemeType {
     ## Unknown or invalid theme type.
     NONE = -1,
@@ -319,13 +320,20 @@ static func get_default_base_scale(theme: Theme, include_base_themes := true) ->
     return ThemeDB.fallback_base_scale
 
 
-# TODO: 0.0 will clear
+## Sets the default base scale factor of the [param theme] resource.
+## Used by some controls to scale their visual properties based on the global scale factor.[br][br]
+## A value smaller or equal to [code]0.0[/code] is invalid and will remove the base scale
+## (use [method clear_default_base_scale] to do this explicitely).
+## This method wraps [member Theme.default_base_scale].
 static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     if theme and not is_built_in_theme(theme):
         if value < 0.0: value = 0.0
         theme.default_base_scale = maxf(0.0, value)
 
 
+## Clears the default base scale factor of the [param theme] resource.[br][br]
+## This method will set [member Theme.default_base_scale] to [code]0.0[/code].
+## (see [method set_default_base_scale]).
 static func clear_default_base_scale(theme: Theme) -> void:
     set_default_base_scale(theme, 0.0)
 
@@ -356,12 +364,20 @@ static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
     return ThemeDB.fallback_font
 
 
-# TODO: null will clear
+## Sets the default font of the [param theme] resource.
+## Used as the default value when trying to fetch a font resource that doesn't
+## exist in the theme or is in invalid state.[br][br]
+## A value is an invalid valid [Font] resource will remove the default font.
+## (use [method clear_default_font] to do this explicitely).
+## This method wraps [member Theme.default_font].
 static func set_default_font(theme: Theme, value: Font = null) -> void:
     if theme and not is_built_in_theme(theme):
         theme.default_font = value
 
 
+## Clears the default font of the [param theme] resource.[br][br]
+## This method will set [member Theme.default_font] to [code]null[/code].
+## (see [method set_default_font]).
 static func clear_default_font(theme: Theme) -> void:
     set_default_font(theme, null)
 
@@ -392,13 +408,21 @@ static func get_default_font_size(theme: Theme, include_base_themes := true) -> 
     return ThemeDB.fallback_font_size
 
 
-# TODO: 0 will clear (value smaller 1 will clear)
+## Sets the default font size of the [param theme] resource.
+## Used as the default value when trying to fetch a font size value that doesn't
+## exist in this theme or is in invalid state.[br][br]
+## A value smaller than [code]1[/code] is invalid and will remove the
+## default font size (use [method clear_default_font_size] to do this explicitely).
+## This method wraps [member Theme.default_font_size].
 static func set_default_font_size(theme: Theme, value: int = 0) -> void:
     if theme and not is_built_in_theme(theme):
         if value < 1: value = 0
         theme.default_font_size = value
 
 
+## Clears the default font size of the [param theme] resource.[br][br]
+## This method will set [member Theme.default_font_size] to [code]0[/code].
+## (see [method set_default_font_size]).
 static func clear_default_font_size(theme: Theme) -> void:
     set_default_font_size(theme, 0)
 
@@ -406,25 +430,24 @@ static func clear_default_font_size(theme: Theme) -> void:
 
 #region Themes (Editor utilities)
 
-static func get_theme_name(theme: Theme) -> String:
+static func get_theme_name(theme: Theme) -> StringName:
     if not theme:
         return &"Missing Resource"
 
     if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
         return &"Editor"
 
-    var default_theme := ThemeDB.get_default_theme()
-    if theme == default_theme:
+    if theme == ThemeDB.get_default_theme():
         return &"Default"
 
     var project_theme := ThemeDB.get_project_theme()
-    if project_theme and not theme == project_theme:
+    if project_theme and theme == project_theme:
         return &"Project"
 
     if theme.resource_path:
         return theme.resource_path.get_file()
 
-    return &"Theme"
+    return &"New Theme"
 
 
 static func get_theme_icon(theme: Theme) -> Texture2D:
@@ -922,10 +945,16 @@ static func rename_color(
 
 #region Constants (Editor utilities)
 
+## The type of the theme constant.
+## To get the theme constant type use [method get_constant_type].
 enum ConstantType {
+    ## Unknown constant type.
     UNKNOWN = -1,
+    ## The constant is a pixel measurement.
     PIXEL = 0,
+    ## The constant is a multiplication factor.
     FACTOR = 1,
+    ## The constant is a boolean flag.
     FLAG = 2
 }
 
