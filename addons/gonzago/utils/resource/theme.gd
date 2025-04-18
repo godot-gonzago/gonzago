@@ -197,16 +197,29 @@ class DefaultsIterator extends RefCounted:
 
 #region Themes
 
+## The type of a [Theme] resource.
 enum ThemeType {
+    ## Unknown or invalid theme type.
     NONE = -1,
+    ## [Theme] resource currently in memory without a
+    ## [member Resource.resource_path].
     MEMORY = 0,
+    ## Persistent [Theme] resource with a
+    ## [member Resource.resource_path].
     RESOURCE = 1,
+    ## The project [Theme] resource referenced in
+    ## [method ThemeDB.get_project_theme].
     PROJECT = 2,
+    ## Internal default [Theme] resource referenced in
+    ## [method ThemeDB.get_default_theme].
     DEFAULT = 3,
+    ## Internal editor [Theme] resource referenced in
+    ## [method EditorInterface.get_editor_theme].
     EDITOR = 4
 }
 
 
+## Returns the type of the given [param theme].
 static func get_theme_type(theme: Theme) -> ThemeType:
     if not theme:
         return ThemeType.NONE
@@ -226,6 +239,11 @@ static func get_theme_type(theme: Theme) -> ThemeType:
     return ThemeType.MEMORY
 
 
+## Returns [code]true[/code] if the given [param theme] has a base theme,
+## otherwise returns [code]false[/code].[br][br]
+## The theme referenced in [method ThemeDB.get_default_theme]
+## is considered the general base theme for all themes.[br][br]
+## An invalid [param theme] will return [code]false[/code].
 static func has_base_theme(theme: Theme) -> bool:
     if not theme:
         return false
@@ -236,6 +254,11 @@ static func has_base_theme(theme: Theme) -> bool:
     return theme != ThemeDB.get_default_theme()
 
 
+## Returns the base theme for the given [param theme].
+## The returned [Theme] will either be the default theme referenced in
+## [method ThemeDB.get_default_theme] or the project theme referenced in
+## [method ThemeDB.get_project_theme].[br][br]
+## An invalid [param theme] or a root base theme will return [code]null[/code].
 static func get_base_theme(theme: Theme) -> Theme:
     if not theme:
         return null
@@ -254,6 +277,12 @@ static func get_base_theme(theme: Theme) -> Theme:
     return default_theme
 
 
+## Returns [code]true[/code] if the given [param theme] is a built-in theme,
+## otherwise returns [code]false[/code].
+## Built-in themes are either the default theme referenced in
+## [method ThemeDB.get_default_theme] or the editor theme referenced in
+## [method EditorInterface.get_editor_theme] as they are not editable.[br][br]
+## An invalid [param theme] will return [code]false[/code].
 static func is_built_in_theme(theme: Theme) -> bool:
     if not theme:
         return false
@@ -264,12 +293,26 @@ static func is_built_in_theme(theme: Theme) -> bool:
     return false
 
 
+## Returns [code]true[/code] if [member Theme.default_base_scale] has a
+## valid value for [param theme], otherwise returns [code]false[/code].[br][br]
+## An invalid [param theme] will return [code]false[/code].
+## If [param include_base_themes] is [code]true[/code] will also check
+## base themes of [param theme].[br][br]
+## The value must be greater than [code]0.0[/code] to be considered valid.
+## This method wraps [method Theme.has_default_base_scale].
 static func has_default_base_scale(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_base_scale(): return true
     return false
 
 
+## Returns [member Theme.default_base_scale] if it has a valid value.[br][br]
+## An invalid [param theme] or if no valid base scale is present
+## will return [member ThemeDB.fallback_base_scale].
+## If [param include_base_themes] is [code]true[/code] will also check
+## base themes of [param theme].[br][br]
+## The value must be greater than [code]0.0[/code] to be considered valid.
+## This method wraps [member Theme.default_base_scale].
 static func get_default_base_scale(theme: Theme, include_base_themes := true) -> float:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_base_scale(): return s.theme.default_base_scale
@@ -279,6 +322,7 @@ static func get_default_base_scale(theme: Theme, include_base_themes := true) ->
 # TODO: 0.0 will clear
 static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     if theme and not is_built_in_theme(theme):
+        if value < 0.0: value = 0.0
         theme.default_base_scale = maxf(0.0, value)
 
 
@@ -286,12 +330,26 @@ static func clear_default_base_scale(theme: Theme) -> void:
     set_default_base_scale(theme, 0.0)
 
 
+## Returns [code]true[/code] if [member Theme.default_font] has a
+## valid value for [param theme], otherwise returns [code]false[/code].[br][br]
+## An invalid [param theme] will return [code]false[/code].
+## If [param include_base_themes] is [code]true[/code] will also check
+## base themes of [param theme].[br][br]
+## The value must be a valid [Font] resource to be considered valid.
+## This method wraps [method Theme.has_default_font].
 static func has_default_font(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font(): return true
     return false
 
 
+## Returns [member Theme.default_font] if it has a valid value.[br][br]
+## An invalid [param theme] or if no valid default font is present
+## will return [member ThemeDB.fallback_font].
+## If [param include_base_themes] is [code]true[/code] will also check
+## base themes of [param theme].[br][br]
+## The value must be a valid [Font] resource to be considered valid.
+## This method wraps [member Theme.default_font].
 static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font(): return s.theme.default_font
@@ -308,12 +366,26 @@ static func clear_default_font(theme: Theme) -> void:
     set_default_font(theme, null)
 
 
+## Returns [code]true[/code] if [member Theme.default_font_size] has a
+## valid value for [param theme], otherwise returns [code]false[/code].[br][br]
+## An invalid [param theme] will return [code]false[/code].
+## If [param include_base_themes] is [code]true[/code] will also check
+## base themes of [param theme].[br][br]
+## The value must be greater than [code]0[/code] to be considered valid.
+## This method wraps [method Theme.has_default_font_size].
 static func has_default_font_size(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font_size(): return true
     return false
 
 
+## Returns [member Theme.default_font_size] if it has a valid value.[br][br]
+## An invalid [param theme] or if no valid default font size is present
+## will return [member ThemeDB.fallback_font_size].
+## If [param include_base_themes] is [code]true[/code] will also check
+## base themes of [param theme].[br][br]
+## The value must be greater than [code]0[/code] to be considered valid.
+## This method wraps [member Theme.default_font_size].
 static func get_default_font_size(theme: Theme, include_base_themes := true) -> int:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font_size(): return s.theme.default_font_size
