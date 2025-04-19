@@ -130,11 +130,11 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
 
 func _on_tree_item_selected() -> void:
     var item := _tree.get_selected()
-    
+
     var theme_item := item.get_meta(&"theme_item", StringName())
     var theme_type := item.get_meta(&"theme_type", StringName())
     var data_type := item.get_meta(&"data_type", Theme.DATA_TYPE_MAX)
-    
+
     if theme_item:
         theme_item_selected.emit(data_type, theme_type, theme_item)
     else:

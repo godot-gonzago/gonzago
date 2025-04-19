@@ -1,6 +1,11 @@
 @tool
 extends PopupMenu
 
+# https://github.com/Lenrow/line-edit-complete-godot
+
+# https://github.com/godotengine/godot/blob/master/scene/gui/popup_menu.cpp#L241
+# https://github.com/godotengine/godot/blob/master/scene/main/window.cpp#L2173
+
 @export var line_edit: LineEdit:
     set = set_line_edit, get = get_line_edit
 
@@ -41,43 +46,32 @@ func _notification(what: int) -> void:
     match what:
         NOTIFICATION_READY:
             # Start with the popup not being able to grab focus
-            #unfocusable = true
-
-            # When the popup menu is about to popup make it focusable so we can control it with the mouse
-            # connect it in a deferred way so it does it at the end of the frame and does not steal the focus
-            #about_to_popup.connect(
-            #    func(): unfocusable = false,
-            #    CONNECT_DEFERRED
-            #)
-
-            # When the popup menu is going to hide make it unfocusable again
-            #popup_hide.connect(
-            #    func(): unfocusable = true
-            #)
-
+            unfocusable = true
             _recalculate_max_size()
         NOTIFICATION_THEME_CHANGED:
             if is_node_ready():
                 _recalculate_max_size()
+        NOTIFICATION_VISIBILITY_CHANGED:
+            set_focused_item(-1)
+            #if not visible:
+                #unfocusable = true
+            #else:
+                #set_deferred(&"unfocusable", false)
 
 
-func _unhandled_key_input(event: InputEvent) -> void:
-    pass
-
-
-func _get_contents_minimum_size() -> Vector2:
-    var min_size := get_theme_stylebox("panel").get_minimum_size()
-
-    var font := get_theme_font("font")
-    var font_size := get_theme_font_size("font_size")
-    var font_height := font.get_height(font_size)
-    var v_separation := get_theme_constant("v_separation")
-    var item_height := font_height + v_separation
-
-    var lines_count := mini(item_count, max_lines)
-    min_size.y += item_height * lines_count
-
-    return min_size
+#func _get_contents_minimum_size() -> Vector2:
+#    var min_size := get_theme_stylebox("panel").get_minimum_size()
+#
+#    var font := get_theme_font("font")
+#    var font_size := get_theme_font_size("font_size")
+#    var font_height := font.get_height(font_size)
+#    var v_separation := get_theme_constant("v_separation")
+#    var item_height := font_height + v_separation
+#
+#    var lines_count := mini(item_count, max_lines)
+#    min_size.y += item_height * lines_count
+#
+#    return min_size
 
 
 func _recalculate_max_size() -> void:
@@ -88,8 +82,7 @@ func _recalculate_max_size() -> void:
     var v_separation := get_theme_constant("v_separation")
     var item_height := font_height + v_separation
     var max_height := panel_height + item_height * max_lines
-    #max_height -= v_separation
-    max_size.y = max_height
+    #max_size.y = max_height
 
 
 func _focus_entered() -> void:
@@ -97,39 +90,52 @@ func _focus_entered() -> void:
 
 
 func _text_changed(new_text: String) -> void:
-    var line_edit_rect := line_edit.get_global_rect()
+    var line_edit_rect := line_edit.get_rect()
     var min_size := get_contents_minimum_size()
-    var rect := Rect2i(
+
+    var screen_transform := line_edit.get_screen_transform()
+    var rect := screen_transform * Rect2(
         line_edit_rect.position.x,
         line_edit_rect.end.y,
         line_edit_rect.size.x,
         min_size.y
     )
 
-    #var panel_height := get_theme_stylebox("panel").get_minimum_size().y
-    #var font := get_theme_font("font")
-    #var font_size := get_theme_font_size("font_size")
-    #var font_height := font.get_height(font_size)
-    #var v_separation := get_theme_constant("v_separation")
-    #var item_height := font_height + v_separation
-    #var max_height := panel_height + item_height * max_lines
+    var window := line_edit.get_last_exclusive_window()
+    var window_rect: Rect2
+    if window.is_embedded():
+        window_rect = window.get_visible_rect()
+    else:
+        var screen := window.current_screen
+        window_rect = DisplayServer.screen_get_usable_rect(screen)
 
-    #var window := line_edit.get_last_exclusive_window()
-    #var window_rect: Rect2
-    #if window.is_embedded():
-        #window_rect = window.get_visible_rect()
-    #else:
-        #var screen := window.current_screen
-        #window_rect = DisplayServer.screen_get_usable_rect(screen)
+    var panel_height := get_theme_stylebox("panel").get_minimum_size().y
+    var font := get_theme_font("font")
+    var font_size := get_theme_font_size("font_size")
+    var font_height := font.get_height(font_size)
+    var v_separation := get_theme_constant("v_separation")
+    var item_height := font_height + v_separation
+    var max_height := panel_height + item_height * max_lines
 
-    #print(rect)
-    #print(window_rect)
+    #print("Rect before: %s" % rect)
+    #print("WindowRect before: %s" % window_rect)
 
-    #if window_rect.end.y < rect.end.y:
-        #rect.end.y = window_rect.end.y
-        #max_height = minf(max_height, rect.size.y)
+    if window_rect.end.y < rect.end.y:
+        rect.end.y = window_rect.end.y
 
-    #max_size.y = max_height
+        var inverse_screen_transform := get_screen_transform().affine_inverse()
+        var local_rect := inverse_screen_transform * rect
+        max_height = minf(max_height, local_rect.size.y)
+
+    #print("Rect after: %s" % rect)
+    #print("WindowRect after: %s" % window_rect)
+
+    #print("max_height: %s" % max_height)
+    max_size.y = max_height
+
     #popup(rect)
+    position = rect.position
+    size = rect.size
 
-    popup_on_parent(rect)
+    show()
+    #line_edit.call_deferred(&"grab_focus")
