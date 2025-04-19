@@ -7,9 +7,6 @@ extends RefCounted
 ## Most functionality extends the default functions already provided by [Theme]
 ## but generalizes their use.
 
-# TODO: Document according to
-#       https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
-
 const _Self := preload("./theme.gd")
 
 #region Iterators
@@ -586,6 +583,9 @@ static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
 
 #region Theme types
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_type_list]
 static func get_type_list(
     theme: Theme,
     include_variations := false,
@@ -605,6 +605,10 @@ static func get_type_list(
     return result
 
 
+
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_type_variation_list]
 static func get_type_variation_list(
     theme: Theme,
     base_type: StringName,
@@ -622,28 +626,37 @@ static func get_type_variation_list(
     return result
 
 
-#static func get_type_variation_base(
-#    theme: Theme,
-#    theme_type: StringName,
-#    include_base_themes := true
-#) -> StringName:
-#    for s in ThemeIterator.new(theme, include_base_themes):
-#        var variation_base := s.theme.get_type_variation_base(theme_type)
-#        if variation_base:
-#            return variation_base
-#    return &""
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_type_variation_base]
+static func get_type_variation_base(
+    theme: Theme,
+    theme_type: StringName,
+    include_base_themes := true
+) -> StringName:
+    for s in ThemeIterator.new(theme, include_base_themes):
+        var variation_base := s.theme.get_type_variation_base(theme_type)
+        if variation_base:
+            return variation_base
+    return &""
 
 
-#static func get_default_theme_for_type(
-#    theme: Theme,
-#    theme_type: StringName
-#) -> Theme:
-#    for s in ThemeIterator.new(theme, true):
-#        if theme_type in s.theme.get_type_list():
-#            return s.theme
-#    return null
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_type_list]
+static func get_default_theme_for_type(
+    theme: Theme,
+    theme_type: StringName
+) -> Theme:
+    for s in ThemeIterator.new(theme, true):
+        if theme_type in s.theme.get_type_list():
+            return s.theme
+    return null
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_type_list]
 static func has_type(
     theme: Theme,
     theme_type: StringName,
@@ -654,6 +667,10 @@ static func has_type(
     return false
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [enum ClassDB.APIType]
+## [method ClassDB.class_get_api_type]
 static func is_built_in_type(
     type: StringName,
     max_api_depth := ClassDB.API_EDITOR_EXTENSION
@@ -682,6 +699,9 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
 
 #region Theme items
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_theme_item_type_list]
 static func get_theme_item_type_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -702,6 +722,9 @@ static func get_theme_item_type_list(
     return result
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_theme_item_list]
 static func get_theme_item_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -720,50 +743,67 @@ static func get_theme_item_list(
     return result
 
 
-#static func get_default_theme_for_theme_item(
-#    theme: Theme,
-#    data_type: Theme.DataType,
-#    name: StringName,
-#    theme_type: StringName
-#) -> Theme:
-#    for s in DefaultsIterator.new(theme, theme_type, true):
-#        if s.theme.has_theme_item(data_type, name, s.theme_type):
-#            return s.theme
-#    return null
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.has_theme_item]
+static func get_default_theme_for_theme_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    name: StringName,
+    theme_type: StringName
+) -> Theme:
+    for s in DefaultsIterator.new(theme, theme_type, true):
+        if s.theme.has_theme_item(data_type, name, s.theme_type):
+            return s.theme
+    return null
 
 
-#static func get_default_type_for_theme_item(
-#    theme: Theme,
-#    data_type: Theme.DataType,
-#    name: StringName,
-#    theme_type: StringName
-#) -> StringName:
-#    for s in DefaultsIterator.new(theme, theme_type, true):
-#        if s.theme.has_theme_item(data_type, name, s.theme_type):
-#            return s.theme_type
-#    return &""
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.has_theme_item]
+static func get_default_type_for_theme_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    name: StringName,
+    theme_type: StringName
+) -> StringName:
+    for s in DefaultsIterator.new(theme, theme_type, true):
+        if s.theme.has_theme_item(data_type, name, s.theme_type):
+            return s.theme_type
+    return &""
 
 
-# https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
-#static func is_class_item(
-#    theme: Theme,
-#    data_type: Theme.DataType,
-#    name: StringName,
-#    theme_type: StringName
-#) -> bool:
-#    return false
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.has_theme_item]
+static func is_class_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    name: StringName,
+    theme_type: StringName
+) -> bool:
+    # TODO: Implement
+    # https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
+    return false
 
 
-# https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
-#static func is_custom_item(
-#    theme: Theme,
-#    data_type: Theme.DataType,
-#    name: StringName,
-#    theme_type: StringName
-#) -> bool:
-#    return false
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.has_theme_item]
+static func is_custom_item(
+    theme: Theme,
+    data_type: Theme.DataType,
+    name: StringName,
+    theme_type: StringName
+) -> bool:
+    # TODO: Implement
+    # https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
+    return false
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.has_theme_item]
 static func has_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -777,6 +817,10 @@ static func has_theme_item(
     return false
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.get_theme_item]
+## [method get_data_type_fallback]
 static func get_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -790,6 +834,9 @@ static func get_theme_item(
     return get_data_type_fallback(data_type)
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.set_theme_item]
 static func set_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -803,6 +850,9 @@ static func set_theme_item(
     theme.set_theme_item(data_type, name, theme_type, value)
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.clear_theme_item]
 static func clear_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -814,6 +864,9 @@ static func clear_theme_item(
         theme.clear_theme_item(data_type, name, theme_type)
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [method Theme.rename_theme_item]
 static func rename_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -839,7 +892,9 @@ static func rename_theme_item(
 
 #region Theme items (Property paths)
 
-# [code]"Button/colors/font_color"[/code]
+## Returns the property path for a theme item stored in [Theme].[br][br]
+## The format is [code]"theme_type/data_type_name/name"[/code],
+## eg. [code]"Button/colors/font_color"[/code].
 static func get_theme_item_property_path(
     data_type: Theme.DataType,
     name: StringName,
@@ -852,14 +907,20 @@ static func get_theme_item_property_path(
     ]
 
 
-# [code]"Button/colors/font_color"[/code]
+## Returns the theme type from the [param property_path]
+## used for storing a theme item in a [Theme].[br][br]
+## The format is [code]"theme_type/data_type_name/name"[/code],
+## eg. [code]"Button/colors/font_color"[/code].
 static func get_theme_item_type_from_property_path(
     property_path: StringName
 ) -> StringName:
     return property_path.get_slice("/", 0)
 
 
-# [code]"Button/colors/font_color"[/code]
+## Returns the [enum Theme.DataType] from the [param property_path]
+## used for storing a theme item in a [Theme].[br][br]
+## The format is [code]"theme_type/data_type_name/name"[/code],
+## eg. [code]"Button/colors/font_color"[/code].
 static func get_theme_item_data_type_from_property_path(
     property_path: StringName
 ) -> Theme.DataType:
@@ -867,14 +928,19 @@ static func get_theme_item_data_type_from_property_path(
     return _get_data_type_from_property_path(data_type)
 
 
-# [code]"Button/colors/font_color"[/code]
+## Returns the theme item name from the [param property_path]
+## used for storing a theme item in a [Theme].[br][br]
+## The format is [code]"theme_type/data_type_name/name"[/code],
+## eg. [code]"Button/colors/font_color"[/code].
 static func get_theme_item_name_from_property_path(
     property_path: StringName
 ) -> StringName:
     return property_path.get_slice("/", 2)
 
 
-# [code]"theme_override_colors/font_color"[/code]
+## Returns the property path for a theme override stored in a [Control].[br][br]
+## The format is [code]"theme_override_data_type_name/name"[/code],
+## eg. [code]"theme_override_colors/font_color"[/code].
 static func get_theme_item_override_property_path(
     data_type: Theme.DataType,
     name: StringName
@@ -886,7 +952,10 @@ static func get_theme_item_override_property_path(
     ]
 
 
-# [code]"theme_override_colors/font_color"[/code]
+## Returns the [enum Theme.DataType] from the [param property_path]
+## used for storing a theme override in a [Control].[br][br]
+## The format is [code]"theme_override_data_type_name/name"[/code],
+## eg. [code]"theme_override_colors/font_color"[/code].
 static func get_theme_item_data_type_from_override_property_path(
     property_path: StringName
 ) -> Theme.DataType:
@@ -895,7 +964,10 @@ static func get_theme_item_data_type_from_override_property_path(
     )
 
 
-# [code]"theme_override_colors/font_color"[/code]
+## Returns the theme item name from the [param property_path]
+## used for storing a theme override in a [Control].[br][br]
+## The format is [code]"theme_override_data_type_name/name"[/code],
+## eg. [code]"theme_override_colors/font_color"[/code].
 static func get_theme_item_name_from_override_property_path(
     property_path: StringName
 ) -> StringName:
@@ -906,6 +978,9 @@ static func get_theme_item_name_from_override_property_path(
 # TODO: Copy for all types to match original Theme functionality?
 #region Colors
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func get_colors_type_list(
     theme: Theme,
     include_variations := false, include_defaults := true, sort := true
@@ -915,6 +990,10 @@ static func get_colors_type_list(
         include_variations, include_defaults, sort
     )
 
+
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func get_color_list(
     theme: Theme, theme_type: StringName,
     include_defaults := true, sort := true
@@ -925,6 +1004,9 @@ static func get_color_list(
     )
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func has_color(
     theme: Theme, name: StringName, theme_type: StringName,
     include_defaults := false
@@ -935,6 +1017,9 @@ static func has_color(
     )
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func get_color(
     theme: Theme, name: StringName, theme_type: StringName,
     include_defaults := true
@@ -945,6 +1030,9 @@ static func get_color(
     ) as Color
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func set_color(
     theme: Theme, name: StringName, theme_type: StringName, value: Color
 ) -> void:
@@ -952,6 +1040,9 @@ static func set_color(
         theme.set_color(name, theme_type, value)
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func clear_color(
     theme: Theme, name: StringName, theme_type: StringName
 ) -> void:
@@ -959,6 +1050,9 @@ static func clear_color(
         theme.clear_color(name, theme_type)
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## @experimental
 static func rename_color(
     theme: Theme,
     old_name: StringName, name: StringName, theme_type: StringName,
@@ -1045,10 +1139,14 @@ static func get_constant_type_suffix(type: ConstantType) -> StringName:
 
 #region Fonts
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 static func get_pairing_font_size_name(font_name: StringName) -> StringName:
     return font_name + "_size"
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 static func has_pairing_font_size(
     theme: Theme,
     font_name: StringName,
@@ -1062,6 +1160,8 @@ static func has_pairing_font_size(
     return false
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 static func get_pairing_font_size(
     theme: Theme,
     font_name: StringName,
@@ -1078,10 +1178,14 @@ static func get_pairing_font_size(
 
 #region Font Sizes
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 static func get_pairing_font_name(font_size_name: StringName) -> StringName:
     return font_size_name.trim_suffix("_size")
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 static func has_pairing_font(
     theme: Theme,
     font_size_name: StringName,
@@ -1095,6 +1199,8 @@ static func has_pairing_font(
     return false
 
 
+## TODO: Document according to
+## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 static func get_pairing_font(
     theme: Theme,
     font_size_name: StringName,
