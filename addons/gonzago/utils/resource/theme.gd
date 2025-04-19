@@ -296,7 +296,7 @@ static func is_built_in_theme(theme: Theme) -> bool:
 ## An invalid [param theme] will return [code]false[/code].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
-## The value must be greater than [code]0.0[/code] to be considered valid.
+## The value must be greater than [code]0.0[/code] to be considered valid.[br][br]
 ## This method wraps [method Theme.has_default_base_scale].
 static func has_default_base_scale(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
@@ -309,7 +309,7 @@ static func has_default_base_scale(theme: Theme, include_base_themes := false) -
 ## will return [member ThemeDB.fallback_base_scale].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
-## The value must be greater than [code]0.0[/code] to be considered valid.
+## The value must be greater than [code]0.0[/code] to be considered valid.[br][br]
 ## This method wraps [member Theme.default_base_scale].
 static func get_default_base_scale(theme: Theme, include_base_themes := true) -> float:
     for s in ThemeIterator.new(theme, include_base_themes):
@@ -320,7 +320,7 @@ static func get_default_base_scale(theme: Theme, include_base_themes := true) ->
 ## Sets the default base scale factor of the [param theme] resource.
 ## Used by some controls to scale their visual properties based on the global scale factor.[br][br]
 ## A value smaller or equal to [code]0.0[/code] is invalid and will remove the base scale
-## (use [method clear_default_base_scale] to do this explicitely).
+## (use [method clear_default_base_scale] to do this explicitely).[br][br]
 ## This method wraps [member Theme.default_base_scale].
 static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     if theme and not is_built_in_theme(theme):
@@ -329,7 +329,7 @@ static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
 
 
 ## Clears the default base scale factor of the [param theme] resource.[br][br]
-## This method will set [member Theme.default_base_scale] to [code]0.0[/code].
+## This method will set [member Theme.default_base_scale] to [code]0.0[/code]
 ## (see [method set_default_base_scale]).
 static func clear_default_base_scale(theme: Theme) -> void:
     set_default_base_scale(theme, 0.0)
@@ -340,7 +340,7 @@ static func clear_default_base_scale(theme: Theme) -> void:
 ## An invalid [param theme] will return [code]false[/code].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
-## The value must be a valid [Font] resource to be considered valid.
+## The value must be a valid [Font] resource to be considered valid.[br][br]
 ## This method wraps [method Theme.has_default_font].
 static func has_default_font(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
@@ -353,7 +353,7 @@ static func has_default_font(theme: Theme, include_base_themes := false) -> bool
 ## will return [member ThemeDB.fallback_font].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
-## The value must be a valid [Font] resource to be considered valid.
+## The value must be a valid [Font] resource to be considered valid.[br][br]
 ## This method wraps [member Theme.default_font].
 static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
     for s in ThemeIterator.new(theme, include_base_themes):
@@ -365,7 +365,7 @@ static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
 ## Used as the default value when trying to fetch a font resource that doesn't
 ## exist in the theme or is in invalid state.[br][br]
 ## A value is an invalid valid [Font] resource will remove the default font.
-## (use [method clear_default_font] to do this explicitely).
+## (use [method clear_default_font] to do this explicitely).[br][br]
 ## This method wraps [member Theme.default_font].
 static func set_default_font(theme: Theme, value: Font = null) -> void:
     if theme and not is_built_in_theme(theme):
@@ -373,7 +373,7 @@ static func set_default_font(theme: Theme, value: Font = null) -> void:
 
 
 ## Clears the default font of the [param theme] resource.[br][br]
-## This method will set [member Theme.default_font] to [code]null[/code].
+## This method will set [member Theme.default_font] to [code]null[/code]
 ## (see [method set_default_font]).
 static func clear_default_font(theme: Theme) -> void:
     set_default_font(theme, null)
@@ -384,7 +384,7 @@ static func clear_default_font(theme: Theme) -> void:
 ## An invalid [param theme] will return [code]false[/code].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
-## The value must be greater than [code]0[/code] to be considered valid.
+## The value must be greater than [code]0[/code] to be considered valid.[br][br]
 ## This method wraps [method Theme.has_default_font_size].
 static func has_default_font_size(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
@@ -397,7 +397,7 @@ static func has_default_font_size(theme: Theme, include_base_themes := false) ->
 ## will return [member ThemeDB.fallback_font_size].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
-## The value must be greater than [code]0[/code] to be considered valid.
+## The value must be greater than [code]0[/code] to be considered valid.[br][br]
 ## This method wraps [member Theme.default_font_size].
 static func get_default_font_size(theme: Theme, include_base_themes := true) -> int:
     for s in ThemeIterator.new(theme, include_base_themes):
@@ -409,7 +409,7 @@ static func get_default_font_size(theme: Theme, include_base_themes := true) -> 
 ## Used as the default value when trying to fetch a font size value that doesn't
 ## exist in this theme or is in invalid state.[br][br]
 ## A value smaller than [code]1[/code] is invalid and will remove the
-## default font size (use [method clear_default_font_size] to do this explicitely).
+## default font size (use [method clear_default_font_size] to do this explicitely).[br][br]
 ## This method wraps [member Theme.default_font_size].
 static func set_default_font_size(theme: Theme, value: int = 0) -> void:
     if theme and not is_built_in_theme(theme):
@@ -418,7 +418,7 @@ static func set_default_font_size(theme: Theme, value: int = 0) -> void:
 
 
 ## Clears the default font size of the [param theme] resource.[br][br]
-## This method will set [member Theme.default_font_size] to [code]0[/code].
+## This method will set [member Theme.default_font_size] to [code]0[/code]
 ## (see [method set_default_font_size]).
 static func clear_default_font_size(theme: Theme) -> void:
     set_default_font_size(theme, 0)
@@ -427,7 +427,7 @@ static func clear_default_font_size(theme: Theme) -> void:
 
 #region Themes (Editor utilities)
 
-## Gets an appropriate display name for the theme.
+## Returns an appropriate display name for the [param theme].[br][br]
 ## This method is only useful for editor tools.
 static func get_theme_name(theme: Theme) -> StringName:
     if not theme:
@@ -449,7 +449,7 @@ static func get_theme_name(theme: Theme) -> StringName:
     return &"New Theme"
 
 
-## Gets an appropriate icon for the theme.
+## Returns an appropriate icon for the [param theme].[br][br]
 ## This method is only useful for editor tools.
 static func get_theme_icon(theme: Theme) -> Texture2D:
     if not Engine.is_editor_hint():
@@ -468,7 +468,7 @@ static func get_theme_icon(theme: Theme) -> Texture2D:
 
 #region Data types
 
-## Gets an appropriate fallback value for [param data_type].[br][br]
+## Returns an appropriate fallback value for [param data_type].[br][br]
 ## Returns [constant Color.BLACK] for [constant Theme.DATA_TYPE_COLOR],
 ## [code]0[/code] for [constant Theme.DATA_TYPE_CONSTANT],
 ## [member ThemeDB.fallback_font] for [constant Theme.DATA_TYPE_FONT],
@@ -537,7 +537,7 @@ static func _get_data_type_from_property_path(property_path: StringName) -> Them
 
 #region Data types (Editor utilities)
 
-## Gets an appropriate display name for the [enum Theme.DataType].
+## Returns an appropriate display name for the [enum Theme.DataType].[br][br]
 ## This method is only useful for editor tools.
 static func get_data_type_name(data_type: Theme.DataType) -> StringName:
     match data_type:
@@ -550,7 +550,7 @@ static func get_data_type_name(data_type: Theme.DataType) -> StringName:
         _:                         return StringName()
 
 
-## Gets an appropriate list of tags for the [enum Theme.DataType].
+## Returns an appropriate list of tags for the [enum Theme.DataType].[br][br]
 ## This method is only useful for editor tools.
 static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
     match data_type:
@@ -563,7 +563,7 @@ static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
         _:                         return []
 
 
-## Gets an appropriate icon for the [enum Theme.DataType].
+## Returns an appropriate icon for the [enum Theme.DataType].[br][br]
 ## This method is only useful for editor tools.
 static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
     if not Engine.is_editor_hint():
@@ -583,9 +583,15 @@ static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
 
 #region Theme types
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_type_list]
+## Returns a list of all unique theme type names in [param theme].
+## Use the appropriate [code]get_*_type_list[/code] methods to get a list of
+## unique theme types for a single data type.[br][br]
+## If [param include_variations] is [code]true[/code] variations are included in the resulting list,
+## otherwise only theme types that don't have a variation base are included.
+## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
+## base themes of [param theme], otherwise only data in [param theme] is checked and included.
+## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
+## This method wraps [method Theme.get_type_list].
 static func get_type_list(
     theme: Theme,
     include_variations := false,
@@ -606,10 +612,11 @@ static func get_type_list(
     return result
 
 
-
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_type_variation_list]
+## Returns a list of all type variations for the given [param base_type] in [param theme].[br][br]
+## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
+## base themes of [param theme], otherwise only data in [param theme] is checked and included.
+## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
+## This method wraps [method Theme.get_type_variation_list].
 static func get_type_variation_list(
     theme: Theme,
     base_type: StringName,
@@ -627,9 +634,11 @@ static func get_type_variation_list(
     return result
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_type_variation_base]
+## Returns the name of the base theme type if [param theme_type] is a
+## valid variation type in [param theme]. Returns an empty string otherwise.[br][br]
+## If [param include_base_themes] is [code]true[/code] the result also checks variations in
+## base themes of [param theme], otherwise only data in [param theme] is checked and included.[br][br]
+## This method wraps [method Theme.get_type_variation_base].
 static func get_type_variation_base(
     theme: Theme,
     theme_type: StringName,
@@ -642,9 +651,8 @@ static func get_type_variation_base(
     return &""
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_type_list]
+## Returns the [Theme] the given [param theme_type] is found in first.
+## This method will check base themes, if [param theme] does not contain [param type].
 static func get_base_theme_for_type(
     theme: Theme,
     theme_type: StringName
@@ -655,9 +663,10 @@ static func get_base_theme_for_type(
     return null
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_type_list]
+## Returns [code]true[/code] if [param theme] contains [param theme_type],
+## otherwise returns [code]false[/code].[br][br]
+## If [param include_base_themes] is [code]true[/code] the result also checks
+## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 static func has_type(
     theme: Theme,
     theme_type: StringName,
@@ -668,10 +677,10 @@ static func has_type(
     return false
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [enum ClassDB.APIType]
-## [method ClassDB.class_get_api_type]
+## Returns [code]true[/code] if [param type] is a built-in type, otherwise returns [code]false[/code],[br][br]
+## This uses [method ClassDB.class_get_api_type] to look for types.
+## The api type for [param type] needs to be smaller than or equal to
+## [param max_api_depth] to count as built-in (can be set to a [enum ClassDB.APIType]).
 static func is_built_in_type(
     type: StringName,
     max_api_depth := ClassDB.API_EDITOR_EXTENSION
@@ -685,7 +694,7 @@ static func is_built_in_type(
 
 #region Theme types (Editor utilities)
 
-## Gets an appropriate icon for the theme type.
+## Returns an appropriate icon for the [param theme_type].[br][br]
 ## This method is only useful for editor tools.
 static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
     if not Engine.is_editor_hint():
@@ -700,9 +709,16 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
 
 #region Theme items
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_theme_item_type_list]
+## Returns a list of all unique theme type names for [param data_type] properties in [param theme].
+## Use [method get_type_list] to get a list of all unique theme types.
+## If [param include_variations] is [code]true[/code] variations are included in the resulting list,
+## otherwise only theme types that don't have a variation base are included.
+## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
+## base themes of [param theme], otherwise only data in [param theme] is checked and included.
+## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.get_theme_item_type_list].
 static func get_theme_item_type_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -724,9 +740,14 @@ static func get_theme_item_type_list(
     return result
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_theme_item_list]
+## Returns a list of names for properties of [param data_type] defined with [param theme_type] in [param theme].
+## Use [method get_theme_item_type_list to get a list of possible theme type names.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the results.
+## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.get_theme_item_list].
 static func get_theme_item_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -745,9 +766,9 @@ static func get_theme_item_list(
     return result
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.has_theme_item]
+## Returns the [Theme] the given theme item is found in first.[br][br]
+## This method will check base variations for [param theme_type] if the theme item cannot be found.
+## This method will check base themes, if [param theme] does not contain the theme item.
 static func get_base_theme_for_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -760,9 +781,9 @@ static func get_base_theme_for_theme_item(
     return null
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.has_theme_item]
+## Returns the theme type the given theme item is found in first.[br][br]
+## This method will check base variations for [param theme_type] if the theme item cannot be found.
+## This method will check base themes, if [param theme] does not contain the theme item.
 static func get_base_type_for_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -775,9 +796,9 @@ static func get_base_type_for_theme_item(
     return &""
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.has_theme_item]
+## Returns [code]true[/code] if the given theme item is a class item.[br][br]
+## TODO: Theme items are class items if they are present in the base theme?
+## @experimental
 static func is_class_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -789,9 +810,9 @@ static func is_class_theme_item(
     return false
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.has_theme_item]
+## Returns [code]true[/code] if the given theme item is a custom item.[br][br]
+## TODO: Theme items are custom items if they are not present in the base theme?
+## @experimental
 static func is_custom_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -803,9 +824,15 @@ static func is_custom_theme_item(
     return false
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.has_theme_item]
+## Returns [code]true[/code] if the theme property of [param data_type] defined
+## by [param name] and [param theme_type] exists.[br][br]
+## Returns [code]false[/code] if it doesn't exist.
+## Use [method set_theme_item] to define it.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the search.[br][br]
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.has_theme_item].
 static func has_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -819,10 +846,14 @@ static func has_theme_item(
     return false
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.get_theme_item]
-## [method get_data_type_fallback]
+## Returns the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists.[br][br]
+## Returns the engine fallback value if the property doesn't exist (see [method get_data_type_fallback]).
+## Use [method has_theme_item] to check for existence.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the search.[br][br]
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.get_theme_item].
 static func get_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -836,9 +867,13 @@ static func get_theme_item(
     return get_data_type_fallback(data_type)
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.set_theme_item]
+## Creates or changes the value of the theme property of [param data_type] defined by [param name] and [param theme_type].
+## Use [method clear_theme_item] to remove the property.
+## If [param value] is not valid for [param data_type] an appropriate fallback value
+## will be set (see [method get_data_type_fallback]).[br][br]
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.set_theme_item].
 static func set_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -852,9 +887,11 @@ static func set_theme_item(
     theme.set_theme_item(data_type, name, theme_type, value)
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.clear_theme_item]
+## Removes the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists.[br][br]
+## Does not fail if it doesn't exist. Use [method has_theme_item] to check for existence.[br][br]
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.clear_theme_item].
 static func clear_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -866,9 +903,13 @@ static func clear_theme_item(
         theme.clear_theme_item(data_type, name, theme_type)
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [method Theme.rename_theme_item]
+## Renames the theme property of data_type defined by [param old_name] and [param theme_type]
+## to [param name], if it exists.[br][br]
+## Does not fail if it doesn't exist, or if a similar property with the new name already exists.
+## Use [method has_theme_item] to check for existence, and [method clear_theme_item] to remove the existing property.
+## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## specific method, but can be used for more generalized logic.[br][br]
+## This method wraps [method Theme.rename_theme_item].
 static func rename_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -982,6 +1023,8 @@ static func get_theme_item_name_from_override_property_path(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.get_colors_type_list].
 ## @experimental
 static func get_colors_type_list(
     theme: Theme,
@@ -995,6 +1038,8 @@ static func get_colors_type_list(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.get_color_list].
 ## @experimental
 static func get_color_list(
     theme: Theme, theme_type: StringName,
@@ -1008,6 +1053,8 @@ static func get_color_list(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.has_color].
 ## @experimental
 static func has_color(
     theme: Theme, name: StringName, theme_type: StringName,
@@ -1021,6 +1068,8 @@ static func has_color(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.get_color].
 ## @experimental
 static func get_color(
     theme: Theme, name: StringName, theme_type: StringName,
@@ -1034,6 +1083,8 @@ static func get_color(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.set_color].
 ## @experimental
 static func set_color(
     theme: Theme, name: StringName, theme_type: StringName, value: Color
@@ -1046,6 +1097,8 @@ static func set_color(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.clear_color].
 ## @experimental
 static func clear_color(
     theme: Theme, name: StringName, theme_type: StringName
@@ -1058,6 +1111,8 @@ static func clear_color(
 
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## [br][br]
+## This method wraps [method Theme.rename_color].
 ## @experimental
 static func rename_color(
     theme: Theme,
@@ -1145,14 +1200,15 @@ static func get_constant_type_suffix(type: ConstantType) -> StringName:
 
 #region Fonts
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## Returns the font size name to pair [param font_name] with.[br][br]
+## Used in [method has_pairing_font_size] and [method get_pairing_font_size].
 static func get_pairing_font_size_name(font_name: StringName) -> StringName:
     return font_name + "_size"
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## Returns [code]true[/code] if there is a font size to pair [param font_name] with.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the check.
 static func has_pairing_font_size(
     theme: Theme,
     font_name: StringName,
@@ -1166,8 +1222,10 @@ static func has_pairing_font_size(
     return false
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## Returns the font size to pair [param font_name] with, if there is one.[br][br]
+## Returns an appropriate default value if no font size pairing is found.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the check.
 static func get_pairing_font_size(
     theme: Theme,
     font_name: StringName,
@@ -1184,14 +1242,15 @@ static func get_pairing_font_size(
 
 #region Font Sizes
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## Returns the font name to pair [param font_size_name] with.[br][br]
+## Used in [method has_pairing_font] and [method get_pairing_font].
 static func get_pairing_font_name(font_size_name: StringName) -> StringName:
     return font_size_name.trim_suffix("_size")
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## Returns [code]true[/code] if there is a font to pair [param font_name_size] with.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the check.
 static func has_pairing_font(
     theme: Theme,
     font_size_name: StringName,
@@ -1205,8 +1264,10 @@ static func has_pairing_font(
     return false
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
+## Returns the font to pair [param font_size_name] with, if there is one.[br][br]
+## Returns an appropriate default value if no font pairing is found.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the check.
 static func get_pairing_font(
     theme: Theme,
     font_size_name: StringName,
