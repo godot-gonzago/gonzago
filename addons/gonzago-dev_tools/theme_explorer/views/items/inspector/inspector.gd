@@ -67,9 +67,9 @@ func _notification(what: int) -> void:
                 _editor.add_child(_font_size_spin_box)
                 _editor.add_child(_icon_resource_picker)
                 _editor.add_child(_style_box_resource_picker)
-                
+
                 _meta_data
-                
+
                 _preview.draw.connect(_draw_preview)
                 _update_inspector()
 
@@ -119,7 +119,7 @@ func inspect_theme_item(
 
 func _update_inspector() -> void:
     _hierarchy_button.clear()
-    
+
     _preview_box.visible = false
     _color_picker.visible = false
     _constant_spin_box.visible = false
@@ -130,12 +130,12 @@ func _update_inspector() -> void:
     _icon_resource_picker.edited_resource = null
     _style_box_resource_picker.visible = false
     _style_box_resource_picker.edited_resource = null
-    
+
     for mode in range(_mode, -1, -1):
         var idx := _hierarchy_button.item_count
         _hierarchy_button.add_item("")
         _hierarchy_button.set_item_metadata(idx, mode)
-        
+
         match mode:
             Mode.THEME:
                 var icon := ThemeUtil.get_theme_icon(_theme)
@@ -166,11 +166,11 @@ func _update_inspector() -> void:
 func _queue_resource_preview() -> void:
     if not Engine.is_editor_hint():
         return
-    
+
     var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
     if not value is Resource:
         return
-    
+
     _preview_box.visible = true
     var resource_preview := EditorInterface.get_resource_previewer()
     resource_preview.queue_edited_resource_preview(
@@ -221,13 +221,13 @@ func _update_theme_item_inspector() -> void:
             var style_box: StyleBox = value as StyleBox
             _style_box_resource_picker.visible = true
             _style_box_resource_picker.edited_resource = style_box
-            
-    
+
+
 func _draw_preview() -> void:
     var canvas_item := _preview.get_canvas_item()
     var canvas_item_rect := Rect2(Vector2.ZERO, _preview.size)
     var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
-    
+
     # TODO: Externalize into draw util or something
     match _data_type:
         Theme.DATA_TYPE_COLOR:
@@ -319,14 +319,14 @@ func _draw_preview() -> void:
 func _build_meta_data() -> void:
     _meta_data.clear()
     var root := _meta_data.create_item()
-    
+
     match _mode:
         Mode.THEME:
             var is_built_in := ThemeUtil.is_built_in_theme(_theme)
             _add_checked_value_meta_child(root, "Is Built In", is_built_in)
             var has_base_theme := ThemeUtil.has_base_theme(_theme)
             _add_checked_value_meta_child(root, "Has Base Theme", has_base_theme)
-            
+
             var has_default_base_scale := ThemeUtil.has_default_base_scale(_theme)
             _add_checked_value_meta_child(root, "Has Default Base Scale", has_default_base_scale)
             var default_base_scale := ThemeUtil.get_default_base_scale(_theme, true)
@@ -351,7 +351,7 @@ func _build_meta_data() -> void:
                 root, "Is Default",
                 not ThemeUtil.has_type(_theme, _theme_type)
             )
-            
+
             var variation_base := _theme.get_type_variation_base(_theme_type)
             var is_variation := not variation_base.is_empty()
             _add_checked_value_meta_child(
@@ -363,16 +363,16 @@ func _build_meta_data() -> void:
                     variation_base,
                     ThemeUtil.get_theme_type_icon(variation_base)
                 )
-            
+
             for data_type in Theme.DATA_TYPE_MAX:
                 var data_type_name := ThemeUtil.get_data_type_name(data_type)
                 var total_items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type, true, false)
                 var items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type, false, false)
-                
+
                 var total_count := total_items.size()
                 var items_count := items.size()
                 var defaults_count := total_count - items_count
-                
+
                 var total_item := _add_string_value_meta_child(
                     root,
                     "Total %s" % data_type_name,
@@ -383,11 +383,11 @@ func _build_meta_data() -> void:
         Mode.DATA_TYPE:
             var total_items := ThemeUtil.get_theme_item_list(_theme, _data_type, _theme_type, true, false)
             var items := ThemeUtil.get_theme_item_list(_theme, _data_type, _theme_type, false, false)
-            
+
             var total_count := total_items.size()
             var items_count := items.size()
             var defaults_count := total_count - items_count
-            
+
             _add_string_value_meta_child(root, "Total Items", str(total_count))
             _add_string_value_meta_child(root, "Default Items", str(defaults_count))
             _add_string_value_meta_child(root, "Items", str(items_count))
@@ -400,7 +400,7 @@ func _build_meta_data() -> void:
                 root, "Is Default",
                 not ThemeUtil.has_theme_item(_theme, _data_type, _theme_item, _theme_type)
             )
-            
+
             match _data_type:
                 Theme.DATA_TYPE_COLOR:
                     var color: Color = value as Color
@@ -415,7 +415,7 @@ func _build_meta_data() -> void:
                          font.get_class() if font else "None"
                     )
                     _add_string_value_meta_child(root, "Path", font.resource_path)
-                    
+
                     var has_pairing_font_size := ThemeUtil.has_pairing_font_size(_theme, _theme_item, _theme_type)
                     _add_checked_value_meta_child(root, "Has Pairing Font Size", has_pairing_font_size)
                     if has_pairing_font_size:
@@ -436,7 +436,7 @@ func _build_meta_data() -> void:
                          icon.get_class() if icon else "None"
                     )
                     _add_string_value_meta_child(root, "Path", icon.resource_path)
-                    
+
                     if icon:
                         _add_string_value_meta_child(root, "Size", str(icon.get_size()))
                         _add_string_value_meta_child(root, "Width", str(icon.get_width()))
@@ -452,7 +452,7 @@ func _build_meta_data() -> void:
                         style_box.get_class() if style_box else "None"
                     )
                     _add_string_value_meta_child(root, "Path", style_box.resource_path)
-                    
+
                     # float get_content_margin(margin: Side)
                     # float get_margin(margin: Side)
                     # Vector2 get_minimum_size()
@@ -468,7 +468,7 @@ func _add_labeled_meta_child(root: TreeItem, label: String) -> TreeItem:
     var item := root.create_child()
     item.set_text(0, label)
     return item
-    
+
 
 func _add_string_value_meta_child(
     root: TreeItem,
@@ -510,28 +510,28 @@ func _add_checked_value_meta_child(root: TreeItem, label: String, value: bool) -
 func _build_meta_data_list() -> void:
     for child in _meta_data_list.get_children():
         child.queue_free()
-        
+
     if not Engine.is_editor_hint():
         return
-        
+
     var inspector := EditorInterface.get_inspector()
-        
+
     match _mode:
         Mode.THEME:
             for property in _theme.get_property_list():
                 var usage: PropertyUsageFlags = property.get("usage", PROPERTY_USAGE_NONE)
                 if (usage & PROPERTY_USAGE_EDITOR) != PROPERTY_USAGE_EDITOR:
                     continue
-                
+
                 var property_name: String = property.get("name", "")
                 if not property_name in ["default_base_scale", "default_font", "default_font_size"]:
                     continue
-                
+
                 var cls_name: StringName = property.get("class_name", &"")
                 var type: Variant.Type = property.get("type", TYPE_NIL)
                 var hint: PropertyHint = property.get("hint", PROPERTY_HINT_NONE)
                 var hint_string: String = property.get("hint_string", "")
-                
+
                 var editor := inspector.instantiate_property_editor(
                     _theme, type, property_name, hint, hint_string, usage,
                     false
@@ -545,7 +545,7 @@ func _build_meta_data_list() -> void:
             pass
         Mode.THEME_ITEM:
             var value := ThemeUtil.get_theme_item(_theme, _data_type, _theme_item, _theme_type)
-            
+
             match _data_type:
                 Theme.DATA_TYPE_COLOR:
                     var color: Color = value as Color
@@ -559,7 +559,7 @@ func _build_meta_data_list() -> void:
                     var icon: Texture2D = value as Texture2D
                 Theme.DATA_TYPE_STYLEBOX:
                     var style_box: StyleBox = value as StyleBox
-                    
+
                     if style_box is StyleBoxFlat:
                         pass # TODO
                     if style_box is StyleBoxLine:

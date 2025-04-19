@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b2yapabtwdbpc"]
 
-[ext_resource type="Script" uid="uid://bagfm53o5qr5m" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/file_bar.gd" id="1_rct3o"]
+[ext_resource type="Script" uid="uid://bagfm53o5qr5m" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/theme_file_bar.gd" id="1_kqwr0"]
 
 [node name="FileBar" type="HBoxContainer"]
 anchors_preset = 10
@@ -8,4 +8,4 @@ anchor_right = 1.0
 offset_bottom = 31.0
 grow_horizontal = 2
 size_flags_horizontal = 3
-script = ExtResource("1_rct3o")
+script = ExtResource("1_kqwr0")

@@ -15,13 +15,13 @@ func _notification(what: int) -> void:
     match what:
         NOTIFICATION_READY:
             _options_button.about_to_popup.connect(_options_about_to_popup)
-            
+
             _tree.set_column_expand(0, true)
             _tree.set_column_expand(1, false)
             _tree.set_column_title(1, tr("Import"))
             _tree.set_column_expand(2, false)
             _tree.set_column_title(2, tr("With Data"))
-            
+
             if not _theme:
                 _theme = _file_bar.get_current_theme()
             if _theme:
@@ -34,12 +34,12 @@ func _notification(what: int) -> void:
 func _options_about_to_popup() -> void:
     var popup := _options_button.get_popup()
     popup.clear(true)
-    
+
     var count := PackedInt32Array()
     count.resize(Theme.DATA_TYPE_MAX)
     count.fill(0)
     var total_count := 0
-    
+
     var root := _tree.get_root()
     for type_tree_item in root.get_children():
         for data_type_tree_item in type_tree_item.get_children():
@@ -48,7 +48,7 @@ func _options_about_to_popup() -> void:
                 if item_tree_item.visible:
                     count[data_type] += 1
                     total_count += 1
-    
+
     var select_sub_menu := PopupMenu.new()
     select_sub_menu.add_icon_item(
         get_theme_icon("Theme", "EditorIcons"),
@@ -66,10 +66,10 @@ func _options_about_to_popup() -> void:
             "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
         )
         select_sub_menu.set_item_disabled(idx, count[data_type] == 0)
-    
+
     popup.add_submenu_node_item(tr("Select"), select_sub_menu)
     popup.set_item_icon(popup.item_count - 1, get_theme_icon("ThemeSelectAll", "EditorIcons"))
-    
+
     var select_with_sub_menu := PopupMenu.new()
     select_with_sub_menu.add_icon_item(
         get_theme_icon("Theme", "EditorIcons"),
@@ -87,10 +87,10 @@ func _options_about_to_popup() -> void:
             "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
         )
         select_with_sub_menu.set_item_disabled(idx, count[data_type] == 0)
-    
+
     popup.add_submenu_node_item(tr("Select With Data"), select_with_sub_menu)
     popup.set_item_icon(popup.item_count - 1, get_theme_icon("ThemeSelectFull", "EditorIcons"))
-    
+
     var deselect_sub_menu := PopupMenu.new()
     deselect_sub_menu.add_icon_item(
         get_theme_icon("Theme", "EditorIcons"),
@@ -108,15 +108,15 @@ func _options_about_to_popup() -> void:
             "%d %s" % [count[data_type], ThemeUtil.get_data_type_name(data_type)]
         )
         deselect_sub_menu.set_item_disabled(idx, count[data_type] == 0)
-    
+
     popup.add_submenu_node_item(tr("Deselect"), deselect_sub_menu)
     popup.set_item_icon(popup.item_count - 1, get_theme_icon("ThemeDeselectAll", "EditorIcons"))
 
-    
+
 func _build_tree() -> void:
     _tree.clear()
     if not _theme: return
-    
+
     var root := _tree.create_item()
     var types := ThemeUtil.get_type_list(_theme, true, false)
     for type in types:
@@ -126,27 +126,27 @@ func _build_tree() -> void:
         type_item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
         type_item.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
         type_item.collapsed = true
-        
+
         for data_type in Theme.DATA_TYPE_MAX:
             var theme_items := ThemeUtil.get_theme_item_list(
                 _theme, data_type, type, false, false
             )
             if theme_items.size() == 0:
                 continue
-            
+
             var data_type_root := type_item.create_child()
             data_type_root.set_text(0, ThemeUtil.get_data_type_name(data_type))
             data_type_root.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
             data_type_root.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
             data_type_root.set_metadata(0, data_type)
             data_type_root.collapsed = true
-                
+
             for theme_item in theme_items:
                 var theme_tree_item := data_type_root.create_child()
                 theme_tree_item.set_text(0, theme_item)
                 theme_tree_item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
                 theme_tree_item.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
-    
+
     _update_tree()
 
 
@@ -156,7 +156,7 @@ func _update_tree() -> void:
         var type := item.get_text(0)
         var icon := ThemeUtil.get_theme_type_icon(type)
         item.set_icon(0, icon)
-        
+
         for data_type_item in item.get_children():
             var data_type: int = data_type_item.get_metadata(0)
             data_type_item.set_icon(0, ThemeUtil.get_data_type_icon(data_type))

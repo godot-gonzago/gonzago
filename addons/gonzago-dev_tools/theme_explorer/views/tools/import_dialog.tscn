@@ -1,10 +1,9 @@
 [gd_scene load_steps=17 format=3 uid="uid://dd5vq37p0ovcx"]
 
-[ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/file_bar.tscn" id="1_gxpm6"]
+[ext_resource type="PackedScene" uid="uid://b2yapabtwdbpc" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/theme_file_bar.tscn" id="1_gxpm6"]
 [ext_resource type="Script" uid="uid://durgexe8t7ntp" path="res://addons/gonzago-dev_tools/theme_explorer/views/tools/import_dialog.gd" id="1_tryw0"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_tryw0"]
 [ext_resource type="Script" uid="uid://cpbyfhnvp7snj" path="res://addons/gonzago/utils/theme/theme_stylebox_reference.gd" id="4_na1j8"]
-
 
 [sub_resource type="Texture2D" id="Texture2D_gxpm6"]
 resource_local_to_scene = false
@@ -121,7 +120,7 @@ metadata/_custom_type_script = "uid://fkalipf2jmdp"
 [node name="ImportDialog" type="AcceptDialog"]
 title = "Import Theme Items"
 position = Vector2i(0, 36)
-size = Vector2i(621, 457)
+size = Vector2i(621, 522)
 visible = true
 ok_button_text = "Close"
 script = ExtResource("1_tryw0")
@@ -131,10 +130,10 @@ custom_minimum_size = Vector2(400, 400)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -49.0
+offset_left = 19.0
+offset_top = 19.0
+offset_right = 602.0
+offset_bottom = 419.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -156,6 +155,11 @@ clear_button_enabled = true
 right_icon = SubResource("Texture2D_gxpm6")
 select_all_on_focus = true
 caret_blink = true
+
+[node name="ShowDefaultsButton" type="CheckButton" parent="ImportTree/Toolbar"]
+visible = false
+layout_mode = 2
+text = "Show Defaults"
 
 [node name="OptionsButton" type="MenuButton" parent="ImportTree/Toolbar"]
 layout_mode = 2

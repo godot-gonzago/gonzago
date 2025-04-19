@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bt1ev7nrtm4gx"]
 
-[ext_resource type="Script" uid="uid://cih5nr6v1i0e2" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/items_list.gd" id="1_lwdu0"]
+[ext_resource type="Script" uid="uid://cih5nr6v1i0e2" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/list/items_list.gd" id="1_lwdu0"]
 
 [node name="ItemsList" type="Control"]
 clip_contents = true

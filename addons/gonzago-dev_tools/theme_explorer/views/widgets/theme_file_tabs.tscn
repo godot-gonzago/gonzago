@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6gid5npsnq77"]
+
+[ext_resource type="Script" uid="uid://didj6scphd2ha" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/theme_file_tabs.gd" id="1_yb6q7"]
+
+[node name="ThemeFileTabs" type="TabBar"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+current_tab = 0
+drag_to_rearrange_enabled = true
+tab_count = 3
+tab_0/title = "Editor"
+tab_0/tooltip = "Editor Theme"
+tab_1/title = "Default"
+tab_1/tooltip = "Default Theme"
+tab_2/title = "Project"
+tab_2/tooltip = "Project Theme definded in ProjectSettings"
+tab_2/disabled = true
+script = ExtResource("1_yb6q7")

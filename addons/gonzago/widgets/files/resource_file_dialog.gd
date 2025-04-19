@@ -5,7 +5,7 @@ extends Node #EditorFileDialog
 # https://docs.godotengine.org/en/stable/classes/class_editorfiledialog.html
 # - use_native_dialog via EditorSettings.interface/editor/use_native_file_dialogs
 # - var disable_overwrite_warning: bool = false
-# - var display_mode: EditorFileDialog.DisplayMode = EditorFileDialog.DisplayMode.DISPLAY_THUMBNAILS 
+# - var display_mode: EditorFileDialog.DisplayMode = EditorFileDialog.DisplayMode.DISPLAY_THUMBNAILS
 # - func get_filename_filter() -> String: pass
 # - func add_side_menu(menu: Control, title: String = "") -> void: pass
 # - func popup_file_dialog() -> void: pass

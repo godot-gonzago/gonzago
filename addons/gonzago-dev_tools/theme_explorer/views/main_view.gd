@@ -25,7 +25,7 @@ func _ready() -> void:
     _export_dialog = ExportDialogScene.instantiate() as ExportDialog
     _export_dialog.set_unparent_when_invisible(true)
     tools_button.get_popup().index_pressed.connect(_on_tools_button_index_pressed)
-    
+
     _theme = file_bar.get_current_theme()
     items_view.inspect(_theme)
 

@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://oe3rmurwb7nk"]
+
+[ext_resource type="Script" uid="uid://cp805pbyihdl8" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/types/add_type_panel.gd" id="1_s3c8b"]
+[ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_ray37"]
+[ext_resource type="PackedScene" uid="uid://bu4pshmn8lgb4" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/auto_complete.tscn" id="3_jowis"]
+
+[sub_resource type="Texture2D" id="Texture2D_jowis"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("2_ray37")
+use_editor_theme = true
+icon_name = "StatusWarning"
+icon_type = "EditorIcons"
+metadata/_custom_type_script = "uid://fkalipf2jmdp"
+
+[node name="AddTypePanel" type="PopupPanel"]
+size = Vector2i(216, 247)
+visible = true
+script = ExtResource("1_s3c8b")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 192.0
+offset_bottom = 223.0
+
+[node name="TypeContainer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="TypeStatusIcon" type="TextureRect" parent="Layout/TypeContainer"]
+layout_mode = 2
+texture = SubResource("Texture2D_jowis")
+stretch_mode = 5
+
+[node name="TypeEdit" type="LineEdit" parent="Layout/TypeContainer"]
+layout_mode = 2
+placeholder_text = "Type Name"
+
+[node name="AutoComplete" parent="Layout/TypeContainer/TypeEdit" node_paths=PackedStringArray("line_edit") instance=ExtResource("3_jowis")]
+line_edit = NodePath("..")
+
+[node name="BaseTypeContainer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="BaseTypeStatusIcon" type="TextureRect" parent="Layout/BaseTypeContainer"]
+layout_mode = 2
+texture = SubResource("Texture2D_jowis")
+stretch_mode = 5
+
+[node name="BaseTypeEdit" type="LineEdit" parent="Layout/BaseTypeContainer"]
+layout_mode = 2
+placeholder_text = "Base Type Name"
+editable = false
+
+[node name="AutoComplete" parent="Layout/BaseTypeContainer/BaseTypeEdit" node_paths=PackedStringArray("line_edit") instance=ExtResource("3_jowis")]
+line_edit = NodePath("..")
+
+[node name="AddButton" type="Button" parent="Layout"]
+layout_mode = 2
+text = "Add Type"

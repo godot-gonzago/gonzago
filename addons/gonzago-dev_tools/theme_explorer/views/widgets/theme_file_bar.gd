@@ -46,7 +46,7 @@ func get_current_theme() -> Theme:
 func _init() -> void:
     set_anchors_preset(Control.PRESET_TOP_WIDE)
     size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    
+
     _file_tabs = TabBar.new()
     _file_tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     _file_tabs.size_flags_vertical = Control.SIZE_SHRINK_END
@@ -56,7 +56,7 @@ func _init() -> void:
     _file_tabs.add_tab("Default")
     _file_tabs.add_tab("Project")
     add_child(_file_tabs)
-    
+
     _create_button = Button.new()
     _create_button.flat = true
     add_child(_create_button)
@@ -67,36 +67,36 @@ func _init() -> void:
     _save_button.flat = true
     _save_button.disabled = true
     add_child(_save_button)
-    
+
     var theme_resource_filters := PackedStringArray()
     for e in ResourceLoader.get_recognized_extensions_for_type("Theme"):
         theme_resource_filters.append("*.%s;%s" % [e, e.to_upper()])
-    
+
     _file_create_dialog = EditorFileDialog.new()
     _file_create_dialog.filters = theme_resource_filters
     add_child(_file_create_dialog, false, Node.INTERNAL_MODE_FRONT)
-    
+
     _file_open_dialog = EditorFileDialog.new()
     _file_open_dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
     _file_open_dialog.filters = theme_resource_filters
     add_child(_file_open_dialog, false, Node.INTERNAL_MODE_FRONT)
-    
+
     #_file_open_type_missmatch = AcceptDialog.new()
     #_file_open_dialog.add_child(_file_open_type_missmatch)
-    
+
     if NodeUtil.is_node_being_edited(self):
         return
-    
+
     _file_tabs.tab_changed.connect(_tab_changed)
     _file_tabs.tab_close_pressed.connect(_tab_close_pressed)
     _file_tabs.tab_hovered.connect(_tab_hovered)
     _file_tabs.active_tab_rearranged.connect(_active_tab_rearranged)
     _check_project_theme_tab()
     ProjectSettings.settings_changed.connect(_check_project_theme_tab)
-    
+
     _file_create_dialog.file_selected.connect(_file_create_selected)
     _file_open_dialog.file_selected.connect(_file_open_selected)
-    
+
     _create_button.pressed.connect(_file_create_dialog.popup_file_dialog)
     _open_button.pressed.connect(_file_open_dialog.popup_file_dialog)
 
@@ -117,10 +117,10 @@ func _notification(what: int) -> void:
             _file_tabs.set_tab_tooltip(1, tr("Default Theme"))
             _file_tabs.set_tab_title(2, tr("Project"))
             _file_tabs.set_tab_tooltip(2, tr("Project Theme defined in ProjectSettings"))
-            
+
             _file_create_dialog.title = tr("Create Theme Resource")
             _file_open_dialog.title = tr("Open Theme Resource")
-            
+
             _create_button.tooltip_text = tr("Create a new Theme...")
             _open_button.tooltip_text = tr("Open a Theme...")
             _save_button.tooltip_text = tr("Save the current Theme...")
@@ -130,11 +130,11 @@ func _notification(what: int) -> void:
             for tab_idx in range(2):
                 _file_tabs.set_tab_icon(tab_idx, read_only_icon)
             _file_tabs.set_tab_icon(2, theme_icon)
-            
+
             #var missing_icon := get_theme_icon(&"MissingResource", &"EditorIcons")
             for tab_idx in range(3, _file_tabs.tab_count):
                 _file_tabs.set_tab_icon(tab_idx, theme_icon)
-            
+
             _create_button.icon = get_theme_icon(&"New", &"EditorIcons")
             _open_button.icon = get_theme_icon(&"Load", &"EditorIcons")
             _save_button.icon = get_theme_icon(&"Save", &"EditorIcons")
@@ -184,7 +184,7 @@ func _file_create_selected(path: String) -> void:
     if ResourceSaver.save(new_theme, path) != OK:
         push_error("failed saving...")
         return
-    
+
     var tab_idx := _file_tabs.tab_count
     _file_tabs.add_tab(
         path.get_file(),
@@ -205,14 +205,14 @@ func _file_open_selected(path: String) -> void:
         #_file_open_dialog.set_deferred(&"current_file", path)
         #_file_open_dialog.call_deferred(&"popup_file_dialog")
         return
-    
+
     for tab_idx in range(2, _file_tabs.tab_count):
         var tab_theme := _file_tabs.get_tab_metadata(tab_idx) as Theme
         if not tab_theme: continue
         if theme == tab_theme:
             _file_tabs.current_tab = tab_idx
             return
-    
+
     var tab_idx := _file_tabs.tab_count
     _file_tabs.add_tab(
         path.get_file(),

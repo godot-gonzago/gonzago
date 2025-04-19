@@ -108,21 +108,21 @@ func _filter_types_items(parent: TreeItem, filters: PackedStringArray) -> bool:
     for item in parent.get_children():
         if _filter_types_items(item, filters):
             has_visible_children = true
-    
+
     if has_visible_children:
         parent.visible = true
         return true
-    
+
     if filters.is_empty():
         parent.visible = true
         return true
-            
+
     var type := parent.get_text(0)
     for filter in filters:
         if type.containsn(filter):
             parent.visible = true
             return true
-            
+
     parent.visible = false
     return false
 
