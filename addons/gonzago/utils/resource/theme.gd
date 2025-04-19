@@ -596,8 +596,9 @@ static func get_type_list(
 
     for s in ThemeIterator.new(theme, include_base_themes):
         for type in s.theme.get_type_list():
-            if not include_variations and s.theme.get_type_variation_base(type):
-                continue
+            if not include_variations:
+                if get_type_variation_base(s.theme, type, include_base_themes):
+                    continue
             if type not in result:
                 result.append(type)
 
@@ -644,7 +645,7 @@ static func get_type_variation_base(
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 ## [method Theme.get_type_list]
-static func get_default_theme_for_type(
+static func get_base_theme_for_type(
     theme: Theme,
     theme_type: StringName
 ) -> Theme:
@@ -713,8 +714,9 @@ static func get_theme_item_type_list(
 
     for s in ThemeIterator.new(theme, include_base_themes):
         for type in s.theme.get_theme_item_type_list(data_type):
-            if not include_variations and s.theme.get_type_variation_base(type):
-                continue
+            if not include_variations:
+                if get_type_variation_base(s.theme, type, include_base_themes):
+                    continue
             if type not in result:
                 result.append(type)
 
@@ -746,7 +748,7 @@ static func get_theme_item_list(
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 ## [method Theme.has_theme_item]
-static func get_default_theme_for_theme_item(
+static func get_base_theme_for_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
     name: StringName,
@@ -761,7 +763,7 @@ static func get_default_theme_for_theme_item(
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 ## [method Theme.has_theme_item]
-static func get_default_type_for_theme_item(
+static func get_base_type_for_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
     name: StringName,
@@ -776,7 +778,7 @@ static func get_default_type_for_theme_item(
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 ## [method Theme.has_theme_item]
-static func is_class_item(
+static func is_class_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
     name: StringName,
@@ -790,7 +792,7 @@ static func is_class_item(
 ## TODO: Document according to
 ## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
 ## [method Theme.has_theme_item]
-static func is_custom_item(
+static func is_custom_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
     name: StringName,
@@ -1036,8 +1038,10 @@ static func get_color(
 static func set_color(
     theme: Theme, name: StringName, theme_type: StringName, value: Color
 ) -> void:
-    if theme:
-        theme.set_color(name, theme_type, value)
+    set_theme_item(
+        theme, Theme.DATA_TYPE_COLOR,
+        name, theme_type, value
+    )
 
 
 ## TODO: Document according to
@@ -1046,8 +1050,10 @@ static func set_color(
 static func clear_color(
     theme: Theme, name: StringName, theme_type: StringName
 ) -> void:
-    if theme and theme.has_color(name, theme_type):
-        theme.clear_color(name, theme_type)
+    clear_theme_item(
+        theme, Theme.DATA_TYPE_COLOR,
+        name, theme_type
+    )
 
 
 ## TODO: Document according to
