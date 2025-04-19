@@ -297,7 +297,7 @@ static func is_built_in_theme(theme: Theme) -> bool:
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
 ## The value must be greater than [code]0.0[/code] to be considered valid.[br][br]
-## This method wraps [method Theme.has_default_base_scale].
+## [b]Note:[/b] This method wraps [method Theme.has_default_base_scale].
 static func has_default_base_scale(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_base_scale(): return true
@@ -310,7 +310,7 @@ static func has_default_base_scale(theme: Theme, include_base_themes := false) -
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
 ## The value must be greater than [code]0.0[/code] to be considered valid.[br][br]
-## This method wraps [member Theme.default_base_scale].
+## [b]Note:[/b] This method wraps [member Theme.default_base_scale].
 static func get_default_base_scale(theme: Theme, include_base_themes := true) -> float:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_base_scale(): return s.theme.default_base_scale
@@ -321,7 +321,7 @@ static func get_default_base_scale(theme: Theme, include_base_themes := true) ->
 ## Used by some controls to scale their visual properties based on the global scale factor.[br][br]
 ## A value smaller or equal to [code]0.0[/code] is invalid and will remove the base scale
 ## (use [method clear_default_base_scale] to do this explicitely).[br][br]
-## This method wraps [member Theme.default_base_scale].
+## [b]Note:[/b] This method wraps [member Theme.default_base_scale].
 static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     if theme and not is_built_in_theme(theme):
         if value < 0.0: value = 0.0
@@ -329,7 +329,7 @@ static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
 
 
 ## Clears the default base scale factor of the [param theme] resource.[br][br]
-## This method will set [member Theme.default_base_scale] to [code]0.0[/code]
+## [b]Note:[/b] This method will set [member Theme.default_base_scale] to [code]0.0[/code]
 ## (see [method set_default_base_scale]).
 static func clear_default_base_scale(theme: Theme) -> void:
     set_default_base_scale(theme, 0.0)
@@ -341,7 +341,7 @@ static func clear_default_base_scale(theme: Theme) -> void:
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
 ## The value must be a valid [Font] resource to be considered valid.[br][br]
-## This method wraps [method Theme.has_default_font].
+## [b]Note:[/b] This method wraps [method Theme.has_default_font].
 static func has_default_font(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font(): return true
@@ -354,7 +354,7 @@ static func has_default_font(theme: Theme, include_base_themes := false) -> bool
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
 ## The value must be a valid [Font] resource to be considered valid.[br][br]
-## This method wraps [member Theme.default_font].
+## [b]Note:[/b] This method wraps [member Theme.default_font].
 static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font(): return s.theme.default_font
@@ -366,14 +366,14 @@ static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
 ## exist in the theme or is in invalid state.[br][br]
 ## A value is an invalid valid [Font] resource will remove the default font.
 ## (use [method clear_default_font] to do this explicitely).[br][br]
-## This method wraps [member Theme.default_font].
+## [b]Note:[/b] This method wraps [member Theme.default_font].
 static func set_default_font(theme: Theme, value: Font = null) -> void:
     if theme and not is_built_in_theme(theme):
         theme.default_font = value
 
 
 ## Clears the default font of the [param theme] resource.[br][br]
-## This method will set [member Theme.default_font] to [code]null[/code]
+## [b]Note:[/b] This method will set [member Theme.default_font] to [code]null[/code]
 ## (see [method set_default_font]).
 static func clear_default_font(theme: Theme) -> void:
     set_default_font(theme, null)
@@ -385,7 +385,7 @@ static func clear_default_font(theme: Theme) -> void:
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
 ## The value must be greater than [code]0[/code] to be considered valid.[br][br]
-## This method wraps [method Theme.has_default_font_size].
+## [b]Note:[/b] This method wraps [method Theme.has_default_font_size].
 static func has_default_font_size(theme: Theme, include_base_themes := false) -> bool:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font_size(): return true
@@ -398,7 +398,7 @@ static func has_default_font_size(theme: Theme, include_base_themes := false) ->
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
 ## The value must be greater than [code]0[/code] to be considered valid.[br][br]
-## This method wraps [member Theme.default_font_size].
+## [b]Note:[/b] This method wraps [member Theme.default_font_size].
 static func get_default_font_size(theme: Theme, include_base_themes := true) -> int:
     for s in ThemeIterator.new(theme, include_base_themes):
         if s.theme.has_default_font_size(): return s.theme.default_font_size
@@ -410,7 +410,7 @@ static func get_default_font_size(theme: Theme, include_base_themes := true) -> 
 ## exist in this theme or is in invalid state.[br][br]
 ## A value smaller than [code]1[/code] is invalid and will remove the
 ## default font size (use [method clear_default_font_size] to do this explicitely).[br][br]
-## This method wraps [member Theme.default_font_size].
+## [b]Note:[/b] This method wraps [member Theme.default_font_size].
 static func set_default_font_size(theme: Theme, value: int = 0) -> void:
     if theme and not is_built_in_theme(theme):
         if value < 1: value = 0
@@ -418,7 +418,7 @@ static func set_default_font_size(theme: Theme, value: int = 0) -> void:
 
 
 ## Clears the default font size of the [param theme] resource.[br][br]
-## This method will set [member Theme.default_font_size] to [code]0[/code]
+## [b]Note:[/b] This method will set [member Theme.default_font_size] to [code]0[/code]
 ## (see [method set_default_font_size]).
 static func clear_default_font_size(theme: Theme) -> void:
     set_default_font_size(theme, 0)
@@ -428,7 +428,7 @@ static func clear_default_font_size(theme: Theme) -> void:
 #region Themes (Editor utilities)
 
 ## Returns an appropriate display name for the [param theme].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_name(theme: Theme) -> StringName:
     if not theme:
         return &"Missing Resource"
@@ -450,7 +450,7 @@ static func get_theme_name(theme: Theme) -> StringName:
 
 
 ## Returns an appropriate tooltip for the [param theme].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_tooltip(theme: Theme) -> StringName:
     if not theme:
         return &"Missing Resource"
@@ -466,13 +466,13 @@ static func get_theme_tooltip(theme: Theme) -> StringName:
         return &"Project Theme defined in ProjectSettings"
 
     if theme.resource_path:
-        return theme.resource_path.get_file()
+        return theme.resource_path
 
     return &"New Theme"
 
 
 ## Returns an appropriate icon for the [param theme].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_icon(theme: Theme) -> Texture2D:
     if not Engine.is_editor_hint():
         return ThemeDB.fallback_icon
@@ -560,7 +560,7 @@ static func _get_data_type_from_property_path(property_path: StringName) -> Them
 #region Data types (Editor utilities)
 
 ## Returns an appropriate display name for the [enum Theme.DataType].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_data_type_name(data_type: Theme.DataType) -> StringName:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return &"Colors"
@@ -573,7 +573,7 @@ static func get_data_type_name(data_type: Theme.DataType) -> StringName:
 
 
 ## Returns an appropriate list of tags for the [enum Theme.DataType].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return [&"colors"]
@@ -586,7 +586,7 @@ static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
 
 
 ## Returns an appropriate icon for the [enum Theme.DataType].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
     if not Engine.is_editor_hint():
         return ThemeDB.fallback_icon
@@ -613,7 +613,7 @@ static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
-## This method wraps [method Theme.get_type_list].
+## [b]Note:[/b] This method wraps [method Theme.get_type_list].
 static func get_type_list(
     theme: Theme,
     include_variations := false,
@@ -638,7 +638,7 @@ static func get_type_list(
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
-## This method wraps [method Theme.get_type_variation_list].
+## [b]Note:[/b] This method wraps [method Theme.get_type_variation_list].
 static func get_type_variation_list(
     theme: Theme,
     base_type: StringName,
@@ -660,7 +660,7 @@ static func get_type_variation_list(
 ## valid variation type in [param theme]. Returns an empty string otherwise.[br][br]
 ## If [param include_base_themes] is [code]true[/code] the result also checks variations in
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.[br][br]
-## This method wraps [method Theme.get_type_variation_base].
+## [b]Note:[/b] This method wraps [method Theme.get_type_variation_base].
 static func get_type_variation_base(
     theme: Theme,
     theme_type: StringName,
@@ -674,7 +674,7 @@ static func get_type_variation_base(
 
 
 ## Returns the [Theme] the given [param theme_type] is found in first.
-## This method will check base themes, if [param theme] does not contain [param type].
+## [b]Note:[/b] This method will check base themes, if [param theme] does not contain [param type].
 static func get_base_theme_for_type(
     theme: Theme,
     theme_type: StringName
@@ -717,7 +717,7 @@ static func is_built_in_type(
 #region Theme types (Editor utilities)
 
 ## Returns an appropriate icon for the [param theme_type].[br][br]
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
     if not Engine.is_editor_hint():
         return ThemeDB.fallback_icon
@@ -738,9 +738,9 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.get_theme_item_type_list].
+## [b]Note:[/b] This method wraps [method Theme.get_theme_item_type_list].
 static func get_theme_item_type_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -767,9 +767,9 @@ static func get_theme_item_type_list(
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the results.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.get_theme_item_list].
+## [b]Note:[/b] This method wraps [method Theme.get_theme_item_list].
 static func get_theme_item_list(
     theme: Theme,
     data_type: Theme.DataType,
@@ -789,8 +789,8 @@ static func get_theme_item_list(
 
 
 ## Returns the [Theme] the given theme item is found in first.[br][br]
-## This method will check base variations for [param theme_type] if the theme item cannot be found.
-## This method will check base themes, if [param theme] does not contain the theme item.
+## [b]Note:[/b] This method will check base variations for [param theme_type] if the theme item cannot be found.
+## [b]Note:[/b] This method will check base themes, if [param theme] does not contain the theme item.
 static func get_base_theme_for_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -804,8 +804,8 @@ static func get_base_theme_for_theme_item(
 
 
 ## Returns the theme type the given theme item is found in first.[br][br]
-## This method will check base variations for [param theme_type] if the theme item cannot be found.
-## This method will check base themes, if [param theme] does not contain the theme item.
+## [b]Note:[/b] This method will check base variations for [param theme_type] if the theme item cannot be found.
+## [b]Note:[/b] This method will check base themes, if [param theme] does not contain the theme item.
 static func get_base_type_for_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -852,9 +852,9 @@ static func is_custom_theme_item(
 ## Use [method set_theme_item] to define it.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.has_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.has_theme_item].
 static func has_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -873,9 +873,9 @@ static func has_theme_item(
 ## Use [method has_theme_item] to check for existence.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.get_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.get_theme_item].
 static func get_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -893,9 +893,9 @@ static func get_theme_item(
 ## Use [method clear_theme_item] to remove the property.
 ## If [param value] is not valid for [param data_type] an appropriate fallback value
 ## will be set (see [method get_data_type_fallback]).[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.set_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.set_theme_item].
 static func set_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -911,9 +911,9 @@ static func set_theme_item(
 
 ## Removes the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists.[br][br]
 ## Does not fail if it doesn't exist. Use [method has_theme_item] to check for existence.[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.clear_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.clear_theme_item].
 static func clear_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -931,9 +931,9 @@ static func clear_theme_item(
 ## Use [method has_theme_item] to check for existence, and [method clear_theme_item] to remove the existing property.
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## [b]Note[/b]: This method is analogous to calling the corresponding data type
+## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## This method wraps [method Theme.rename_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.rename_theme_item].
 static func rename_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -1052,7 +1052,7 @@ static func get_theme_item_name_from_override_property_path(
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
-## This method wraps [method Theme.get_colors_type_list].
+## [b]Note:[/b] This method wraps [method Theme.get_colors_type_list].
 ## @experimental
 static func get_colors_type_list(
     theme: Theme,
@@ -1069,7 +1069,7 @@ static func get_colors_type_list(
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the results.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
-## This method wraps [method Theme.get_color_list].
+## [b]Note:[/b] This method wraps [method Theme.get_color_list].
 ## @experimental
 static func get_color_list(
     theme: Theme, theme_type: StringName,
@@ -1087,7 +1087,7 @@ static func get_color_list(
 ## Use [method set_color] to define it.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## This method wraps [method Theme.has_color].
+## [b]Note:[/b] This method wraps [method Theme.has_color].
 ## @experimental
 static func has_color(
     theme: Theme, name: StringName, theme_type: StringName,
@@ -1104,7 +1104,7 @@ static func has_color(
 ## Use [method has_color] to check for existence.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## This method wraps [method Theme.get_color].
+## [b]Note:[/b] This method wraps [method Theme.get_color].
 ## @experimental
 static func get_color(
     theme: Theme, name: StringName, theme_type: StringName,
@@ -1120,7 +1120,7 @@ static func get_color(
 ## Use [method clear_color] to remove the property.[br][br]
 ## If [param value] is not valid for [param data_type] an appropriate fallback value
 ## will be set (see [method get_data_type_fallback]).[br][br]
-## This method wraps [method Theme.set_color].
+## [b]Note:[/b] This method wraps [method Theme.set_color].
 ## @experimental
 static func set_color(
     theme: Theme, name: StringName, theme_type: StringName, value: Color
@@ -1133,7 +1133,7 @@ static func set_color(
 
 ## Removes the [Color] property defined by [param name] and [param theme_type], if it exists.[br][br]
 ## Does not fail if it doesn't exist. Use [method has_color] to check for existence.[br][br]
-## This method wraps [method Theme.clear_color].
+## [b]Note:[/b] This method wraps [method Theme.clear_color].
 ## @experimental
 static func clear_color(
     theme: Theme, name: StringName, theme_type: StringName
@@ -1150,7 +1150,7 @@ static func clear_color(
 ## Use [method has_color] to check for existence, and [method clear_color] to remove the existing property.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## This method wraps [method Theme.rename_color].
+## [b]Note:[/b] This method wraps [method Theme.rename_color].
 ## @experimental
 static func rename_color(
     theme: Theme,
@@ -1200,7 +1200,7 @@ static var _constant_type_regex := RegEx.create_from_string(
 
 ## Gets an appropriate [enum ConstantType] for the constant [param name].
 ## It guesses the constant type based on the theme item name.
-## This method is only useful for editor tools.[br][br]
+## [b]Note:[/b] This method is only useful for editor tools.[br][br]
 ## Returns [constant ConstantType.PIXEL] if [param name] ends with
 ##   [code]size[/code], [code]height[/code], [code]width[/code], [code]margin[/code], [code]padding[/code],
 ##   [code]separation[/code], [code]offset[/code], [code]spacing[/code], [code]thickness[/code], [code]border[/code]
@@ -1227,7 +1227,7 @@ static func get_constant_type(name: StringName) -> ConstantType:
 
 
 ## Gets an appropriate suffix for the given constant [param type].
-## This method is only useful for editor tools.
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_constant_type_suffix(type: ConstantType) -> StringName:
     match type:
         ConstantType.PIXEL:  return &"px"
