@@ -20,7 +20,7 @@ func _enter_tree() -> void:
     if _include_old:
         _theme_explorer = ThemeExplorer.instantiate() as Control
         add_control_to_bottom_panel(_theme_explorer, "Theme Explorer (old)")
-    
+
     _main_view = MainView.instantiate() as Control
     add_control_to_bottom_panel(_main_view, "Theme Explorer")
 
@@ -29,7 +29,7 @@ func _exit_tree() -> void:
     if _main_view:
         remove_control_from_bottom_panel(_main_view)
         _main_view.queue_free()
-    
+
     if _theme_explorer:
         remove_control_from_bottom_panel(_theme_explorer)
         _theme_explorer.queue_free()
