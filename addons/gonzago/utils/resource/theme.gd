@@ -195,7 +195,6 @@ class DefaultsIterator extends RefCounted:
 #region Themes
 
 ## The type of a [Theme] resource.
-## To get the theme type use [method get_theme_type].
 enum ThemeType {
     ## Unknown or invalid theme type.
     NONE = -1,
@@ -237,8 +236,7 @@ static func get_theme_type(theme: Theme) -> ThemeType:
     return ThemeType.MEMORY
 
 
-## Returns [code]true[/code] if the given [param theme] has a base theme,
-## otherwise returns [code]false[/code].[br][br]
+## Returns [code]true[/code] if the given [param theme] has a base theme.[br][br]
 ## The theme referenced in [method ThemeDB.get_default_theme]
 ## is considered the general base theme for all themes.[br][br]
 ## An invalid [param theme] will return [code]false[/code].
@@ -252,7 +250,7 @@ static func has_base_theme(theme: Theme) -> bool:
     return theme != ThemeDB.get_default_theme()
 
 
-## Returns the base theme for the given [param theme].
+## Returns the base theme for the given [param theme].[br][br]
 ## The returned [Theme] will either be the default theme referenced in
 ## [method ThemeDB.get_default_theme] or the project theme referenced in
 ## [method ThemeDB.get_project_theme].[br][br]
@@ -275,8 +273,7 @@ static func get_base_theme(theme: Theme) -> Theme:
     return default_theme
 
 
-## Returns [code]true[/code] if the given [param theme] is a built-in theme,
-## otherwise returns [code]false[/code].
+## Returns [code]true[/code] if the given [param theme] is a built-in theme.[br][br]
 ## Built-in themes are either the default theme referenced in
 ## [method ThemeDB.get_default_theme] or the editor theme referenced in
 ## [method EditorInterface.get_editor_theme] as they are not editable.[br][br]
@@ -292,7 +289,7 @@ static func is_built_in_theme(theme: Theme) -> bool:
 
 
 ## Returns [code]true[/code] if [member Theme.default_base_scale] has a
-## valid value for [param theme], otherwise returns [code]false[/code].[br][br]
+## valid value for [param theme].[br][br]
 ## An invalid [param theme] will return [code]false[/code].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
@@ -318,9 +315,7 @@ static func get_default_base_scale(theme: Theme, include_base_themes := true) ->
 
 
 ## Sets the default base scale factor of the [param theme] resource.
-## Used by some controls to scale their visual properties based on the global scale factor.[br][br]
-## A value smaller or equal to [code]0.0[/code] is invalid and will remove the base scale
-## (use [method clear_default_base_scale] to do this explicitely).[br][br]
+## A [param value] smaller or equal to [code]0.0[/code] is invalid and will remove the base scale.[br][br]
 ## [b]Note:[/b] This method wraps [member Theme.default_base_scale].
 static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
     if theme and not is_built_in_theme(theme):
@@ -329,14 +324,13 @@ static func set_default_base_scale(theme: Theme, value: float = 0.0) -> void:
 
 
 ## Clears the default base scale factor of the [param theme] resource.[br][br]
-## [b]Note:[/b] This method will set [member Theme.default_base_scale] to [code]0.0[/code]
-## (see [method set_default_base_scale]).
+## [b]Note:[/b] This method will set [member Theme.default_base_scale] to [code]0.0[/code].
 static func clear_default_base_scale(theme: Theme) -> void:
     set_default_base_scale(theme, 0.0)
 
 
 ## Returns [code]true[/code] if [member Theme.default_font] has a
-## valid value for [param theme], otherwise returns [code]false[/code].[br][br]
+## valid value for [param theme].[br][br]
 ## An invalid [param theme] will return [code]false[/code].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
@@ -362,10 +356,7 @@ static func get_default_font(theme: Theme, include_base_themes := true) -> Font:
 
 
 ## Sets the default font of the [param theme] resource.
-## Used as the default value when trying to fetch a font resource that doesn't
-## exist in the theme or is in invalid state.[br][br]
-## A value is an invalid valid [Font] resource will remove the default font.
-## (use [method clear_default_font] to do this explicitely).[br][br]
+## A [param value] of an invalid [Font] resource will remove the default font.[br][br]
 ## [b]Note:[/b] This method wraps [member Theme.default_font].
 static func set_default_font(theme: Theme, value: Font = null) -> void:
     if theme and not is_built_in_theme(theme):
@@ -373,14 +364,13 @@ static func set_default_font(theme: Theme, value: Font = null) -> void:
 
 
 ## Clears the default font of the [param theme] resource.[br][br]
-## [b]Note:[/b] This method will set [member Theme.default_font] to [code]null[/code]
-## (see [method set_default_font]).
+## [b]Note:[/b] This method will set [member Theme.default_font] to [code]null[/code].
 static func clear_default_font(theme: Theme) -> void:
     set_default_font(theme, null)
 
 
 ## Returns [code]true[/code] if [member Theme.default_font_size] has a
-## valid value for [param theme], otherwise returns [code]false[/code].[br][br]
+## valid value for [param theme].[br][br]
 ## An invalid [param theme] will return [code]false[/code].
 ## If [param include_base_themes] is [code]true[/code] will also check
 ## base themes of [param theme].[br][br]
@@ -406,10 +396,7 @@ static func get_default_font_size(theme: Theme, include_base_themes := true) -> 
 
 
 ## Sets the default font size of the [param theme] resource.
-## Used as the default value when trying to fetch a font size value that doesn't
-## exist in this theme or is in invalid state.[br][br]
-## A value smaller than [code]1[/code] is invalid and will remove the
-## default font size (use [method clear_default_font_size] to do this explicitely).[br][br]
+## A [param value] smaller than [code]1[/code] is invalid and will remove the default font size.[br][br]
 ## [b]Note:[/b] This method wraps [member Theme.default_font_size].
 static func set_default_font_size(theme: Theme, value: int = 0) -> void:
     if theme and not is_built_in_theme(theme):
@@ -418,8 +405,7 @@ static func set_default_font_size(theme: Theme, value: int = 0) -> void:
 
 
 ## Clears the default font size of the [param theme] resource.[br][br]
-## [b]Note:[/b] This method will set [member Theme.default_font_size] to [code]0[/code]
-## (see [method set_default_font_size]).
+## [b]Note:[/b] This method will set [member Theme.default_font_size] to [code]0[/code].
 static func clear_default_font_size(theme: Theme) -> void:
     set_default_font_size(theme, 0)
 
@@ -509,8 +495,7 @@ static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
         _:                         return null
 
 
-## Returns [code]true[/code] if [param value] is a valid value for [param data_type],
-## otherwise [code]false[/code].
+## Returns [code]true[/code] if [param value] is a valid value for [param data_type].
 static func is_valid_value_for_data_type(
     data_type: Theme.DataType,
     value: Variant
@@ -1161,9 +1146,8 @@ static func rename_color(
 
 #region Constants (Editor utilities)
 
-## The type of the theme constant.
-## To get the theme constant type use [method get_constant_type].
-## These values are only useful for editor tools.
+## The type of a theme constant.[br][br]
+## [b]Note:[/b] These values are only useful for editor tools.
 enum ConstantType {
     ## Unknown constant type.
     UNKNOWN = -1,
