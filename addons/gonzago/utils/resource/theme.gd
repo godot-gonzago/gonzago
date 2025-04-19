@@ -413,64 +413,71 @@ static func clear_default_font_size(theme: Theme) -> void:
 
 #region Themes (Editor utilities)
 
+## Returns an appropriate display name for the [param theme_type].[br][br]
+## [b]Note:[/b] This method is only useful for editor tools.
+static func get_theme_name_from_type(theme_type: ThemeType) -> StringName:
+    match theme_type:
+        ThemeType.NONE:     return &"Missing Resource"
+        ThemeType.MEMORY:   return &"New Theme"
+        ThemeType.RESOURCE: return &"Theme"
+        ThemeType.PROJECT:  return &"Project"
+        ThemeType.DEFAULT:  return &"Default"
+        ThemeType.EDITOR:   return &"Editor"
+        _:                  return &""
+
+
+## Returns an appropriate tooltip for the [param theme_type].[br][br]
+## [b]Note:[/b] This method is only useful for editor tools.
+static func get_theme_tooltip_from_type(theme_type: ThemeType) -> StringName:
+    match theme_type:
+        ThemeType.NONE:     return &"Missing Resource"
+        ThemeType.MEMORY:   return &"New Theme"
+        ThemeType.RESOURCE: return &"Theme"
+        ThemeType.PROJECT:  return &"Project Theme defined in ProjectSettings"
+        ThemeType.DEFAULT:  return &"Default Theme"
+        ThemeType.EDITOR:   return &"Editor Theme"
+        _:                  return &""
+
+
+## Returns an appropriate icon for the [param theme_type].[br][br]
+## [b]Note:[/b] This method is only useful for editor tools.
+static func get_theme_icon_from_type(theme_type: ThemeType) -> Texture2D:
+    if not Engine.is_editor_hint():
+        return ThemeDB.fallback_icon
+
+    var editor_theme := EditorInterface.get_editor_theme()
+    match theme_type:
+        ThemeType.NONE:
+            return editor_theme.get_icon(&"MissingResource", &"EditorIcons")
+        ThemeType.DEFAULT, ThemeType.EDITOR:
+            return editor_theme.get_icon(&"GuiVisibilityXray", &"EditorIcons")
+        _:
+            return editor_theme.get_icon(&"Theme", &"EditorIcons")
+
+
 ## Returns an appropriate display name for the [param theme].[br][br]
 ## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_name(theme: Theme) -> StringName:
-    if not theme:
-        return &"Missing Resource"
-
-    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
-        return &"Editor"
-
-    if theme == ThemeDB.get_default_theme():
-        return &"Default"
-
-    var project_theme := ThemeDB.get_project_theme()
-    if project_theme and theme == project_theme:
-        return &"Project"
-
-    if theme.resource_path:
+    var theme_type := get_theme_type(theme)
+    if theme_type == ThemeType.RESOURCE:
         return theme.resource_path.get_file()
-
-    return &"New Theme"
+    return get_theme_name_from_type(theme_type)
 
 
 ## Returns an appropriate tooltip for the [param theme].[br][br]
 ## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_tooltip(theme: Theme) -> StringName:
-    if not theme:
-        return &"Missing Resource"
-
-    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
-        return &"Editor Theme"
-
-    if theme == ThemeDB.get_default_theme():
-        return &"Default Theme"
-
-    var project_theme := ThemeDB.get_project_theme()
-    if project_theme and theme == project_theme:
-        return &"Project Theme defined in ProjectSettings"
-
-    if theme.resource_path:
+    var theme_type := get_theme_type(theme)
+    if theme_type == ThemeType.RESOURCE:
         return theme.resource_path
-
-    return &"New Theme"
+    return get_theme_tooltip_from_type(theme_type)
 
 
 ## Returns an appropriate icon for the [param theme].[br][br]
 ## [b]Note:[/b] This method is only useful for editor tools.
 static func get_theme_icon(theme: Theme) -> Texture2D:
-    if not Engine.is_editor_hint():
-        return ThemeDB.fallback_icon
-
-    var editor_theme := EditorInterface.get_editor_theme()
-    if not theme:
-        return editor_theme.get_icon(&"MissingResource", &"EditorIcons")
-
-    if is_built_in_theme(theme):
-        return editor_theme.get_icon(&"GuiVisibilityXray", &"EditorIcons")
-
-    return editor_theme.get_icon(&"Theme", &"EditorIcons")
+    var theme_type := get_theme_type(theme)
+    return get_theme_icon_from_type(theme_type)
 
 #endregion
 
@@ -795,32 +802,18 @@ static func get_base_type_for_theme_item(
     return &""
 
 
-## Returns [code]true[/code] if the given theme item is a class item.[br][br]
-## TODO: Theme items are class items if they are present in a built-in theme?
-## @experimental
-static func is_class_theme_item(
-    theme: Theme,
+## Returns [code]true[/code] if the given theme item is a built-in theme item.[br][br]
+## Checks if the given theme item is in the default theme referenced in
+## [method ThemeDB.get_default_theme].
+static func is_built_in_theme_item(
     data_type: Theme.DataType,
     name: StringName,
     theme_type: StringName
 ) -> bool:
-    # TODO: Implement
-    # https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
-    return false
-
-
-## Returns [code]true[/code] if the given theme item is a custom item.[br][br]
-## TODO: Theme items are custom items if they are not present in a built-in theme?
-## @experimental
-static func is_custom_theme_item(
-    theme: Theme,
-    data_type: Theme.DataType,
-    name: StringName,
-    theme_type: StringName
-) -> bool:
-    # TODO: Implement
-    # https://docs.godotengine.org/en/stable/tutorials/ui/gui_using_theme_editor.html#manage-and-import-items
-    return false
+    # https://github.com/godotengine/godot/blob/master/editor/plugins/theme_editor_plugin.cpp#L1626
+    # https://github.com/godotengine/godot/blob/master/editor/plugins/theme_editor_plugin.cpp#L1662
+    var default_theme := ThemeDB.get_default_theme()
+    return default_theme.has_theme_item(data_type, name, theme_type)
 
 
 ## Returns [code]true[/code] if the theme property of [param data_type] defined
