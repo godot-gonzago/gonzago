@@ -430,6 +430,8 @@ static func clear_default_font_size(theme: Theme) -> void:
 
 #region Themes (Editor utilities)
 
+## Gets an appropriate display name for the theme.
+## This method is only useful for editor tools.
 static func get_theme_name(theme: Theme) -> StringName:
     if not theme:
         return &"Missing Resource"
@@ -450,6 +452,8 @@ static func get_theme_name(theme: Theme) -> StringName:
     return &"New Theme"
 
 
+## Gets an appropriate icon for the theme.
+## This method is only useful for editor tools.
 static func get_theme_icon(theme: Theme) -> Texture2D:
     if not Engine.is_editor_hint():
         return ThemeDB.fallback_icon
@@ -467,6 +471,14 @@ static func get_theme_icon(theme: Theme) -> Texture2D:
 
 #region Data types
 
+## Gets an appropriate fallback value for [param data_type].[br][br]
+## Returns [constant Color.BLACK] for [constant Theme.DATA_TYPE_COLOR],
+## [code]0[/code] for [constant Theme.DATA_TYPE_CONSTANT],
+## [member ThemeDB.fallback_font] for [constant Theme.DATA_TYPE_FONT],
+## [member ThemeDB.fallback_font_size] for [constant Theme.DATA_TYPE_FONT_SIZE],
+## [member ThemeDB.fallback_icon] for [constant Theme.DATA_TYPE_ICON],
+## [member ThemeDB.fallback_stylebox] for [constant Theme.DATA_TYPE_STYLEBOX],
+## otherwise returns [code]null[/code].
 static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return Color.BLACK
@@ -478,6 +490,8 @@ static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
         _:                         return null
 
 
+## Returns [code]true[/code] if [param value] is a valid value for [param data_type],
+## otherwise [code]false[/code].
 static func is_valid_value_for_data_type(
     data_type: Theme.DataType,
     value: Variant
@@ -495,6 +509,9 @@ static func is_valid_value_for_data_type(
 
 #region Data types (Property paths)
 
+# Utility function for gettings property paths.
+# Used in [method get_theme_item_property_path] and
+# [method get_theme_item_override_property_path].
 static func _get_data_type_property_path(data_type: Theme.DataType) -> StringName:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return &"colors"
@@ -506,6 +523,9 @@ static func _get_data_type_property_path(data_type: Theme.DataType) -> StringNam
         _:                         return &""
 
 
+# Utility function for gettings data types from property paths.
+# Used in [method get_theme_item_data_type_from_property_path] and
+# [method get_theme_item_data_type_from_override_property_path].
 static func _get_data_type_from_property_path(property_path: StringName) -> Theme.DataType:
     match property_path:
         &"colors":     return Theme.DATA_TYPE_COLOR
@@ -520,6 +540,8 @@ static func _get_data_type_from_property_path(property_path: StringName) -> Them
 
 #region Data types (Editor utilities)
 
+## Gets an appropriate display name for the [enum Theme.DataType].
+## This method is only useful for editor tools.
 static func get_data_type_name(data_type: Theme.DataType) -> StringName:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return &"Colors"
@@ -531,6 +553,8 @@ static func get_data_type_name(data_type: Theme.DataType) -> StringName:
         _:                         return StringName()
 
 
+## Gets an appropriate list of tags for the [enum Theme.DataType].
+## This method is only useful for editor tools.
 static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return [&"colors"]
@@ -542,6 +566,8 @@ static func get_data_type_tags(data_type: Theme.DataType) -> Array[StringName]:
         _:                         return []
 
 
+## Gets an appropriate icon for the [enum Theme.DataType].
+## This method is only useful for editor tools.
 static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
     if not Engine.is_editor_hint():
         return ThemeDB.fallback_icon
@@ -641,6 +667,8 @@ static func is_built_in_type(
 
 #region Theme types (Editor utilities)
 
+## Gets an appropriate icon for the theme type.
+## This method is only useful for editor tools.
 static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
     if not Engine.is_editor_hint():
         return ThemeDB.fallback_icon
@@ -842,11 +870,11 @@ static func get_theme_item_name_from_property_path(
     return property_path.get_slice("/", 2)
 
 
-# TODO: name.is_valid_ascii_identifier()
 static func get_theme_item_override_property_path(
     data_type: Theme.DataType,
     name: StringName
 ) -> StringName:
+    # TODO: name.is_valid_ascii_identifier()
     return "%s/%s" % [
         "theme_override_%s" % _get_data_type_property_path(data_type),
         name
@@ -947,6 +975,7 @@ static func rename_color(
 
 ## The type of the theme constant.
 ## To get the theme constant type use [method get_constant_type].
+## These values are only useful for editor tools.
 enum ConstantType {
     ## Unknown constant type.
     UNKNOWN = -1,
@@ -958,16 +987,7 @@ enum ConstantType {
     FLAG = 2
 }
 
-# https://regex101.com/r/2vR47X/1
-# TODO: Guess format
-#       name ends with:
-#       px: size, height, width, margin, padding,
-#           separation, offset, spacing, thickness, border
-#           with optional prefix: h_, v_ (does not need checking)
-#           with optional suffix: _bottom, _top, _left, _right, _x, _y
-#       factor: scale, speed
-#       bool: if value is 0 or 1 (but only guessing)
-#             maybe if starts with: draw, modulate, align, center
+# RegEx used in [method get_constant_type].
 static var _constant_type_regex := RegEx.create_from_string(
     r"(?(DEFINE)" + \
     r"(?P<p>size|height|width|margin|padding|separation|offset|spacing|thickness|border)" + \
@@ -978,6 +998,22 @@ static var _constant_type_regex := RegEx.create_from_string(
 )
 
 
+## Gets an appropriate [enum ConstantType] for the constant [param name].
+## It guesses the constant type based on the theme item name.
+## This method is only useful for editor tools.[br][br]
+## Returns [constant ConstantType.PIXEL] if [param name] ends with
+##   [code]size[/code], [code]height[/code], [code]width[/code], [code]margin[/code], [code]padding[/code],
+##   [code]separation[/code], [code]offset[/code], [code]spacing[/code], [code]thickness[/code], [code]border[/code]
+## with optional suffix
+##   [code]_bottom[/code], [code]_top[/code], [code]_left[/code], [code]_right[/code],
+##   [code]_x[/code], [code]_y[/code].
+## Returns [constant ConstantType.FACTOR] if [param name] ends with
+##   [code]scale[/code], [code]speed[/code].
+## Returns [constant ConstantType.FLAG] if [param name] starts with
+##   [code]draw[/code], [code]modulate[/code], [code]align[/code], [code]center[/code]
+## meaning that constant value of [code]0[/code] equals [code]false[/code] and
+## constant value of [code]1[/code] equals [code]true[/code] (but this is only a guess).
+## Otherwise returns [constant ConstantType.UNKNOWN].
 static func get_constant_type(name: StringName) -> ConstantType:
     var regex_match := _constant_type_regex.search(name)
     if regex_match and regex_match.get_group_count() > 0:
@@ -990,6 +1026,8 @@ static func get_constant_type(name: StringName) -> ConstantType:
     return ConstantType.UNKNOWN
 
 
+## Gets an appropriate suffix for the given constant [param type].
+## This method is only useful for editor tools.
 static func get_constant_type_suffix(type: ConstantType) -> StringName:
     match type:
         ConstantType.PIXEL:  return &"px"
