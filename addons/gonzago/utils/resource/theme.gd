@@ -605,14 +605,14 @@ static func get_data_type_icon(data_type: Theme.DataType) -> Texture2D:
 
 #region Theme types
 
-## Returns a list of all unique theme type names in [param theme].
-## Use the appropriate [code]get_*_type_list[/code] methods to get a list of
-## unique theme types for a single data type.[br][br]
+## Returns a list of all unique theme type names in [param theme].[br][br]
 ## If [param include_variations] is [code]true[/code] variations are included in the resulting list,
 ## otherwise only theme types that don't have a variation base are included.
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
+## [b]Note:[/b] Use the appropriate [code]get_*_type_list[/code] methods to get a list of
+## unique theme types for a single data type.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.get_type_list].
 static func get_type_list(
     theme: Theme,
@@ -731,8 +731,7 @@ static func get_theme_type_icon(theme_type: StringName) -> Texture2D:
 
 #region Theme items
 
-## Returns a list of all unique theme type names for [param data_type] properties in [param theme].
-## Use [method get_type_list] to get a list of all unique theme types.
+## Returns a list of all unique theme type names for [param data_type] properties in [param theme].[br][br]
 ## If [param include_variations] is [code]true[/code] variations are included in the resulting list,
 ## otherwise only theme types that don't have a variation base are included.
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
@@ -762,8 +761,7 @@ static func get_theme_item_type_list(
     return result
 
 
-## Returns a list of names for properties of [param data_type] defined with [param theme_type] in [param theme].
-## Use [method get_theme_item_type_list] to get a list of possible theme type names.[br][br]
+## Returns a list of names for properties of [param data_type] defined with [param theme_type] in [param theme].[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the results.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
@@ -819,7 +817,7 @@ static func get_base_type_for_theme_item(
 
 
 ## Returns [code]true[/code] if the given theme item is a class item.[br][br]
-## TODO: Theme items are class items if they are present in the base theme?
+## TODO: Theme items are class items if they are present in a built-in theme?
 ## @experimental
 static func is_class_theme_item(
     theme: Theme,
@@ -833,7 +831,7 @@ static func is_class_theme_item(
 
 
 ## Returns [code]true[/code] if the given theme item is a custom item.[br][br]
-## TODO: Theme items are custom items if they are not present in the base theme?
+## TODO: Theme items are custom items if they are not present in a built-in theme?
 ## @experimental
 static func is_custom_theme_item(
     theme: Theme,
@@ -847,9 +845,7 @@ static func is_custom_theme_item(
 
 
 ## Returns [code]true[/code] if the theme property of [param data_type] defined
-## by [param name] and [param theme_type] exists.[br][br]
-## Returns [code]false[/code] if it doesn't exist.
-## Use [method set_theme_item] to define it.[br][br]
+## by [param name] and [param theme_type] exists in [param theme].
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
 ## [b]Note:[/b] This method is analogous to calling the corresponding data type
@@ -868,11 +864,12 @@ static func has_theme_item(
     return false
 
 
-## Returns the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists.[br][br]
-## Returns the engine fallback value if the property doesn't exist (see [method get_data_type_fallback]).
-## Use [method has_theme_item] to check for existence.[br][br]
+## Returns the theme property of [param data_type] defined by [param name] and
+## [param theme_type], if it exists in [param theme].
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
+## Returns the engine fallback value if the property doesn't exist.
+## Use [method has_theme_item] to check for existence.[br][br]
 ## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.get_theme_item].
@@ -889,10 +886,10 @@ static func get_theme_item(
     return get_data_type_fallback(data_type)
 
 
-## Creates or changes the value of the theme property of [param data_type] defined by [param name] and [param theme_type].
-## Use [method clear_theme_item] to remove the property.
-## If [param value] is not valid for [param data_type] an appropriate fallback value
-## will be set (see [method get_data_type_fallback]).[br][br]
+## Creates or changes the [param value] of the [param theme] property
+## of [param data_type] defined by [param name] and [param theme_type].
+## If [param value] is not valid for [param data_type] an appropriate
+## fallback value will be set.[br][br]
 ## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.set_theme_item].
@@ -909,11 +906,12 @@ static func set_theme_item(
     theme.set_theme_item(data_type, name, theme_type, value)
 
 
-## Removes the theme property of [param data_type] defined by [param name] and [param theme_type], if it exists.[br][br]
-## Does not fail if it doesn't exist. Use [method has_theme_item] to check for existence.[br][br]
+## Removes the theme property of [param data_type] defined by [param name] and [param theme_type],
+## if it exists in [param theme].[br][br]
 ## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## [b]Note:[/b] This method wraps [method Theme.clear_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.clear_theme_item] but does not fail
+## if it doesn't exist. Use [method has_theme_item] to check for existence.
 static func clear_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -925,15 +923,15 @@ static func clear_theme_item(
         theme.clear_theme_item(data_type, name, theme_type)
 
 
-## Renames the theme property of data_type defined by [param old_name] and [param theme_type]
-## to [param name], if it exists.[br][br]
-## Does not fail if it doesn't exist, or if a similar property with the new name already exists.
-## Use [method has_theme_item] to check for existence, and [method clear_theme_item] to remove the existing property.
+## Renames the theme property of [param data_type] defined by [param old_name]
+## and [param theme_type] to [param name], if it exists in [param theme].
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
 ## [b]Note:[/b] This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
-## [b]Note:[/b] This method wraps [method Theme.rename_theme_item].
+## [b]Note:[/b] This method wraps [method Theme.rename_theme_item] but does not fail
+## if [param old_name] doesn't exist, or if a property with [param name] already exists.
+## Use [method has_theme_item] to check for existence and [method clear_theme_item] to remove the existing property.
 static func rename_theme_item(
     theme: Theme,
     data_type: Theme.DataType,
@@ -1045,32 +1043,28 @@ static func get_theme_item_name_from_override_property_path(
 # TODO: Copy for all types to match original Theme functionality?
 #region Colors
 
-## Returns a list of all unique theme type names for [Color] properties.
-## Use [method get_type_list] to get a list of all unique theme types.[br][br]
+## Returns a list of all unique theme type names for [Color] properties in [param theme].[br][br]
 ## If [param include_variations] is [code]true[/code] variations are included in the resulting list,
 ## otherwise only theme types that don't have a variation base are included.
 ## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
 ## base themes of [param theme], otherwise only data in [param theme] is checked and included.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.get_colors_type_list].
-## @experimental
 static func get_colors_type_list(
     theme: Theme,
-    include_variations := false, include_defaults := true, sort := true
+    include_variations := false, include_base_themes := true, sort := true
 ) -> PackedStringArray:
     return get_theme_item_type_list(
         theme, Theme.DATA_TYPE_COLOR,
-        include_variations, include_defaults, sort
+        include_variations, include_base_themes, sort
     )
 
 
-## Returns a list of names for [Color] properties defined with [param theme_type] in [param theme].
-## Use [method get_color_type_list] to get a list of possible theme type names.[br][br]
+## Returns a list of names for [Color] properties defined with [param theme_type] in [param theme].[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the results.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.get_color_list].
-## @experimental
 static func get_color_list(
     theme: Theme, theme_type: StringName,
     include_defaults := true, sort := true
@@ -1082,13 +1076,10 @@ static func get_color_list(
 
 
 ## Returns [code]true[/code] if the [Color] property defined
-## by [param name] and [param theme_type] exists.[br][br]
-## Returns [code]false[/code] if it doesn't exist.
-## Use [method set_color] to define it.[br][br]
+## by [param name] and [param theme_type] exists in [param theme].
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.has_color].
-## @experimental
 static func has_color(
     theme: Theme, name: StringName, theme_type: StringName,
     include_defaults := false
@@ -1099,13 +1090,13 @@ static func has_color(
     )
 
 
-## Returns the [Color] property defined by [param name] and [param theme_type], if it exists.[br][br]
-## Returns the default color value if the property doesn't exist (see [method get_data_type_fallback]).
-## Use [method has_color] to check for existence.[br][br]
+## Returns the [Color] property defined by [param name] and [param theme_type],
+## if it exists in [param theme].
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
+## Returns the default color value if the property isn't found.
+## Use [method has_color] to check for existence.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.get_color].
-## @experimental
 static func get_color(
     theme: Theme, name: StringName, theme_type: StringName,
     include_defaults := true
@@ -1116,12 +1107,11 @@ static func get_color(
     ) as Color
 
 
-## Creates or changes the value of the [Color] property defined by [param name] and [param theme_type].
-## Use [method clear_color] to remove the property.[br][br]
-## If [param value] is not valid for [param data_type] an appropriate fallback value
-## will be set (see [method get_data_type_fallback]).[br][br]
+## Creates or changes the value of the [Color] property defined by
+## [param name] and [param theme_type] in [param theme].
+## If [param value] is not valid for [param data_type] an
+## appropriate fallback value will be set.[br][br]
 ## [b]Note:[/b] This method wraps [method Theme.set_color].
-## @experimental
 static func set_color(
     theme: Theme, name: StringName, theme_type: StringName, value: Color
 ) -> void:
@@ -1131,10 +1121,10 @@ static func set_color(
     )
 
 
-## Removes the [Color] property defined by [param name] and [param theme_type], if it exists.[br][br]
-## Does not fail if it doesn't exist. Use [method has_color] to check for existence.[br][br]
-## [b]Note:[/b] This method wraps [method Theme.clear_color].
-## @experimental
+## Removes the [Color] property defined by [param name] and [param theme_type],
+## if it exists in [param theme].[br][br]
+## [b]Note:[/b] This method wraps [method Theme.clear_color] but does not fail
+## if property doesn't exist. Use [method has_color] to check for existence.
 static func clear_color(
     theme: Theme, name: StringName, theme_type: StringName
 ) -> void:
@@ -1144,14 +1134,12 @@ static func clear_color(
     )
 
 
-## Renames the [Color] property defined by [param old_name] and [param theme_type]
-## to [param name], if it exists.[br][br]
-## Does not fail if it doesn't exist, or if a similar property with the new name already exists.
-## Use [method has_color] to check for existence, and [method clear_color] to remove the existing property.[br][br]
+## Renames the [Color] property defined by [param old_name] and [param theme_type] to [param name], if it exists in [param theme].
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the search.[br][br]
-## [b]Note:[/b] This method wraps [method Theme.rename_color].
-## @experimental
+## [b]Note:[/b] This method wraps [method Theme.rename_color] but does not fail
+## if [param old_name] doesn't exist, or if a property with [param name] already exists.
+## Use [method has_color] to check for existence and [method clear_color] to remove the existing property.
 static func rename_color(
     theme: Theme,
     old_name: StringName, name: StringName, theme_type: StringName,
@@ -1198,22 +1186,23 @@ static var _constant_type_regex := RegEx.create_from_string(
 )
 
 
-## Gets an appropriate [enum ConstantType] for the constant [param name].
-## It guesses the constant type based on the theme item name.
-## [b]Note:[/b] This method is only useful for editor tools.[br][br]
+## Returns an appropriate [enum ConstantType] for the constant [param name].[br][br]
 ## Returns [constant ConstantType.PIXEL] if [param name] ends with
-##   [code]size[/code], [code]height[/code], [code]width[/code], [code]margin[/code], [code]padding[/code],
-##   [code]separation[/code], [code]offset[/code], [code]spacing[/code], [code]thickness[/code], [code]border[/code]
+## [code]size[/code], [code]height[/code], [code]width[/code],
+## [code]margin[/code], [code]padding[/code],
+## [code]separation[/code], [code]offset[/code], [code]spacing[/code],
+## [code]thickness[/code], [code]border[/code]
 ## with optional suffix
-##   [code]_bottom[/code], [code]_top[/code], [code]_left[/code], [code]_right[/code],
-##   [code]_x[/code], [code]_y[/code].
+## [code]_bottom[/code], [code]_top[/code], [code]_left[/code], [code]_right[/code],
+## [code]_x[/code], [code]_y[/code].[br][br]
 ## Returns [constant ConstantType.FACTOR] if [param name] ends with
-##   [code]scale[/code], [code]speed[/code].
+## [code]scale[/code], [code]speed[/code].[br][br]
 ## Returns [constant ConstantType.FLAG] if [param name] starts with
-##   [code]draw[/code], [code]modulate[/code], [code]align[/code], [code]center[/code]
+## [code]draw[/code], [code]modulate[/code], [code]align[/code], [code]center[/code]
 ## meaning that constant value of [code]0[/code] equals [code]false[/code] and
-## constant value of [code]1[/code] equals [code]true[/code] (but this is only a guess).
-## Otherwise returns [constant ConstantType.UNKNOWN].
+## constant value of [code]1[/code] equals [code]true[/code].[br][br]
+## Returns [constant ConstantType.UNKNOWN] otherwise.[br][br]
+## [b]Note:[/b] This method is only useful for editor tools.
 static func get_constant_type(name: StringName) -> ConstantType:
     var regex_match := _constant_type_regex.search(name)
     if regex_match and regex_match.get_group_count() > 0:
@@ -1226,7 +1215,7 @@ static func get_constant_type(name: StringName) -> ConstantType:
     return ConstantType.UNKNOWN
 
 
-## Gets an appropriate suffix for the given constant [param type].
+## Gets an appropriate suffix for the given constant [param type].[br][br]
 ## [b]Note:[/b] This method is only useful for editor tools.
 static func get_constant_type_suffix(type: ConstantType) -> StringName:
     match type:
@@ -1238,7 +1227,7 @@ static func get_constant_type_suffix(type: ConstantType) -> StringName:
 
 #region Fonts
 
-## Returns the font size name to pair [param font_name] with.[br][br]
+## Returns the font size name to pair [param font_name] with.[br]
 ## Used in [method has_pairing_font_size] and [method get_pairing_font_size].
 static func get_pairing_font_size_name(font_name: StringName) -> StringName:
     return font_name + "_size"
@@ -1246,7 +1235,7 @@ static func get_pairing_font_size_name(font_name: StringName) -> StringName:
 
 ## Returns [code]true[/code] if there is a font size to pair [param font_name] with.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
-## and base themes for [param theme] are included in the check.
+## and base themes for [param theme] are included in the search.
 static func has_pairing_font_size(
     theme: Theme,
     font_name: StringName,
@@ -1260,10 +1249,10 @@ static func has_pairing_font_size(
     return false
 
 
-## Returns the font size to pair [param font_name] with, if there is one.[br][br]
-## Returns an appropriate default value if no font size pairing is found.[br][br]
+## Returns the font size to pair [param font_name] with, if there is one
+## or an appropriate default value if no font size pairing is found.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
-## and base themes for [param theme] are included in the check.
+## and base themes for [param theme] are included in the search.
 static func get_pairing_font_size(
     theme: Theme,
     font_name: StringName,
@@ -1280,7 +1269,7 @@ static func get_pairing_font_size(
 
 #region Font Sizes
 
-## Returns the font name to pair [param font_size_name] with.[br][br]
+## Returns the font name to pair [param font_size_name].[br]
 ## Used in [method has_pairing_font] and [method get_pairing_font].
 static func get_pairing_font_name(font_size_name: StringName) -> StringName:
     return font_size_name.trim_suffix("_size")
@@ -1288,7 +1277,7 @@ static func get_pairing_font_name(font_size_name: StringName) -> StringName:
 
 ## Returns [code]true[/code] if there is a font to pair [param font_name_size] with.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
-## and base themes for [param theme] are included in the check.
+## and base themes for [param theme] are included in the search.
 static func has_pairing_font(
     theme: Theme,
     font_size_name: StringName,
@@ -1302,10 +1291,10 @@ static func has_pairing_font(
     return false
 
 
-## Returns the font to pair [param font_size_name] with, if there is one.[br][br]
-## Returns an appropriate default value if no font pairing is found.[br][br]
+## Returns the font to pair [param font_size_name] with, if there is one
+## or an appropriate default value if no font pairing is found.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
-## and base themes for [param theme] are included in the check.
+## and base themes for [param theme] are included in the search.
 static func get_pairing_font(
     theme: Theme,
     font_size_name: StringName,
