@@ -839,6 +839,7 @@ static func rename_theme_item(
 
 #region Theme items (Property paths)
 
+# [code]"Button/colors/font_color"[/code]
 static func get_theme_item_property_path(
     data_type: Theme.DataType,
     name: StringName,
@@ -851,12 +852,14 @@ static func get_theme_item_property_path(
     ]
 
 
+# [code]"Button/colors/font_color"[/code]
 static func get_theme_item_type_from_property_path(
     property_path: StringName
 ) -> StringName:
     return property_path.get_slice("/", 0)
 
 
+# [code]"Button/colors/font_color"[/code]
 static func get_theme_item_data_type_from_property_path(
     property_path: StringName
 ) -> Theme.DataType:
@@ -864,12 +867,14 @@ static func get_theme_item_data_type_from_property_path(
     return _get_data_type_from_property_path(data_type)
 
 
+# [code]"Button/colors/font_color"[/code]
 static func get_theme_item_name_from_property_path(
     property_path: StringName
 ) -> StringName:
     return property_path.get_slice("/", 2)
 
 
+# [code]"theme_override_colors/font_color"[/code]
 static func get_theme_item_override_property_path(
     data_type: Theme.DataType,
     name: StringName
@@ -881,6 +886,7 @@ static func get_theme_item_override_property_path(
     ]
 
 
+# [code]"theme_override_colors/font_color"[/code]
 static func get_theme_item_data_type_from_override_property_path(
     property_path: StringName
 ) -> Theme.DataType:
@@ -889,6 +895,7 @@ static func get_theme_item_data_type_from_override_property_path(
     )
 
 
+# [code]"theme_override_colors/font_color"[/code]
 static func get_theme_item_name_from_override_property_path(
     property_path: StringName
 ) -> StringName:
