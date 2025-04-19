@@ -32,7 +32,8 @@ layout_mode = 2
 placeholder_text = "Filter Types"
 
 [node name="AutoComplete" parent="Toolbar/Filter" node_paths=PackedStringArray("line_edit") instance=ExtResource("3_csm5k")]
-size = Vector2i(136, 195)
+size = Vector2i(136, 332)
+unfocusable = true
 max_size = Vector2i(32768, 618)
 line_edit = NodePath("..")
 
