@@ -907,6 +907,8 @@ static func clear_theme_item(
 ## to [param name], if it exists.[br][br]
 ## Does not fail if it doesn't exist, or if a similar property with the new name already exists.
 ## Use [method has_theme_item] to check for existence, and [method clear_theme_item] to remove the existing property.
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the search.[br][br]
 ## [b]Note[/b]: This method is analogous to calling the corresponding data type
 ## specific method, but can be used for more generalized logic.[br][br]
 ## This method wraps [method Theme.rename_theme_item].
@@ -1021,9 +1023,13 @@ static func get_theme_item_name_from_override_property_path(
 # TODO: Copy for all types to match original Theme functionality?
 #region Colors
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Returns a list of all unique theme type names for [Color] properties.
+## Use [method get_type_list] to get a list of all unique theme types.[br][br]
+## If [param include_variations] is [code]true[/code] variations are included in the resulting list,
+## otherwise only theme types that don't have a variation base are included.
+## If [param include_base_themes] is [code]true[/code] the result also includes theme types from
+## base themes of [param theme], otherwise only data in [param theme] is checked and included.
+## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
 ## This method wraps [method Theme.get_colors_type_list].
 ## @experimental
 static func get_colors_type_list(
@@ -1036,9 +1042,11 @@ static func get_colors_type_list(
     )
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Returns a list of names for [Color] properties defined with [param theme_type] in [param theme].
+## Use [method get_color_type_list] to get a list of possible theme type names.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the results.
+## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
 ## This method wraps [method Theme.get_color_list].
 ## @experimental
 static func get_color_list(
@@ -1051,9 +1059,12 @@ static func get_color_list(
     )
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Returns [code]true[/code] if the [Color] property defined
+## by [param name] and [param theme_type] exists.[br][br]
+## Returns [code]false[/code] if it doesn't exist.
+## Use [method set_color] to define it.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the search.[br][br]
 ## This method wraps [method Theme.has_color].
 ## @experimental
 static func has_color(
@@ -1066,9 +1077,11 @@ static func has_color(
     )
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Returns the [Color] property defined by [param name] and [param theme_type], if it exists.[br][br]
+## Returns the default color value if the property doesn't exist (see [method get_data_type_fallback]).
+## Use [method has_color] to check for existence.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the search.[br][br]
 ## This method wraps [method Theme.get_color].
 ## @experimental
 static func get_color(
@@ -1081,9 +1094,10 @@ static func get_color(
     ) as Color
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Creates or changes the value of the [Color] property defined by [param name] and [param theme_type].
+## Use [method clear_color] to remove the property.[br][br]
+## If [param value] is not valid for [param data_type] an appropriate fallback value
+## will be set (see [method get_data_type_fallback]).[br][br]
 ## This method wraps [method Theme.set_color].
 ## @experimental
 static func set_color(
@@ -1095,9 +1109,8 @@ static func set_color(
     )
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Removes the [Color] property defined by [param name] and [param theme_type], if it exists.[br][br]
+## Does not fail if it doesn't exist. Use [method has_color] to check for existence.[br][br]
 ## This method wraps [method Theme.clear_color].
 ## @experimental
 static func clear_color(
@@ -1109,9 +1122,12 @@ static func clear_color(
     )
 
 
-## TODO: Document according to
-## [url]https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html[/url]
-## [br][br]
+## Renames the [Color] property defined by [param old_name] and [param theme_type]
+## to [param name], if it exists.[br][br]
+## Does not fail if it doesn't exist, or if a similar property with the new name already exists.
+## Use [method has_color] to check for existence, and [method clear_color] to remove the existing property.[br][br]
+## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
+## and base themes for [param theme] are included in the search.[br][br]
 ## This method wraps [method Theme.rename_color].
 ## @experimental
 static func rename_color(
