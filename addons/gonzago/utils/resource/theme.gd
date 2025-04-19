@@ -449,6 +449,28 @@ static func get_theme_name(theme: Theme) -> StringName:
     return &"New Theme"
 
 
+## Returns an appropriate tooltip for the [param theme].[br][br]
+## This method is only useful for editor tools.
+static func get_theme_tooltip(theme: Theme) -> StringName:
+    if not theme:
+        return &"Missing Resource"
+
+    if Engine.is_editor_hint() and theme == EditorInterface.get_editor_theme():
+        return &"Editor Theme"
+
+    if theme == ThemeDB.get_default_theme():
+        return &"Default Theme"
+
+    var project_theme := ThemeDB.get_project_theme()
+    if project_theme and theme == project_theme:
+        return &"Project Theme defined in ProjectSettings"
+
+    if theme.resource_path:
+        return theme.resource_path.get_file()
+
+    return &"New Theme"
+
+
 ## Returns an appropriate icon for the [param theme].[br][br]
 ## This method is only useful for editor tools.
 static func get_theme_icon(theme: Theme) -> Texture2D:
@@ -741,7 +763,7 @@ static func get_theme_item_type_list(
 
 
 ## Returns a list of names for properties of [param data_type] defined with [param theme_type] in [param theme].
-## Use [method get_theme_item_type_list to get a list of possible theme type names.[br][br]
+## Use [method get_theme_item_type_list] to get a list of possible theme type names.[br][br]
 ## If [param include_defaults] is [code]true[/code] variation bases for [param theme_type]
 ## and base themes for [param theme] are included in the results.
 ## If [param sort] is [code]true[/code] the resulting list will be sorted alphabetically.[br][br]
