@@ -48,6 +48,8 @@ func _notification(what: int) -> void:
                     line_edit.resized.connect(_resized)
                 if not line_edit.focus_entered.is_connected(_focus_entered):
                     line_edit.focus_entered.connect(_focus_entered)
+                if not line_edit.focus_exited.is_connected(_focus_exited):
+                    line_edit.focus_exited.connect(_focus_exited)
                 if not line_edit.text_changed.is_connected(_text_changed):
                     line_edit.text_changed.connect(_text_changed)
             if _line_edit != line_edit:
@@ -59,6 +61,8 @@ func _notification(what: int) -> void:
                     _line_edit.resized.disconnect(_resized)
                 if _line_edit.focus_entered.is_connected(_focus_entered):
                     _line_edit.focus_entered.disconnect(_focus_entered)
+                if _line_edit.focus_exited.is_connected(_focus_exited):
+                    _line_edit.focus_exited.disconnect(_focus_exited)
                 if _line_edit.text_changed.is_connected(_text_changed):
                     _line_edit.text_changed.disconnect(_text_changed)
             _line_edit = null
@@ -140,6 +144,10 @@ func _resized() -> void:
 
 func _focus_entered() -> void:
     pass
+
+
+func _focus_exited() -> void:
+    hide()
 
 
 func _text_changed(new_text: String) -> void:
