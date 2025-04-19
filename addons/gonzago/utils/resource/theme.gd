@@ -477,13 +477,13 @@ static func get_theme_icon(theme: Theme) -> Texture2D:
 #region Data types
 
 ## Returns an appropriate fallback value for [param data_type].[br][br]
-## Returns [constant Color.BLACK] for [constant Theme.DATA_TYPE_COLOR],
-## [code]0[/code] for [constant Theme.DATA_TYPE_CONSTANT],
-## [member ThemeDB.fallback_font] for [constant Theme.DATA_TYPE_FONT],
-## [member ThemeDB.fallback_font_size] for [constant Theme.DATA_TYPE_FONT_SIZE],
-## [member ThemeDB.fallback_icon] for [constant Theme.DATA_TYPE_ICON],
-## [member ThemeDB.fallback_stylebox] for [constant Theme.DATA_TYPE_STYLEBOX],
-## otherwise returns [code]null[/code].
+## Returns [constant Color.BLACK] for [constant Theme.DATA_TYPE_COLOR].[br][br]
+## Returns [code]0[/code] for [constant Theme.DATA_TYPE_CONSTANT].[br][br]
+## Returns [member ThemeDB.fallback_font] for [constant Theme.DATA_TYPE_FONT].[br][br]
+## Returns [member ThemeDB.fallback_font_size] for [constant Theme.DATA_TYPE_FONT_SIZE].[br][br]
+## Returns [member ThemeDB.fallback_icon] for [constant Theme.DATA_TYPE_ICON].[br][br]
+## Returns [member ThemeDB.fallback_stylebox] for [constant Theme.DATA_TYPE_STYLEBOX].[br][br]
+## Returns [code]null[/code] otherwise.
 static func get_data_type_fallback(data_type: Theme.DataType) -> Variant:
     match data_type:
         Theme.DATA_TYPE_COLOR:     return Color.BLACK
