@@ -10,6 +10,8 @@ extends PopupMenu
 # https://github.com/godotengine/godot/blob/master/scene/gui/code_edit.cpp
 # https://github.com/godotengine/godot/blob/master/scene/gui/code_edit.cpp#L2132
 
+# https://github.com/geegaz/Multiple-Windows-tutorial
+
 @export_range(1, 10, 1, "or_greater")
 var max_lines := 10:
     set(new_max_lines):
