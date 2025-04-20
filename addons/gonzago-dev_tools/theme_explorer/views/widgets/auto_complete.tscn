@@ -3,8 +3,7 @@
 [ext_resource type="Script" uid="uid://c73lq0jf55vtw" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/auto_complete.gd" id="1_c81oc"]
 
 [node name="AutoComplete" type="PopupMenu"]
-size = Vector2i(4, 618)
-max_size = Vector2i(32768, 618)
+size = Vector2i(100, 740)
 allow_search = false
 item_count = 12
 item_0/text = "Test 0"
