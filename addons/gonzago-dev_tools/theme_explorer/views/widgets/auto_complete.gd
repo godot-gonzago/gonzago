@@ -37,7 +37,7 @@ class _ThemeCache extends RefCounted:
     var panel_end_offset: Vector2
     var panel_total_offset: Vector2
     var item_h_padding: int
-    var item_size: Vector2
+    var item_min_size: Vector2
 
     var screen_rect: Rect2
     var max_height: float
@@ -66,7 +66,7 @@ class _ThemeCache extends RefCounted:
         )
         panel_total_offset = panel_start_offset + panel_end_offset
         item_h_padding = item_start_padding + item_end_padding
-        item_size = Vector2(
+        item_min_size = Vector2(
             item_h_padding,
             font.get_height(font_size) + v_separation
         )
@@ -89,7 +89,6 @@ var max_lines := 10:
             max_lines = new_max_lines
             if not NodeUtil.is_node_being_edited(self) and is_node_ready():
                 _update_size()
-                _apply_rect()
     get:
         return max_lines
 
@@ -117,8 +116,8 @@ func _notification(what: int) -> void:
 
             _cache.update(self)
 
+            # TODO: Remove! This is test data!
             if not NodeUtil.is_node_being_edited(self):
-                # TODO: Remove! This is test data!
                 var default_theme := ThemeDB.get_default_theme()
                 for type in default_theme.get_type_list():
                     _items.append(_Item.new(type))
@@ -132,12 +131,17 @@ func _notification(what: int) -> void:
                 _cache.update(self)
                 if not NodeUtil.is_node_being_edited(self) and visible:
                     _update_size()
-                    _apply_rect()
+                _panel.queue_redraw()
         NOTIFICATION_VISIBILITY_CHANGED:
-            if not NodeUtil.is_node_being_edited(self):
-                #set_focused_item(-1)
-                if visible:
-                    _apply_rect()
+            if NodeUtil.is_node_being_edited(self):
+                return
+
+            if not visible:
+                _candidates.clear()
+                _selected_candidate = -1
+            else:
+                _update_size()
+                _panel.queue_redraw()
         NOTIFICATION_PARENTED:
             if NodeUtil.is_node_being_edited(self):
                 update_configuration_warnings()
@@ -145,16 +149,14 @@ func _notification(what: int) -> void:
 
             var line_edit := get_parent() as LineEdit
             if line_edit:
-                if not line_edit.resized.is_connected(_resized):
-                    line_edit.resized.connect(_resized)
-                if not line_edit.focus_entered.is_connected(_focus_entered):
-                    line_edit.focus_entered.connect(_focus_entered)
-                if not line_edit.focus_exited.is_connected(_focus_exited):
-                    line_edit.focus_exited.connect(_focus_exited)
+                if not line_edit.visibility_changed.is_connected(hide):
+                    line_edit.visibility_changed.connect(hide)
+                if not line_edit.focus_exited.is_connected(hide):
+                    line_edit.focus_exited.connect(hide)
                 if not line_edit.gui_input.is_connected(_gui_input):
                     line_edit.gui_input.connect(_gui_input)
-                if not line_edit.text_changed.is_connected(_text_changed):
-                    line_edit.text_changed.connect(_text_changed)
+                if not line_edit.text_changed.is_connected(_update_candidates):
+                    line_edit.text_changed.connect(_update_candidates)
             if _line_edit != line_edit:
                 _line_edit = line_edit
         NOTIFICATION_UNPARENTED:
@@ -163,16 +165,14 @@ func _notification(what: int) -> void:
                 return
 
             if _line_edit and not NodeUtil.is_node_being_edited(self):
-                if _line_edit.resized.is_connected(_resized):
-                    _line_edit.resized.disconnect(_resized)
-                if _line_edit.focus_entered.is_connected(_focus_entered):
-                    _line_edit.focus_entered.disconnect(_focus_entered)
-                if _line_edit.focus_exited.is_connected(_focus_exited):
-                    _line_edit.focus_exited.disconnect(_focus_exited)
+                if _line_edit.visibility_changed.is_connected(hide):
+                    _line_edit.visibility_changed.disconnect(hide)
+                if _line_edit.focus_exited.is_connected(hide):
+                    _line_edit.focus_exited.disconnect(hide)
                 if _line_edit.gui_input.is_connected(_gui_input):
                     _line_edit.gui_input.disconnect(_gui_input)
-                if _line_edit.text_changed.is_connected(_text_changed):
-                    _line_edit.text_changed.disconnect(_text_changed)
+                if _line_edit.text_changed.is_connected(_update_candidates):
+                    _line_edit.text_changed.disconnect(_update_candidates)
             _line_edit = null
         NOTIFICATION_PREDELETE:
             _candidates.clear()
@@ -190,55 +190,18 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 
 func _get_contents_minimum_size() -> Vector2:
-    var min_size := _cache.panel_min_size
-    min_size.x += _cache.item_size.x
-    min_size.y += _cache.item_size.y * _candidates.size()
+    var min_size := _cache.item_min_size
+    min_size.y *= _candidates.size()
+    if _scroll_bar.visible:
+        var scroll_min_size := _scroll_bar.get_combined_minimum_size()
+        min_size.x += scroll_min_size.x
+        min_size.y = maxf(min_size.y, scroll_min_size.y)
+    min_size += _cache.panel_min_size
     return min_size
 
 
-func _draw() -> void:
-    var ci := _panel.get_canvas_item()
-    var rect := _panel.get_rect()
-    _cache.panel.draw(ci, rect)
-
-    var content_rect := rect
-    content_rect.position += _cache.panel_start_offset
-    content_rect.size -= _cache.panel_total_offset
-
-    var line_rect := content_rect
-    line_rect.size.y = _cache.item_size.y
-
-    var item_rect := line_rect
-    if is_layout_rtl():
-        item_rect.position.x += _cache.item_end_padding
-    else:
-        item_rect.position.x += _cache.item_start_padding
-    item_rect.size.x -= _cache.item_h_padding
-
-    for idx in _candidates.size():
-        var item := _candidates[idx]
-        if idx == _selected_candidate:
-            _cache.hover.draw(ci, line_rect)
-
-        var text_line := TextLine.new()
-        text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-        text_line.width = item_rect.size.x
-        text_line.add_string(item.text, _cache.font, _cache.font_size)
-
-        var text_size := text_line.get_size()
-        var position := item_rect.position
-        position.y += (item_rect.size.y - text_size.y) * 0.5
-
-        if _cache.outline_size > 0:
-            text_line.draw_outline(ci, position, _cache.outline_size, _cache.font_outline_color)
-        text_line.draw(ci, position, _cache.font_color)
-
-        line_rect.position.y += line_rect.size.y
-        item_rect.position.y = line_rect.position.y
-
-
 func _update_size() -> void:
-    _cache.max_height = _cache.panel_min_size.y + _cache.item_size.y * max_lines
+    _cache.max_height = _cache.panel_min_size.y + _cache.item_min_size.y * max_lines
     if not _line_edit:
         max_size.y = _cache.max_height
         _cache.screen_rect = Rect2()
@@ -271,35 +234,47 @@ func _update_size() -> void:
         var local_rect := inverse_screen_transform * screen_rect
 
         var available_lines_height := local_rect.size.y - _cache.panel_min_size.y
-        var visible_lines := floori(available_lines_height / _cache.item_size.y)
+        var visible_lines := floori(available_lines_height / _cache.item_min_size.y)
         if visible_lines > 0:
-            local_rect.size.y = _cache.panel_min_size.y + _cache.item_size.y * visible_lines
+            local_rect.size.y = _cache.panel_min_size.y + _cache.item_min_size.y * visible_lines
 
         clamped_max_height = minf(clamped_max_height, local_rect.size.y)
 
     max_size.y = clamped_max_height
     _cache.screen_rect = screen_rect
 
+    position = _cache.screen_rect.position
+    size = _cache.screen_rect.size
 
-func _apply_rect() -> void:
-    if visible:
-        position = _cache.screen_rect.position
-        size = _cache.screen_rect.size
+
+func _update_scrollbar() -> void:
+    var min_size := get_contents_minimum_size()
+    _scroll_bar.visible = max_size.y < min_size.y
 
 
 func _update_candidates(text: String) -> void:
     _candidates.clear()
     _selected_candidate = -1
     if text.is_empty():
+        hide()
         return
 
     for item in _items:
         item.priority = item.text.findn(text)
         if item.priority == -1:
             continue
-
         var idx := _candidates.bsearch_custom(item, _sort_items)
         _candidates.insert(idx, item)
+
+    if _candidates.is_empty():
+        hide()
+        return
+
+    if visible:
+        _update_size()
+        _panel.queue_redraw()
+    else:
+        show()
 
 
 func _sort_items(a: _Item, b: _Item) -> bool:
@@ -310,30 +285,17 @@ func _sort_items(a: _Item, b: _Item) -> bool:
     return false
 
 
-func _resized() -> void:
-    _update_size()
-    _apply_rect()
-
-
-func _focus_entered() -> void:
-    pass
-
-
-func _focus_exited() -> void:
-    hide()
-
-
 func _gui_input(event: InputEvent) -> void:
     if not _line_edit.has_focus() or not visible or _candidates.is_empty():
         return
 
     if event.is_action_pressed(&"ui_up") and _selected_candidate > -1:
-        _selected_candidate = wrapi(_selected_candidate - 1, 0, _candidates.size() - 1)
+        _selected_candidate = wrapi(_selected_candidate - 1, 0, _candidates.size())
         _line_edit.accept_event()
         _panel.queue_redraw()
 
     if event.is_action_pressed(&"ui_down"):
-        _selected_candidate = wrapi(_selected_candidate + 1, 0, _candidates.size() - 1)
+        _selected_candidate = wrapi(_selected_candidate + 1, 0, _candidates.size())
         _line_edit.accept_event()
         _panel.queue_redraw()
 
@@ -343,16 +305,42 @@ func _gui_input(event: InputEvent) -> void:
         hide()
 
 
+func _draw() -> void:
+    var ci := _panel.get_canvas_item()
+    var rect := _panel.get_rect()
+    _cache.panel.draw(ci, rect)
 
-func _text_changed(new_text: String) -> void:
-    _update_candidates(new_text)
+    var content_rect := rect
+    content_rect.position += _cache.panel_start_offset
+    content_rect.size -= _cache.panel_total_offset
 
-    if _candidates.is_empty():
-        if visible:
-            hide()
-        return
+    var line_rect := content_rect
+    line_rect.size.y = _cache.item_min_size.y
 
-    _update_size()
-    _apply_rect()
-    if not visible:
-        show()
+    var item_rect := line_rect
+    if is_layout_rtl():
+        item_rect.position.x += _cache.item_end_padding
+    else:
+        item_rect.position.x += _cache.item_start_padding
+    item_rect.size.x -= _cache.item_h_padding
+
+    for idx in _candidates.size():
+        var item := _candidates[idx]
+        if idx == _selected_candidate:
+            _cache.hover.draw(ci, line_rect)
+
+        var text_line := TextLine.new()
+        text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+        text_line.width = item_rect.size.x
+        text_line.add_string(item.text, _cache.font, _cache.font_size)
+
+        var text_size := text_line.get_size()
+        var position := item_rect.position
+        position.y += (item_rect.size.y - text_size.y) * 0.5
+
+        if _cache.outline_size > 0:
+            text_line.draw_outline(ci, position, _cache.outline_size, _cache.font_outline_color)
+        text_line.draw(ci, position, _cache.font_color)
+
+        line_rect.position.y += line_rect.size.y
+        item_rect.position.y = line_rect.position.y
