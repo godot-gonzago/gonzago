@@ -39,8 +39,14 @@ class _ThemeCache extends RefCounted:
     var item_h_padding: int
     var item_min_size: Vector2
 
-    var screen_rect: Rect2
-    var max_height: float
+    var visible_items: int
+    var panel_rect: Rect2
+    var content_rect: Rect2
+    var scroll_bar_rect: Rect2
+
+    var item_rect: Rect2
+    var icon_rect: Rect2
+    var text_rect: Rect2
 
     func update(c: Window) -> void:
         panel = c.get_theme_stylebox(&"panel", &"PopupMenu")
@@ -201,26 +207,8 @@ func _get_contents_minimum_size() -> Vector2:
     return min_size
 
 
-# TODO: Sort this, this will make it easier
 func _update_size() -> void:
-    _cache.max_height = _cache.panel_min_size.y + _cache.item_min_size.y * max_lines
-    if not _line_edit:
-        max_size.y = _cache.max_height
-        _cache.screen_rect = Rect2()
-        return
-
-    var line_edit_rect := _line_edit.get_rect()
-    var min_size := get_contents_minimum_size()
-
-    var visible_lines := mini(_candidates.size(), max_lines)
-    var available_lines_height := _cache.item_min_size.y * visible_lines
-    var panel_rect := Rect2(
-        line_edit_rect.position.x,
-        line_edit_rect.end.y,
-        line_edit_rect.size.x,
-        _cache.panel_min_size.y + available_lines_height
-    )
-
+    # Find bounding rect (in screen coordinates).
     var bounding_window := _line_edit.get_last_exclusive_window()
     var bounding_rect: Rect2
     if bounding_window.is_embedded():
@@ -229,46 +217,95 @@ func _update_size() -> void:
         var screen := bounding_window.current_screen
         bounding_rect = DisplayServer.screen_get_usable_rect(screen)
 
-    var screen_transform := _line_edit.get_screen_transform()
+    # Convert bounding rect to local space for later use
     var inverse_screen_transform := _line_edit.get_screen_transform().inverse()
     var local_bounding_rect := inverse_screen_transform * bounding_rect
 
-    var final_max_height := _cache.max_height
-    if local_bounding_rect.end.y < panel_rect.end.y:
-        var actual_available_lines_height := local_bounding_rect.end.y - panel_rect.position.y - _cache.panel_end_offset.y
-        visible_lines = floori(actual_available_lines_height / _cache.item_min_size.y)
-        available_lines_height = _cache.item_min_size.y * visible_lines
-        if visible_lines > 0:
-            panel_rect.size.y = _cache.panel_min_size.y + available_lines_height
-            final_max_height = minf(final_max_height, panel_rect.size.y)
+    # Calculate ideal amount of items and the needed space
+    var visible_items := mini(_candidates.size(), max_lines)
+    var available_height := _cache.item_min_size.y * visible_items
+    var base_rect := _line_edit.get_rect()
 
-    var screen_rect := screen_transform * panel_rect
-    max_size.y = final_max_height
-    _cache.screen_rect = screen_rect
+    # TODO: Look if more space over base rect or under it if auto.
 
-    position = _cache.screen_rect.position
-    size = _cache.screen_rect.size
+    var popup_rect := Rect2(
+        base_rect.position.x,
+        base_rect.end.y,
+        base_rect.size.x,
+        _cache.panel_min_size.y + available_height
+    )
 
-    # Update scroll bar
-    var content_rect := Rect2(Vector2.ZERO, panel_rect.size)
+    # Keep inside bounding rect by reducing visible items
+    if local_bounding_rect.end.y < popup_rect.end.y:
+        var actual_available_height := local_bounding_rect.end.y - popup_rect.position.y - _cache.panel_end_offset.y
+        visible_items = floori(actual_available_height / _cache.item_min_size.y)
+        available_height = _cache.item_min_size.y * visible_items
+        if visible_items > 0:
+            popup_rect.size.y = _cache.panel_min_size.y + available_height
+
+    # Apply popup rect (in screen coordinates)
+    var screen_transform := _line_edit.get_screen_transform()
+    var screen_rect := screen_transform * popup_rect
+    position = screen_rect.position
+    size = screen_rect.size
+
+    # Update basic rect cache
+    var panel_rect := Rect2(Vector2.ZERO, popup_rect.size)
+    _cache.panel_rect = panel_rect
+
+    var content_rect := panel_rect
     content_rect.position += _cache.panel_start_offset
     content_rect.size -= _cache.panel_total_offset
+    _cache.content_rect = content_rect
 
+    # Update scroll bar
     var scroll_bar_rect := Rect2()
-    _scroll_bar.visible = visible_lines < _candidates.size()
+    _scroll_bar.visible = visible_items < _candidates.size()
     if _scroll_bar.visible:
         var scroll_min_size := _scroll_bar.get_combined_minimum_size()
         scroll_bar_rect = Rect2(
-            content_rect.end.x - scroll_min_size.x,
+            content_rect.position.x,
             content_rect.position.y,
             scroll_min_size.x,
             content_rect.size.y
         )
-        _scroll_bar.max_value = _candidates.size()
-        _scroll_bar.page = visible_lines
+        if not is_layout_rtl():
+            scroll_bar_rect.position.x = content_rect.end.x - scroll_min_size.x
 
         _scroll_bar.position = scroll_bar_rect.position
         _scroll_bar.size = scroll_bar_rect.size
+        _scroll_bar.max_value = _candidates.size()
+        _scroll_bar.page = visible_items
+
+    _cache.scroll_bar_rect = scroll_bar_rect
+
+    # Update item rects
+    var item_rect := content_rect
+    item_rect.size.y = _cache.item_min_size.y
+    if is_layout_rtl():
+        item_rect.position.x += _cache.item_end_padding
+    else:
+        item_rect.position.x += _cache.item_start_padding
+    item_rect.size.x -= _cache.item_h_padding
+    if _scroll_bar.visible:
+        var scroll_bar_rect_offset := scroll_bar_rect.size.x
+        item_rect.size.x -= scroll_bar_rect_offset
+        if is_layout_rtl():
+            item_rect.position.x += scroll_bar_rect_offset
+    _cache.item_rect = item_rect
+
+    var icon_rect := item_rect
+    icon_rect.size.x = 16 # TODO: determine icon width
+    if is_layout_rtl():
+        icon_rect.position.x = item_rect.end.x - icon_rect.size.x
+    _cache.icon_rect = icon_rect
+
+    var icon_rect_offset := icon_rect.size.x + _cache.h_separation
+    var text_rect := item_rect
+    text_rect.size.x -= icon_rect_offset
+    if not is_layout_rtl():
+        text_rect.position.x += icon_rect_offset
+    _cache.text_rect = text_rect
 
 
 func _update_candidates(text: String) -> void:
@@ -321,6 +358,8 @@ func _gui_input(event: InputEvent) -> void:
     if event.is_action_pressed(&"ui_accept") and _selected_candidate > -1:
         _line_edit.text = _candidates[_selected_candidate].text
         _line_edit.accept_event()
+        # TODO: ?
+        #_line_edit.text_changed.emit(_line_edit.text)
         hide()
 
 
