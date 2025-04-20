@@ -2,32 +2,13 @@
 
 [ext_resource type="Script" uid="uid://c73lq0jf55vtw" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/auto_complete.gd" id="1_c81oc"]
 
-[node name="AutoComplete" type="PopupMenu"]
-size = Vector2i(100, 740)
-allow_search = false
-item_count = 12
-item_0/text = "Test 0"
-item_0/id = 0
-item_1/text = "Test 1"
-item_1/id = 1
-item_2/text = "Test 2"
-item_2/id = 2
-item_3/text = "Test 3"
-item_3/id = 3
-item_4/text = "Test 4"
-item_4/id = 4
-item_5/text = "Test 5"
-item_5/id = 5
-item_6/text = "Test 6"
-item_6/id = 6
-item_7/text = "Test 7"
-item_7/id = 7
-item_8/text = "Test 8"
-item_8/id = 8
-item_9/text = "Test 9"
-item_9/id = 9
-item_10/text = "Test 10"
-item_10/id = 10
-item_11/text = "Test 11"
-item_11/id = 11
+[node name="AutoComplete" type="Window"]
+transparent_bg = true
+gui_disable_input = true
+visible = false
+transient = true
+unresizable = true
+borderless = true
+transparent = true
+unfocusable = true
 script = ExtResource("1_c81oc")

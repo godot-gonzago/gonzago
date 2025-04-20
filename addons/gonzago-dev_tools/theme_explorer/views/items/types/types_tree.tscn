@@ -32,9 +32,6 @@ layout_mode = 2
 placeholder_text = "Filter Types"
 
 [node name="AutoComplete" parent="Toolbar/Filter" instance=ExtResource("3_csm5k")]
-size = Vector2i(136, 618)
-unfocusable = true
-max_size = Vector2i(32768, 618)
 
 [node name="AddButton" type="Button" parent="Toolbar"]
 layout_mode = 2
