@@ -4,7 +4,6 @@
 
 [node name="AutoComplete" type="Window"]
 transparent_bg = true
-gui_disable_input = true
 visible = false
 transient = true
 unresizable = true

@@ -15,7 +15,7 @@ extends Window
 
 const NodeUtil := Gonzago.NodeUtil
 
-class ThemeCache extends RefCounted:
+class _ThemeCache extends RefCounted:
     var panel: StyleBox
     var hover: StyleBox
 
@@ -50,7 +50,6 @@ class ThemeCache extends RefCounted:
         font_size = c.get_theme_font_size(&"font_size", &"PopupMenu")
         font_color = c.get_theme_color(&"font_color", &"PopupMenu")
         font_hover_color = c.get_theme_color(&"font_hover_color", &"PopupMenu")
-
         font_outline_color = c.get_theme_color(&"font_outline_color", &"PopupMenu")
         outline_size = c.get_theme_constant(&"outline_size", &"PopupMenu")
 
@@ -72,10 +71,10 @@ class ThemeCache extends RefCounted:
             font.get_height(font_size) + v_separation
         )
 
-class Item extends Object:
+class _Item extends Object:
     var text: String
     var icon: Texture2D
-    var similarity := 1.0
+    var priority := -1
 
     func _init(text: String, icon: Texture2D = null) -> void:
         self.text = text
@@ -95,9 +94,9 @@ var max_lines := 10:
         return max_lines
 
 
-var _cache := ThemeCache.new()
-var _items: Array[Item] = []
-var _candidates: Array[Item] = []
+var _cache := _ThemeCache.new()
+var _items: Array[_Item] = []
+var _candidates: Array[_Item] = []
 var _selected_candidate := -1
 var _line_edit: LineEdit
 var _panel: Control
@@ -119,23 +118,26 @@ func _notification(what: int) -> void:
             _cache.update(self)
 
             if not NodeUtil.is_node_being_edited(self):
-                # Test Data
-                for i in range(15):
-                    _items.append(Item.new("Test %d" % i))
-                close_requested.connect(hide) # TODO: This should not be necessairy
-
-                _update_size()
-                _apply_rect()
+                # TODO: Remove! This is test data!
+                var default_theme := ThemeDB.get_default_theme()
+                for type in default_theme.get_type_list():
+                    _items.append(_Item.new(type))
+                if Engine.is_editor_hint():
+                    var editor_theme := EditorInterface.get_editor_theme()
+                    for item in _items:
+                        if editor_theme.has_icon(item.text, &"EditorIcons"):
+                            item.icon = editor_theme.get_icon(item.text, &"EditorIcons")
         NOTIFICATION_THEME_CHANGED:
             if is_node_ready():
                 _cache.update(self)
-                if not NodeUtil.is_node_being_edited(self):
+                if not NodeUtil.is_node_being_edited(self) and visible:
                     _update_size()
                     _apply_rect()
         NOTIFICATION_VISIBILITY_CHANGED:
             if not NodeUtil.is_node_being_edited(self):
                 #set_focused_item(-1)
-                _apply_rect()
+                if visible:
+                    _apply_rect()
         NOTIFICATION_PARENTED:
             if NodeUtil.is_node_being_edited(self):
                 update_configuration_warnings()
@@ -173,6 +175,7 @@ func _notification(what: int) -> void:
                     _line_edit.text_changed.disconnect(_text_changed)
             _line_edit = null
         NOTIFICATION_PREDELETE:
+            _candidates.clear()
             for idx in _items.size():
                 _items[idx].free()
             _items.clear()
@@ -264,8 +267,14 @@ func _update_size() -> void:
     if window_rect.end.y < screen_rect.end.y:
         screen_rect.end.y = window_rect.end.y
 
-        var inverse_screen_transform := get_screen_transform().affine_inverse()
+        var inverse_screen_transform := screen_transform.affine_inverse()
         var local_rect := inverse_screen_transform * screen_rect
+
+        var available_lines_height := local_rect.size.y - _cache.panel_min_size.y
+        var visible_lines := floori(available_lines_height / _cache.item_size.y)
+        if visible_lines > 0:
+            local_rect.size.y = _cache.panel_min_size.y + _cache.item_size.y * visible_lines
+
         clamped_max_height = minf(clamped_max_height, local_rect.size.y)
 
     max_size.y = clamped_max_height
@@ -280,28 +289,25 @@ func _apply_rect() -> void:
 
 func _update_candidates(text: String) -> void:
     _candidates.clear()
+    _selected_candidate = -1
     if text.is_empty():
         return
 
-    if text.length() > 2:
-        for item in _items:
-            item.similarity = item.text.similarity(text)
-            if item.similarity > 0.0:
-                _candidates.append(item)
-    else:
-        for item in _items:
-            item.similarity = -item.text.findn(text)
-            if item.similarity < 1:
-                _candidates.append(item)
+    for item in _items:
+        item.priority = item.text.findn(text)
+        if item.priority == -1:
+            continue
 
-    _candidates.sort_custom(
-        func(a: Item, b: Item) -> bool:
-            if a.similarity != b.similarity:
-                return a.similarity > b.similarity
-            return a.text.naturalnocasecmp_to(b.text) < 0
-    )
+        var idx := _candidates.bsearch_custom(item, _sort_items)
+        _candidates.insert(idx, item)
 
-    _selected_candidate = -1
+
+func _sort_items(a: _Item, b: _Item) -> bool:
+    if a.priority < b.priority:
+        return true
+    if a.priority == b.priority:
+        return a.text.naturalnocasecmp_to(b.text) < 0
+    return false
 
 
 func _resized() -> void:
@@ -316,8 +322,9 @@ func _focus_entered() -> void:
 func _focus_exited() -> void:
     hide()
 
+
 func _gui_input(event: InputEvent) -> void:
-    if not visible or _candidates.is_empty():
+    if not _line_edit.has_focus() or not visible or _candidates.is_empty():
         return
 
     if event.is_action_pressed(&"ui_up") and _selected_candidate > -1:
