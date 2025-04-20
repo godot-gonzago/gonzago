@@ -31,6 +31,7 @@ class _ThemeCache extends RefCounted:
     var v_separation: int
     var item_start_padding: int
     var item_end_padding: int
+    var icon_max_width: int
 
     var panel_min_size: Vector2
     var panel_start_offset: Vector2
@@ -39,7 +40,9 @@ class _ThemeCache extends RefCounted:
     var item_h_padding: int
     var item_min_size: Vector2
 
+    var screen_rect: Rect2
     var visible_items: int
+
     var panel_rect: Rect2
     var content_rect: Rect2
     var scroll_bar_rect: Rect2
@@ -63,6 +66,7 @@ class _ThemeCache extends RefCounted:
         v_separation = c.get_theme_constant(&"v_separation", &"PopupMenu")
         item_start_padding = c.get_theme_constant(&"item_start_padding", &"PopupMenu")
         item_end_padding = c.get_theme_constant(&"item_end_padding", &"PopupMenu")
+        icon_max_width = c.get_theme_constant(&"icon_max_with", &"PopupMenu")
 
         panel_min_size = panel.get_minimum_size()
         panel_start_offset = panel.get_offset()
@@ -103,6 +107,7 @@ var _cache := _ThemeCache.new()
 var _items: Array[_Item] = []
 var _candidates: Array[_Item] = []
 var _selected_candidate := -1
+var _is_commiting := false
 var _line_edit: LineEdit
 var _panel: Control
 var _scroll_bar: VScrollBar
@@ -119,9 +124,14 @@ func _notification(what: int) -> void:
             _scroll_bar = VScrollBar.new()
             _scroll_bar.rounded = true
             _scroll_bar.custom_step = 1
-            _scroll_bar.visible = false # TODO: Handle scrollbar position and visibility
+            _scroll_bar.visible = false
+            _scroll_bar.value_changed.connect(
+                func(value: float) -> void:
+                    _panel.queue_redraw()
+            )
             add_child(_scroll_bar)
 
+            set_process_input(false)
             _cache.update(self)
 
             # TODO: Remove! This is test data!
@@ -145,11 +155,21 @@ func _notification(what: int) -> void:
                 return
 
             if not visible:
+                set_process_input(false)
                 _candidates.clear()
                 _selected_candidate = -1
+                _scroll_bar.value = 0
             else:
                 _update_size()
                 _panel.queue_redraw()
+        NOTIFICATION_VP_MOUSE_ENTER:
+            if not NodeUtil.is_node_being_edited(self):
+                set_process_input(true)
+                print("Mouse entered")
+        NOTIFICATION_VP_MOUSE_EXIT:
+            if not NodeUtil.is_node_being_edited(self):
+                set_process_input(false)
+                print("Mouse exited")
         NOTIFICATION_PARENTED:
             if NodeUtil.is_node_being_edited(self):
                 update_configuration_warnings()
@@ -232,20 +252,25 @@ func _update_size() -> void:
         base_rect.position.x,
         base_rect.end.y,
         base_rect.size.x,
-        _cache.panel_min_size.y + available_height
+        _cache.panel_total_offset.y + available_height
     )
 
     # Keep inside bounding rect by reducing visible items
-    if local_bounding_rect.end.y < popup_rect.end.y:
-        var actual_available_height := local_bounding_rect.end.y - popup_rect.position.y - _cache.panel_end_offset.y
-        visible_items = floori(actual_available_height / _cache.item_min_size.y)
+    if popup_rect.end.y > local_bounding_rect.end.y:
+        var actual_available_height := (
+            local_bounding_rect.end.y - popup_rect.position.y - _cache.panel_total_offset.y
+        )
+        visible_items = clampi(actual_available_height / _cache.item_min_size.y, 0, max_lines)
         available_height = _cache.item_min_size.y * visible_items
-        if visible_items > 0:
-            popup_rect.size.y = _cache.panel_min_size.y + available_height
+        popup_rect.size.y = _cache.panel_total_offset.y + available_height
 
-    # Apply popup rect (in screen coordinates)
+    # Update cache and apply popup rect (in screen coordinates)
     var screen_transform := _line_edit.get_screen_transform()
     var screen_rect := screen_transform * popup_rect
+
+    _cache.screen_rect = screen_rect
+    _cache.visible_items = visible_items
+
     position = screen_rect.position
     size = screen_rect.size
 
@@ -282,11 +307,6 @@ func _update_size() -> void:
     # Update item rects
     var item_rect := content_rect
     item_rect.size.y = _cache.item_min_size.y
-    if is_layout_rtl():
-        item_rect.position.x += _cache.item_end_padding
-    else:
-        item_rect.position.x += _cache.item_start_padding
-    item_rect.size.x -= _cache.item_h_padding
     if _scroll_bar.visible:
         var scroll_bar_rect_offset := scroll_bar_rect.size.x
         item_rect.size.x -= scroll_bar_rect_offset
@@ -294,8 +314,16 @@ func _update_size() -> void:
             item_rect.position.x += scroll_bar_rect_offset
     _cache.item_rect = item_rect
 
+    if is_layout_rtl():
+        item_rect.position.x += _cache.item_end_padding
+    else:
+        item_rect.position.x += _cache.item_start_padding
+    item_rect.size.x -= _cache.item_h_padding
+
     var icon_rect := item_rect
-    icon_rect.size.x = 16 # TODO: determine icon width
+    icon_rect.size.x = ThemeDB.fallback_icon.get_width() * get_theme_default_base_scale()
+    if _cache.icon_max_width > 0:
+        icon_rect.size.x = _cache.icon_max_width
     if is_layout_rtl():
         icon_rect.position.x = item_rect.end.x - icon_rect.size.x
     _cache.icon_rect = icon_rect
@@ -311,22 +339,20 @@ func _update_size() -> void:
 func _update_candidates(text: String) -> void:
     _candidates.clear()
     _selected_candidate = -1
-    if text.is_empty():
+    _scroll_bar.value = 0
+    if text.is_empty() or _is_commiting:
         hide()
         return
 
     for item in _items:
         item.priority = item.text.findn(text)
-        if item.priority == -1:
-            continue
+        if item.priority == -1: continue
         var idx := _candidates.bsearch_custom(item, _sort_items)
         _candidates.insert(idx, item)
 
     if _candidates.is_empty():
         hide()
-        return
-
-    if visible:
+    elif visible:
         _update_size()
         _panel.queue_redraw()
     else:
@@ -341,64 +367,118 @@ func _sort_items(a: _Item, b: _Item) -> bool:
     return false
 
 
+func _input(event: InputEvent) -> void:
+    if event is InputEventMouse:
+        var is_hovering := false
+
+        var offset := _cache.item_rect.size.y
+        var rect := _cache.item_rect
+        var start_index := int(_scroll_bar.value)
+        var end_index := start_index + _cache.visible_items
+        for idx in range(start_index, end_index):
+            if rect.has_point(event.position):
+                is_hovering = true
+                if _selected_candidate != idx:
+                    _selected_candidate = idx
+                    _panel.queue_redraw()
+                break
+            rect.position.y += offset
+
+        if is_hovering and _selected_candidate > -1:
+            if event is InputEventMouseButton and  event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+                set_input_as_handled()
+                _commit()
+
+
 func _gui_input(event: InputEvent) -> void:
     if not _line_edit.has_focus() or not visible or _candidates.is_empty():
         return
 
-    if event.is_action_pressed(&"ui_up") and _selected_candidate > -1:
+    var select_prev := &"ui_up"
+    var select_next := &"ui_down"
+
+    if event.is_action_pressed(select_prev, true) and _selected_candidate > -1:
         _selected_candidate = wrapi(_selected_candidate - 1, 0, _candidates.size())
+        var scroll_margin := _cache.visible_items - 1
+        _scroll_bar.set_value_no_signal(clampi(
+            _scroll_bar.value,
+            maxi(0, _selected_candidate - scroll_margin),
+            mini(_selected_candidate, _candidates.size())
+        ))
         _line_edit.accept_event()
         _panel.queue_redraw()
 
-    if event.is_action_pressed(&"ui_down"):
+    if event.is_action_pressed(select_next, true):
         _selected_candidate = wrapi(_selected_candidate + 1, 0, _candidates.size())
+        var scroll_margin := _cache.visible_items - 1
+        _scroll_bar.set_value_no_signal(clampi(
+            _scroll_bar.value,
+            maxi(0, _selected_candidate - scroll_margin),
+            mini(_selected_candidate, _candidates.size())
+        ))
         _line_edit.accept_event()
         _panel.queue_redraw()
 
     if event.is_action_pressed(&"ui_accept") and _selected_candidate > -1:
-        _line_edit.text = _candidates[_selected_candidate].text
         _line_edit.accept_event()
-        # TODO: ?
-        #_line_edit.text_changed.emit(_line_edit.text)
-        hide()
+        _commit()
+
+
+func _commit() -> void:
+    var value := _candidates[_selected_candidate].text
+    _is_commiting = true
+    _line_edit.text = value
+    _line_edit.caret_column = value.length()
+    _line_edit.text_changed.emit(_line_edit.text)
+    _is_commiting = false
+    hide()
 
 
 func _draw() -> void:
     var ci := _panel.get_canvas_item()
-    var rect := _panel.get_rect()
-    _cache.panel.draw(ci, rect)
+    _cache.panel.draw(ci, _cache.panel_rect)
 
-    var content_rect := rect
-    content_rect.position += _cache.panel_start_offset
-    content_rect.size -= _cache.panel_total_offset
+    var item_rect := _cache.item_rect
+    var icon_rect := _cache.icon_rect
+    var text_rect := _cache.text_rect
+    var rect_offset := _cache.item_rect.size.y
 
-    var line_rect := content_rect
-    line_rect.size.y = _cache.item_min_size.y
-
-    var item_rect := line_rect
-    if is_layout_rtl():
-        item_rect.position.x += _cache.item_end_padding
-    else:
-        item_rect.position.x += _cache.item_start_padding
-    item_rect.size.x -= _cache.item_h_padding
-
-    for idx in _candidates.size():
+    var start_index := int(_scroll_bar.value)
+    var end_index := start_index + _cache.visible_items
+    for idx in range(start_index, end_index):
         var item := _candidates[idx]
         if idx == _selected_candidate:
-            _cache.hover.draw(ci, line_rect)
+            _cache.hover.draw(ci, item_rect)
+        item_rect.position.y += rect_offset
 
-        var text_line := TextLine.new()
-        text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-        text_line.width = item_rect.size.x
-        text_line.add_string(item.text, _cache.font, _cache.font_size)
+        if item.text:
+            var text_line := TextLine.new()
+            text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+            text_line.width = text_rect.size.x
+            text_line.add_string(item.text, _cache.font, _cache.font_size)
+            var text_size := text_line.get_size()
+            var position := text_rect.position
+            position.y += (text_rect.size.y - text_size.y) * 0.5
+            if _cache.outline_size > 0:
+                text_line.draw_outline(
+                    ci, position,
+                    _cache.outline_size, _cache.font_outline_color
+                )
+            var color := _cache.font_color
+            if idx == _selected_candidate:
+                color = _cache.font_hover_color
+            text_line.draw(ci, position, color)
+        text_rect.position.y += rect_offset
 
-        var text_size := text_line.get_size()
-        var position := item_rect.position
-        position.y += (item_rect.size.y - text_size.y) * 0.5
-
-        if _cache.outline_size > 0:
-            text_line.draw_outline(ci, position, _cache.outline_size, _cache.font_outline_color)
-        text_line.draw(ci, position, _cache.font_color)
-
-        line_rect.position.y += line_rect.size.y
-        item_rect.position.y = line_rect.position.y
+        if item.icon:
+            var icon_size := item.icon.get_size()
+            var scale_factor := minf(
+                icon_rect.size.x / icon_size.x,
+                icon_rect.size.y / icon_size.y
+            )
+            if scale_factor < 1.0:
+                icon_size *= scale_factor
+            var half_size := icon_size * 0.5
+            var rect := Rect2(icon_rect.get_center() - half_size, icon_size)
+            item.icon.draw_rect(ci, rect, false)
+        icon_rect.position.y += rect_offset
