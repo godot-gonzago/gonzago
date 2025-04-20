@@ -6,6 +6,10 @@ extends PopupMenu
 # https://github.com/godotengine/godot/blob/master/scene/gui/popup_menu.cpp#L241
 # https://github.com/godotengine/godot/blob/master/scene/main/window.cpp#L2173
 
+# https://github.com/godotengine/godot/blob/master/scene/gui/code_edit.h
+# https://github.com/godotengine/godot/blob/master/scene/gui/code_edit.cpp
+# https://github.com/godotengine/godot/blob/master/scene/gui/code_edit.cpp#L2132
+
 @export_range(1, 10, 1, "or_greater")
 var max_lines := 10:
     set(new_max_lines):
@@ -30,6 +34,9 @@ func _notification(what: int) -> void:
     match what:
         NOTIFICATION_READY:
             #unfocusable = true
+            #transient = false
+            #always_on_top = true
+            #exclusive = false
             _update_theme_cache()
             _update_size()
             _apply_rect()
@@ -129,6 +136,11 @@ func _update_size() -> void:
 
     max_size.y = max_height
     _rect = rect
+
+    #mouse_passthrough_polygon = [
+        #Vector2.ZERO, Vector2(_rect.size.x, 0.0),
+        #_rect.size, Vector2(0.0, _rect.size.y)
+    #]
 
 
 func _apply_rect() -> void:

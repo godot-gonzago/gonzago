@@ -3,6 +3,8 @@ extends LineEdit
 
 # https://forum.godotengine.org/t/how-to-dynamically-show-search-results-of-lineedit/42058/5
 
+# This doesn't work! Unfocusable popups fail.
+
 const NodeUtil := Gonzago.NodeUtil
 
 var _popup: PopupMenu
@@ -18,14 +20,14 @@ func _init() -> void:
 func _ready() -> void:
     if NodeUtil.is_node_being_edited(self):
         return
-    
+
     # Grab focus when ready
     grab_focus()
     # When the text_changed signal is fired, filter the list
     text_changed.connect(_filter_list_and_popup)
     # start with the popup not being able to grab focus
     _popup.unfocusable = true
-    
+
     # When the popup menu is about to popup make it focusable so we can control it with the mouse
     # connect it in a deferred way so it does it at the end of the frame and does not steal the focus
     _popup.about_to_popup.connect(
@@ -44,7 +46,7 @@ func _ready() -> void:
 func _gui_input(event: InputEvent) -> void:
     if NodeUtil.is_node_being_edited(self):
         return
-    
+
     # If popup isn't visible, keep the normal behavior
     if not _popup.visible:
         return
