@@ -219,7 +219,6 @@ func _update_size() -> void:
         line_edit_rect.end.y,
         line_edit_rect.size.x,
         _cache.panel_min_size.y + available_lines_height
-        #min_size.y
     )
 
     var bounding_window := _line_edit.get_last_exclusive_window()
@@ -231,10 +230,8 @@ func _update_size() -> void:
         bounding_rect = DisplayServer.screen_get_usable_rect(screen)
 
     var screen_transform := _line_edit.get_screen_transform()
-    var local_transform := _line_edit.get_screen_transform().inverse()
-    var local_bounding_rect := local_transform * bounding_rect
-
-    print("panel rect: %s" % panel_rect)
+    var inverse_screen_transform := _line_edit.get_screen_transform().inverse()
+    var local_bounding_rect := inverse_screen_transform * bounding_rect
 
     var final_max_height := _cache.max_height
     if local_bounding_rect.end.y < panel_rect.end.y:
@@ -248,11 +245,6 @@ func _update_size() -> void:
     var screen_rect := screen_transform * panel_rect
     max_size.y = final_max_height
     _cache.screen_rect = screen_rect
-
-    print("bounding rect: %s" % bounding_rect)
-    print("screen rect: %s" % screen_rect)
-    print("local bounding rect: %s" % local_bounding_rect)
-    print("panel rect: %s" % panel_rect)
 
     position = _cache.screen_rect.position
     size = _cache.screen_rect.size
