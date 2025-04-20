@@ -111,6 +111,8 @@ func _notification(what: int) -> void:
             add_child(_panel)
 
             _scroll_bar = VScrollBar.new()
+            _scroll_bar.rounded = true
+            _scroll_bar.custom_step = 1
             _scroll_bar.visible = false # TODO: Handle scrollbar position and visibility
             add_child(_scroll_bar)
 
@@ -191,7 +193,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 func _get_contents_minimum_size() -> Vector2:
     var min_size := _cache.item_min_size
-    min_size.y *= _candidates.size()
     if _scroll_bar.visible:
         var scroll_min_size := _scroll_bar.get_combined_minimum_size()
         min_size.x += scroll_min_size.x
@@ -200,6 +201,7 @@ func _get_contents_minimum_size() -> Vector2:
     return min_size
 
 
+# TODO: Sort this, this will make it easier
 func _update_size() -> void:
     _cache.max_height = _cache.panel_min_size.y + _cache.item_min_size.y * max_lines
     if not _line_edit:
@@ -210,46 +212,71 @@ func _update_size() -> void:
     var line_edit_rect := _line_edit.get_rect()
     var min_size := get_contents_minimum_size()
 
-    var screen_transform := _line_edit.get_screen_transform()
-    var screen_rect := screen_transform * Rect2(
+    var visible_lines := mini(_candidates.size(), max_lines)
+    var available_lines_height := _cache.item_min_size.y * visible_lines
+    var panel_rect := Rect2(
         line_edit_rect.position.x,
         line_edit_rect.end.y,
         line_edit_rect.size.x,
-        min_size.y
+        _cache.panel_min_size.y + available_lines_height
+        #min_size.y
     )
 
-    var window := _line_edit.get_last_exclusive_window()
-    var window_rect: Rect2
-    if window.is_embedded():
-        window_rect = window.get_visible_rect()
+    var bounding_window := _line_edit.get_last_exclusive_window()
+    var bounding_rect: Rect2
+    if bounding_window.is_embedded():
+        bounding_rect = bounding_window.get_visible_rect()
     else:
-        var screen := window.current_screen
-        window_rect = DisplayServer.screen_get_usable_rect(screen)
+        var screen := bounding_window.current_screen
+        bounding_rect = DisplayServer.screen_get_usable_rect(screen)
 
-    var clamped_max_height := _cache.max_height
-    if window_rect.end.y < screen_rect.end.y:
-        screen_rect.end.y = window_rect.end.y
+    var screen_transform := _line_edit.get_screen_transform()
+    var local_transform := _line_edit.get_screen_transform().inverse()
+    var local_bounding_rect := local_transform * bounding_rect
 
-        var inverse_screen_transform := screen_transform.affine_inverse()
-        var local_rect := inverse_screen_transform * screen_rect
+    print("panel rect: %s" % panel_rect)
 
-        var available_lines_height := local_rect.size.y - _cache.panel_min_size.y
-        var visible_lines := floori(available_lines_height / _cache.item_min_size.y)
+    var final_max_height := _cache.max_height
+    if local_bounding_rect.end.y < panel_rect.end.y:
+        var actual_available_lines_height := local_bounding_rect.end.y - panel_rect.position.y - _cache.panel_end_offset.y
+        visible_lines = floori(actual_available_lines_height / _cache.item_min_size.y)
+        available_lines_height = _cache.item_min_size.y * visible_lines
         if visible_lines > 0:
-            local_rect.size.y = _cache.panel_min_size.y + _cache.item_min_size.y * visible_lines
+            panel_rect.size.y = _cache.panel_min_size.y + available_lines_height
+            final_max_height = minf(final_max_height, panel_rect.size.y)
 
-        clamped_max_height = minf(clamped_max_height, local_rect.size.y)
-
-    max_size.y = clamped_max_height
+    var screen_rect := screen_transform * panel_rect
+    max_size.y = final_max_height
     _cache.screen_rect = screen_rect
+
+    print("bounding rect: %s" % bounding_rect)
+    print("screen rect: %s" % screen_rect)
+    print("local bounding rect: %s" % local_bounding_rect)
+    print("panel rect: %s" % panel_rect)
 
     position = _cache.screen_rect.position
     size = _cache.screen_rect.size
 
+    # Update scroll bar
+    var content_rect := Rect2(Vector2.ZERO, panel_rect.size)
+    content_rect.position += _cache.panel_start_offset
+    content_rect.size -= _cache.panel_total_offset
 
-func _update_scrollbar() -> void:
-    var min_size := get_contents_minimum_size()
-    _scroll_bar.visible = max_size.y < min_size.y
+    var scroll_bar_rect := Rect2()
+    _scroll_bar.visible = visible_lines < _candidates.size()
+    if _scroll_bar.visible:
+        var scroll_min_size := _scroll_bar.get_combined_minimum_size()
+        scroll_bar_rect = Rect2(
+            content_rect.end.x - scroll_min_size.x,
+            content_rect.position.y,
+            scroll_min_size.x,
+            content_rect.size.y
+        )
+        _scroll_bar.max_value = _candidates.size()
+        _scroll_bar.page = visible_lines
+
+        _scroll_bar.position = scroll_bar_rect.position
+        _scroll_bar.size = scroll_bar_rect.size
 
 
 func _update_candidates(text: String) -> void:
