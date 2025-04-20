@@ -75,6 +75,7 @@ class ThemeCache extends RefCounted:
 class Item extends Object:
     var text: String
     var icon: Texture2D
+    var similarity := 1.0
 
     func _init(text: String, icon: Texture2D = null) -> void:
         self.text = text
@@ -96,6 +97,8 @@ var max_lines := 10:
 
 var _cache := ThemeCache.new()
 var _items: Array[Item] = []
+var _candidates: Array[Item] = []
+var _selected_candidate := -1
 var _line_edit: LineEdit
 var _panel: Control
 var _scroll_bar: VScrollBar
@@ -146,6 +149,8 @@ func _notification(what: int) -> void:
                     line_edit.focus_entered.connect(_focus_entered)
                 if not line_edit.focus_exited.is_connected(_focus_exited):
                     line_edit.focus_exited.connect(_focus_exited)
+                if not line_edit.gui_input.is_connected(_gui_input):
+                    line_edit.gui_input.connect(_gui_input)
                 if not line_edit.text_changed.is_connected(_text_changed):
                     line_edit.text_changed.connect(_text_changed)
             if _line_edit != line_edit:
@@ -162,6 +167,8 @@ func _notification(what: int) -> void:
                     _line_edit.focus_entered.disconnect(_focus_entered)
                 if _line_edit.focus_exited.is_connected(_focus_exited):
                     _line_edit.focus_exited.disconnect(_focus_exited)
+                if _line_edit.gui_input.is_connected(_gui_input):
+                    _line_edit.gui_input.disconnect(_gui_input)
                 if _line_edit.text_changed.is_connected(_text_changed):
                     _line_edit.text_changed.disconnect(_text_changed)
             _line_edit = null
@@ -182,7 +189,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _get_contents_minimum_size() -> Vector2:
     var min_size := _cache.panel_min_size
     min_size.x += _cache.item_size.x
-    min_size.y += _cache.item_size.y * _items.size()
+    min_size.y += _cache.item_size.y * _candidates.size()
     return min_size
 
 
@@ -205,10 +212,9 @@ func _draw() -> void:
         item_rect.position.x += _cache.item_start_padding
     item_rect.size.x -= _cache.item_h_padding
 
-    for item_idx in _items.size():
-        var item := _items[item_idx]
-
-        if item_idx % 3 == 0:
+    for idx in _candidates.size():
+        var item := _candidates[idx]
+        if idx == _selected_candidate:
             _cache.hover.draw(ci, line_rect)
 
         var text_line := TextLine.new()
@@ -272,6 +278,32 @@ func _apply_rect() -> void:
         size = _cache.screen_rect.size
 
 
+func _update_candidates(text: String) -> void:
+    _candidates.clear()
+    if text.is_empty():
+        return
+
+    if text.length() > 2:
+        for item in _items:
+            item.similarity = item.text.similarity(text)
+            if item.similarity > 0.0:
+                _candidates.append(item)
+    else:
+        for item in _items:
+            item.similarity = -item.text.findn(text)
+            if item.similarity < 1:
+                _candidates.append(item)
+
+    _candidates.sort_custom(
+        func(a: Item, b: Item) -> bool:
+            if a.similarity != b.similarity:
+                return a.similarity > b.similarity
+            return a.text.naturalnocasecmp_to(b.text) < 0
+    )
+
+    _selected_candidate = -1
+
+
 func _resized() -> void:
     _update_size()
     _apply_rect()
@@ -284,14 +316,36 @@ func _focus_entered() -> void:
 func _focus_exited() -> void:
     hide()
 
+func _gui_input(event: InputEvent) -> void:
+    if not visible or _candidates.is_empty():
+        return
+
+    if event.is_action_pressed(&"ui_up") and _selected_candidate > -1:
+        _selected_candidate = wrapi(_selected_candidate - 1, 0, _candidates.size() - 1)
+        _line_edit.accept_event()
+        _panel.queue_redraw()
+
+    if event.is_action_pressed(&"ui_down"):
+        _selected_candidate = wrapi(_selected_candidate + 1, 0, _candidates.size() - 1)
+        _line_edit.accept_event()
+        _panel.queue_redraw()
+
+    if event.is_action_pressed(&"ui_accept") and _selected_candidate > -1:
+        _line_edit.text = _candidates[_selected_candidate].text
+        _line_edit.accept_event()
+        hide()
+
+
 
 func _text_changed(new_text: String) -> void:
-    if not new_text:
+    _update_candidates(new_text)
+
+    if _candidates.is_empty():
         if visible:
             hide()
         return
 
+    _update_size()
+    _apply_rect()
     if not visible:
-        _update_size()
-        _apply_rect()
         show()
