@@ -179,6 +179,8 @@ func _notification(what: int) -> void:
             if line_edit:
                 if not line_edit.visibility_changed.is_connected(hide):
                     line_edit.visibility_changed.connect(hide)
+                if not line_edit.focus_entered.is_connected(_gained_focus):
+                    line_edit.focus_entered.connect(_gained_focus)
                 if not line_edit.focus_exited.is_connected(hide):
                     line_edit.focus_exited.connect(hide)
                 if not line_edit.gui_input.is_connected(_gui_input):
@@ -195,6 +197,8 @@ func _notification(what: int) -> void:
             if _line_edit and not NodeUtil.is_node_being_edited(self):
                 if _line_edit.visibility_changed.is_connected(hide):
                     _line_edit.visibility_changed.disconnect(hide)
+                if _line_edit.focus_entered.is_connected(_gained_focus):
+                    _line_edit.focus_entered.disconnect(_gained_focus)
                 if _line_edit.focus_exited.is_connected(hide):
                     _line_edit.focus_exited.disconnect(hide)
                 if _line_edit.gui_input.is_connected(_gui_input):
@@ -336,6 +340,11 @@ func _update_size() -> void:
     _cache.text_rect = text_rect
 
 
+func _gained_focus() -> void:
+    if not _line_edit.text.is_empty():
+        _update_candidates(_line_edit.text)
+
+
 func _update_candidates(text: String) -> void:
     _candidates.clear()
     _selected_candidate = -1
@@ -384,10 +393,19 @@ func _input(event: InputEvent) -> void:
                 break
             rect.position.y += offset
 
-        if is_hovering and _selected_candidate > -1:
-            if event is InputEventMouseButton and  event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+        var mouse_button_event := event as InputEventMouseButton
+        if mouse_button_event:
+            if is_hovering and _selected_candidate > -1 and mouse_button_event.button_index == MOUSE_BUTTON_LEFT and mouse_button_event.pressed:
                 set_input_as_handled()
                 _commit()
+
+            var scroll_dir := 0.0
+            if mouse_button_event.button_index == MOUSE_BUTTON_WHEEL_UP:
+                scroll_dir -= 1.0
+            if mouse_button_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+                scroll_dir += 1.0
+            if scroll_dir != 0.0:
+                _scroll_bar.value += scroll_dir # TODO: Find speed
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -398,30 +416,31 @@ func _gui_input(event: InputEvent) -> void:
     var select_next := &"ui_down"
 
     if event.is_action_pressed(select_prev, true) and _selected_candidate > -1:
-        _selected_candidate = wrapi(_selected_candidate - 1, 0, _candidates.size())
-        var scroll_margin := _cache.visible_items - 1
-        _scroll_bar.set_value_no_signal(clampi(
-            _scroll_bar.value,
-            maxi(0, _selected_candidate - scroll_margin),
-            mini(_selected_candidate, _candidates.size())
-        ))
+        _select(-1)
         _line_edit.accept_event()
-        _panel.queue_redraw()
 
     if event.is_action_pressed(select_next, true):
-        _selected_candidate = wrapi(_selected_candidate + 1, 0, _candidates.size())
-        var scroll_margin := _cache.visible_items - 1
-        _scroll_bar.set_value_no_signal(clampi(
-            _scroll_bar.value,
-            maxi(0, _selected_candidate - scroll_margin),
-            mini(_selected_candidate, _candidates.size())
-        ))
+        _select(1)
         _line_edit.accept_event()
-        _panel.queue_redraw()
+
+    if event.is_action_pressed(&"ui_cancel"):
+        hide()
+        _line_edit.accept_event()
 
     if event.is_action_pressed(&"ui_accept") and _selected_candidate > -1:
         _line_edit.accept_event()
         _commit()
+
+
+func _select(offset: int) -> void:
+    _selected_candidate = wrapi(_selected_candidate + offset, 0, _candidates.size())
+    var scroll_margin := _cache.visible_items - 1
+    _scroll_bar.set_value_no_signal(clampi(
+        _scroll_bar.value,
+        maxi(0, _selected_candidate - scroll_margin),
+        mini(_selected_candidate, _candidates.size())
+    ))
+    _panel.queue_redraw()
 
 
 func _commit() -> void:
