@@ -102,15 +102,27 @@ var max_lines := 10:
     get:
         return max_lines
 
+@export
+var select_all_on_submit := true
+
 
 var _cache := _ThemeCache.new()
 var _items: Array[_Item] = []
 var _candidates: Array[_Item] = []
 var _selected_candidate := -1
-var _is_commiting := false
+var _is_submiting := false
 var _line_edit: LineEdit
 var _panel: Control
 var _scroll_bar: VScrollBar
+
+
+func _init() -> void:
+    transient = true
+    unresizable = true
+    borderless = true
+    transparent = true
+    transparent_bg = true
+    unfocusable = true
 
 
 func _notification(what: int) -> void:
@@ -211,6 +223,14 @@ func _notification(what: int) -> void:
             for idx in _items.size():
                 _items[idx].free()
             _items.clear()
+
+
+func _validate_property(property: Dictionary) -> void:
+    match property.name:
+        "transient", "exclusive", "unresizable", "borderless", \
+        "transparent", "transparent_bg", "unfocusable":
+            var property_usage := PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY
+            property.usage = property_usage
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -349,7 +369,7 @@ func _update_candidates(text: String) -> void:
     _candidates.clear()
     _selected_candidate = -1
     _scroll_bar.value = 0
-    if text.is_empty() or _is_commiting:
+    if text.is_empty() or _is_submiting:
         hide()
         return
 
@@ -377,35 +397,40 @@ func _sort_items(a: _Item, b: _Item) -> bool:
 
 
 func _input(event: InputEvent) -> void:
-    if event is InputEventMouse:
-        var is_hovering := false
+    var mouse_event := event as InputEventMouse
+    if not mouse_event:
+        return
 
-        var offset := _cache.item_rect.size.y
-        var rect := _cache.item_rect
-        var start_index := int(_scroll_bar.value)
-        var end_index := start_index + _cache.visible_items
-        for idx in range(start_index, end_index):
-            if rect.has_point(event.position):
-                is_hovering = true
-                if _selected_candidate != idx:
-                    _selected_candidate = idx
-                    _panel.queue_redraw()
-                break
-            rect.position.y += offset
+    var is_hovering := false
+    var offset := _cache.item_rect.size.y
+    var rect := _cache.item_rect
 
-        var mouse_button_event := event as InputEventMouseButton
-        if mouse_button_event:
-            if is_hovering and _selected_candidate > -1 and mouse_button_event.button_index == MOUSE_BUTTON_LEFT and mouse_button_event.pressed:
-                set_input_as_handled()
-                _commit()
+    var start_index := int(_scroll_bar.value)
+    var end_index := start_index + _cache.visible_items
+    for idx in range(start_index, end_index):
+        if rect.has_point(mouse_event.position):
+            is_hovering = true
+            if _selected_candidate != idx:
+                _selected_candidate = idx
+                _panel.queue_redraw()
+            break
+        rect.position.y += offset
 
-            var scroll_dir := 0.0
-            if mouse_button_event.button_index == MOUSE_BUTTON_WHEEL_UP:
-                scroll_dir -= 1.0
-            if mouse_button_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-                scroll_dir += 1.0
-            if scroll_dir != 0.0:
-                _scroll_bar.value += scroll_dir # TODO: Find speed
+    var mouse_button_event := event as InputEventMouseButton
+    if not mouse_button_event:
+        return
+
+    if is_hovering and _selected_candidate > -1 and mouse_button_event.button_index == MOUSE_BUTTON_LEFT and mouse_button_event.pressed:
+        set_input_as_handled()
+        _submit()
+
+    var scroll_dir := 0.0
+    if mouse_button_event.button_index == MOUSE_BUTTON_WHEEL_UP:
+        scroll_dir -= 1.0
+    if mouse_button_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+        scroll_dir += 1.0
+    if scroll_dir != 0.0:
+        _scroll_bar.value += scroll_dir # TODO: Find speed
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -429,7 +454,7 @@ func _gui_input(event: InputEvent) -> void:
 
     if event.is_action_pressed(&"ui_accept") and _selected_candidate > -1:
         _line_edit.accept_event()
-        _commit()
+        _submit()
 
 
 func _select(offset: int) -> void:
@@ -443,13 +468,15 @@ func _select(offset: int) -> void:
     _panel.queue_redraw()
 
 
-func _commit() -> void:
+func _submit() -> void:
+    _is_submiting = true
     var value := _candidates[_selected_candidate].text
-    _is_commiting = true
     _line_edit.text = value
     _line_edit.caret_column = value.length()
+    if select_all_on_submit:
+        _line_edit.select_all()
     _line_edit.text_changed.emit(_line_edit.text)
-    _is_commiting = false
+    _is_submiting = false
     hide()
 
 
