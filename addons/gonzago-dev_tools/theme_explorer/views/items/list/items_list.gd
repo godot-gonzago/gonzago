@@ -165,12 +165,12 @@ class _ThemeCache extends RefCounted:
         icon_min_size = ThemeDB.fallback_icon.get_size() * c.get_theme_default_base_scale()
 
         header_start_offset = Vector2(
-            h_separation,
-            v_separation
+            panel.content_margin_left,
+            panel.content_margin_top
         )
         header_end_offset = Vector2(
-            h_separation,
-            v_separation
+            panel.content_margin_right,
+            panel.content_margin_bottom
         )
         header_total_offset = header_start_offset + header_start_offset
 
@@ -212,6 +212,7 @@ var _v_scroll_bar: VScrollBar
 var _h_scroll_bar: HScrollBar
 
 var _header_rect: Rect2
+var _header_content_rect: Rect2
 var _header_foldout_rect: Rect2
 var _header_icon_rect: Rect2
 var _header_text_rect: Rect2
@@ -257,6 +258,8 @@ func _notification(what: int) -> void:
             _update_size()
             queue_redraw()
         NOTIFICATION_RESIZED:
+            if not is_node_ready():
+                return
             _update_size()
             queue_redraw()
         NOTIFICATION_DRAW:
@@ -265,12 +268,17 @@ func _notification(what: int) -> void:
 
             var header_offset := _cache.header_min_size.y
             var header_rect := _header_rect
+            var header_content_rect := _header_content_rect
             var foldout_rect := _header_foldout_rect
+            foldout_rect.size.y = foldout_rect.size.x
+            foldout_rect.position.y += (_header_foldout_rect.size.y - foldout_rect.size.y) * 0.5
             var icon_rect := _header_icon_rect
+            icon_rect.size.y = icon_rect.size.x
+            icon_rect.position.y += (_header_icon_rect.size.y - icon_rect.size.y) * 0.5
             var text_rect := _header_text_rect
             for data_type in Theme.DATA_TYPE_MAX:
                 if data_type % 2 == 0:
-                    draw_style_box(_cache.selected, header_rect)
+                    draw_style_box(_cache.selected, header_content_rect)
 
                 var header := _headers[data_type]
                 if header.folded:
@@ -296,6 +304,7 @@ func _notification(what: int) -> void:
                 text_line.draw(ci, position, color)
 
                 header_rect.position.y += header_offset
+                header_content_rect.position.y += header_offset
                 foldout_rect.position.y += header_offset
                 icon_rect.position.y += header_offset
                 text_rect.position.y += header_offset
@@ -382,18 +391,18 @@ func _update_size() -> void:
     _header_rect = viewport_rect
     _header_rect.size.y = _cache.header_min_size.y
 
-    var header_content_rect := _header_rect
-    header_content_rect.position += _cache.header_start_offset
-    header_content_rect.size -= _cache.header_total_offset
+    _header_content_rect = _header_rect
+    _header_content_rect.position += _cache.header_start_offset
+    _header_content_rect.size -= _cache.header_total_offset
 
-    _header_foldout_rect = header_content_rect
-    _header_foldout_rect.size.x = _cache.icon_min_size.x
+    _header_foldout_rect = _header_content_rect
+    _header_foldout_rect.size.x = _cache.arrow.get_width()
 
-    _header_icon_rect = header_content_rect
+    _header_icon_rect = _header_content_rect
     _header_icon_rect.position.x = _header_foldout_rect.end.x + _cache.h_separation
     _header_icon_rect.size.x = _cache.icon_min_size.x
 
-    _header_text_rect = header_content_rect
+    _header_text_rect = _header_content_rect
     var header_text_offset := _header_foldout_rect.size.x + _header_icon_rect.size.x + _cache.h_separation * 2
     _header_text_rect.position.x += header_text_offset
     _header_text_rect.size.x -= header_text_offset
