@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://ejo1jf6smwlu"]
 
-[ext_resource type="Script" uid="uid://by27t0v8r56kw" path="res://addons/gonzago-dev_tools/to_dos/todos.gd" id="1_6boog"]
+[ext_resource type="Script" uid="uid://by27t0v8r56kw" path="res://addons/gonzago-dev_tools/todos/todos.gd" id="1_6boog"]
 
 [sub_resource type="Image" id="Image_e6jbg"]
 data = {

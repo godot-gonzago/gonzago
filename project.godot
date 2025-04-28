@@ -46,7 +46,7 @@ window/size/window_height_override=720
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gonzago-dev_tools/plugin.cfg", "res://addons/gonzago-dev_tools/plugin_refresher/plugin.cfg", "res://addons/gonzago-dev_tools/theme_explorer/plugin.cfg", "res://addons/gonzago-dev_tools/to_do/plugin.cfg", "res://addons/gonzago-dev_tools/to_dos/plugin.cfg", "res://addons/gonzago/editor/interfaces/plugin.cfg", "res://addons/gonzago/editor/plugins/plugin.cfg", "res://addons/gonzago/plugin.cfg")
+enabled=PackedStringArray("res://addons/gonzago-dev_tools/plugin.cfg", "res://addons/gonzago-dev_tools/plugin_refresher/plugin.cfg", "res://addons/gonzago-dev_tools/theme_explorer/plugin.cfg", "res://addons/gonzago-dev_tools/todos/plugin.cfg", "res://addons/gonzago/editor/interfaces/plugin.cfg", "res://addons/gonzago/editor/plugins/plugin.cfg", "res://addons/gonzago/plugin.cfg")
 
 [input]
 
