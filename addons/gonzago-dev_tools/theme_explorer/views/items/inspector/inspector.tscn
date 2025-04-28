@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://bn16utcatxkgb" path="res://addons/gonzago-dev_tools/theme_explorer/views/items/inspector/inspector.gd" id="1_wrjxo"]
 [ext_resource type="Script" uid="uid://fkalipf2jmdp" path="res://addons/gonzago/utils/theme/theme_icon_reference.gd" id="2_wrjxo"]
 
-
 [sub_resource type="Texture2D" id="Texture2D_wrjxo"]
 resource_local_to_scene = false
 resource_name = ""
