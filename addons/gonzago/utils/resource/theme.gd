@@ -689,6 +689,12 @@ static func has_type(
     return false
 
 
+## Returns [code]true[/code] if [param type] is in the default theme.
+static func is_default_type(type: StringName) -> bool:
+    var default_theme := ThemeDB.get_default_theme()
+    return type in default_theme.get_type_list()
+
+
 ## Returns [code]true[/code] if [param type] is a built-in type.[br][br]
 ## This uses [method ClassDB.class_get_api_type] to look for types.
 ## The api type for [param type] needs to be smaller than or equal to
@@ -805,7 +811,7 @@ static func get_base_type_for_theme_item(
 ## Returns [code]true[/code] if the given theme item is a built-in theme item.[br][br]
 ## Checks if the given theme item is in the default theme referenced in
 ## [method ThemeDB.get_default_theme].
-static func is_built_in_theme_item(
+static func is_default_theme_item(
     data_type: Theme.DataType,
     name: StringName,
     theme_type: StringName

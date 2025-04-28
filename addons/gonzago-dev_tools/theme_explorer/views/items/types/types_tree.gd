@@ -10,6 +10,17 @@ const ThemeUtil := Gonzago.ThemeUtil
 
 signal theme_type_selected(theme_type: StringName)
 
+enum _MenuOptions {
+    ADD,
+    OVERRIDE,
+    REMOVE,
+    RENAME,
+    DUPLICATE,
+    COPY,
+    PASTE,
+    DEFAULT_THEME_TYPE
+}
+
 @onready var _add_button := get_node("Toolbar/AddButton") as Button
 @onready var _tree := get_node("Tree") as Tree
 
@@ -59,8 +70,6 @@ func _build_type_item(item: TreeItem, type: StringName) -> void:
     item.set_metadata(0, type)
     item.set_text(0, type)
     item.set_text_overrun_behavior(0, TextServer.OVERRUN_TRIM_ELLIPSIS)
-    if not _is_read_only:
-        item.add_button(0, ThemeDB.fallback_icon, 0)
 
 
 func _update_tree() -> void:
@@ -79,17 +88,24 @@ func _update_type_item(item: TreeItem) -> void:
     var icon := ThemeUtil.get_theme_type_icon(type)
     item.set_icon(0, icon)
 
-    var is_default := not ThemeUtil.has_type(_theme, type)
-    var color := get_theme_color(&"font_color", &"Tree")
-    if is_default:
-        color = get_theme_color(&"font_disabled_color", &"Tree")
-    item.set_custom_color(0, color)
+    item.clear_custom_color(0)
+    item.clear_buttons()
+
+    var has_item := ThemeUtil.has_type(_theme, type)
+    var is_default := ThemeUtil.is_default_type(type)
+    var is_built_in := ThemeUtil.is_built_in_type(type)
 
     if not _is_read_only:
-        if is_default:
-            item.set_button(0, 0, get_theme_icon(&"Add", &"EditorIcons"))
-        else:
-            item.set_button(0, 0, get_theme_icon(&"Remove", &"EditorIcons"))
+        if has_item:
+            item.add_button(0, get_theme_icon(&"Remove", &"EditorIcons"), _MenuOptions.REMOVE)
+        elif is_default:
+            item.add_button(0, get_theme_icon(&"Add", &"EditorIcons"), _MenuOptions.OVERRIDE)
+
+    if not has_item and is_default:
+        item.set_custom_color(0, get_theme_color(&"font_disabled_color", &"Tree"))
+        #item.add_button(0, get_theme_icon(&"Instance", &"EditorIcons"), _MenuOptions.DEFAULT_THEME_TYPE)
+        #var idx := item.get_button_by_id(0, _Buttons.DEFAULT_THEME_TYPE)
+        #item.set_button_tooltip_text(0, idx, "Theme type is in the default theme")
 
 
 func _on_tree_item_selected() -> void:
@@ -150,4 +166,10 @@ func _on_tree_button_clicked(
 ) -> void:
     var type := item.get_metadata(0) as StringName
     var is_default := not ThemeUtil.has_type(_theme, type)
+    pass
+
+
+func _on_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+    var item := _tree.get_item_at_position(mouse_position)
+    var type := item.get_metadata(0) as StringName
     pass

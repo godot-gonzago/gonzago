@@ -49,4 +49,5 @@ hide_root = true
 [connection signal="button_clicked" from="Tree" to="." method="_on_tree_button_clicked"]
 [connection signal="item_activated" from="Tree" to="." method="_on_tree_item_activated"]
 [connection signal="item_edited" from="Tree" to="." method="_on_tree_item_edited"]
+[connection signal="item_mouse_selected" from="Tree" to="." method="_on_tree_item_mouse_selected"]
 [connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]
