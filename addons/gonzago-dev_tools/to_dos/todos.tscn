@@ -15,6 +15,7 @@ data = {
 image = SubResource("Image_e6jbg")
 
 [node name="ToDos" type="VBoxContainer"]
+editor_description = "TODO: Derp"
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

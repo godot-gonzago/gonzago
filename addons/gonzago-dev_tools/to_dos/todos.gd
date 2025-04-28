@@ -19,7 +19,7 @@ func _notification(what: int) -> void:
 
             var fs := EditorInterface.get_resource_filesystem()
             fs.sources_changed.connect(_sources_changed)
-            _search_scripts()
+            _search()
         NOTIFICATION_THEME_CHANGED:
             if is_node_ready():
                 _update_theme()
@@ -32,10 +32,10 @@ func _update_theme() -> void:
 
 func _sources_changed(exist: bool) -> void:
     _dirty = true
-    _search_scripts()
+    _search()
 
 
-func _search_scripts() -> void:
+func _search() -> void:
     _tree.clear()
     _tree.create_item()
 
@@ -59,8 +59,70 @@ func _search_sub_dirs(fs: EditorFileSystem, dir: EditorFileSystemDirectory) -> v
         _search_sub_dirs(fs, sub_dir)
 
 
+func _search_scripts(script_path: String) -> void:
+    var script := ResourceLoader.load(script_path, &"Script") as Script
+    if script.has_source_code():
+        var value := script.source_code
+        # TODO: Check text
+        var line := 0
+        var column := 0
+
+
+func _search_scene(scene_path: String) -> void:
+    var packed_scene := ResourceLoader.load(scene_path, &"PackedScene") as PackedScene
+    var state := packed_scene.get_state()
+    for idx in state.get_node_count():
+        for prop_idx in state.get_node_property_count(idx):
+            if state.get_node_property_name(idx, prop_idx) != &"editor_description":
+                continue
+            var value := str(state.get_node_property_value(idx, prop_idx))
+            # TODO: Check text
+            var node_path := state.get_node_path(idx)
+
+
 func _on_tree_item_activated() -> void:
     var item := _tree.get_selected()
     var file_path := item.get_tooltip_text(0)
     var script := ResourceLoader.load(file_path, &"Script") as Script
     EditorInterface.edit_script(script)
+
+
+func _data() -> void:
+    # https://peps.python.org/pep-0350/#mnemonics
+    var tags := [
+        "TODO", "[ ]",
+        "DONE", "[x]",
+        "FIXME", "FIXIT", "FIX",
+        "BUG",
+        "HACK", "KLUDGE",
+        "XXX",
+        "INFO",
+        "ERROR", "ERR",
+        "WARNING", "WARN"
+    ]
+
+    var bug := get_theme_icon(&"Debug", &"EditorIcons") # White Bug
+    var watch := get_theme_icon(&"GuiVisibilityXray", &"EditorIcons") # Open £ye
+    var heath := get_theme_icon(&"Heart", &"EditorIcons") # Heart
+    var check := get_theme_icon(&"ImportCheck", &"EditorIcons") # Green Checkmark
+    var fail := get_theme_icon(&"ImportFail", &"EditorIcons") # Red X
+    var info := get_theme_icon(&"Info", &"EditorIcons") # Question mark in white circle
+    var node_info := get_theme_icon(&"NodeInfo", &"EditorIcons") # i in white circle
+    var node_warning := get_theme_icon(&"NodeWarning", &"EditorIcons") # Exclamation mark in yellow triangle
+    var node_warning_2 := get_theme_icon(&"NodeWarning2", &"EditorIcons") # Exclamation mark in yellow triangle with 2 red dots
+    var node_warning_3 := get_theme_icon(&"NodeWarning3", &"EditorIcons") # Exclamation mark in yellow triangle with 3 red dots
+    var node_warning_4_plus := get_theme_icon(&"NodeWarning4Plus", &"EditorIcons") # Exclamation mark in yellow triangle with 4 red dots
+    var lock := get_theme_icon(&"Lock", &"EditorIcons") # White lock
+    var notification := get_theme_icon(&"Notification", &"EditorIcons") # White bell
+    var favorites := get_theme_icon(&"Favorites", &"EditorIcons") # White star
+    var pin := get_theme_icon(&"Pin", &"EditorIcons") # White pin
+    var skeleton := get_theme_icon(&"SkeletonPreview", &"EditorIcons") # White skull
+    var status_error := get_theme_icon(&"StatusError", &"EditorIcons") # X in white circle
+    var status_success := get_theme_icon(&"StatusSuccess", &"EditorIcons") # Check mark in green circle
+    var status_warning := get_theme_icon(&"StatusWarning", &"EditorIcons") # Exclamation mark in yellow circle
+
+    var error_color := get_theme_color(&"error_color", &"Editor") # red
+    var success_color := get_theme_color(&"success_color", &"Editor") # green
+    var warning_color := get_theme_color(&"warning_color", &"Editor") # yellow
+    var property_readonly_warning_color := get_theme_color(&"readonly_warning_color", &"EditorProperty") # dark red
+    var property_warning_color := get_theme_color(&"warning_color", &"EditorProperty") # dark yellow
