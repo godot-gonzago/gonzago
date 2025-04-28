@@ -52,7 +52,9 @@ func _search_sub_dirs(fs: EditorFileSystem, dir: EditorFileSystemDirectory) -> v
             var file_path := dir.get_path().path_join(file_name)
             var root := _tree.get_root()
             var item := root.create_child()
+            var icon := _get_icon_for_type(file_type)
             item.set_text(0, file_name)
+            item.set_icon(0, icon)
             item.set_tooltip_text(0, file_path)
     for sub_dir_idx in dir.get_subdir_count():
         var sub_dir := dir.get_subdir(sub_dir_idx)
@@ -78,6 +80,15 @@ func _search_scene(scene_path: String) -> void:
             var value := str(state.get_node_property_value(idx, prop_idx))
             # TODO: Check text
             var node_path := state.get_node_path(idx)
+
+
+func _get_icon_for_type(type: StringName) -> Texture2D:
+    var editor_theme := EditorInterface.get_editor_theme()
+    while type:
+        if editor_theme.has_icon(type, &"EditorIcons"):
+            return editor_theme.get_icon(type, &"EditorIcons")
+        type = ClassDB.get_parent_class(type)
+    return editor_theme.get_icon(&"ObjectDisabled", &"EditorIcons")
 
 
 func _on_tree_item_activated() -> void:
