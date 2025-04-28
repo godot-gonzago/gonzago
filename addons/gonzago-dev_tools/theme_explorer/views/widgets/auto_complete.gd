@@ -53,6 +53,7 @@ class _ThemeCache extends RefCounted:
     var text_rect: Rect2
 
     func update(c: Window) -> void:
+        # TODO: Check local overrides first
         panel = c.get_theme_stylebox(&"panel", &"PopupMenu")
         hover = c.get_theme_stylebox(&"hover", &"PopupMenu")
 
@@ -125,30 +126,30 @@ func _init() -> void:
     transparent_bg = true
     unfocusable = true
 
+    _panel = Control.new()
+    _panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    _panel.draw.connect(_draw)
+    add_child(_panel, false, Node.INTERNAL_MODE_FRONT)
+
+    _scroll_bar = VScrollBar.new()
+    _scroll_bar.rounded = true
+    _scroll_bar.custom_step = 1
+    _scroll_bar.visible = false
+    _scroll_bar.value_changed.connect(
+        func(value: float) -> void:
+            _panel.queue_redraw()
+    )
+    add_child(_scroll_bar, false, Node.INTERNAL_MODE_BACK)
+
 
 func _notification(what: int) -> void:
     match what:
         NOTIFICATION_READY:
-            _panel = Control.new()
-            _panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-            _panel.draw.connect(_draw)
-            add_child(_panel)
-
-            _scroll_bar = VScrollBar.new()
-            _scroll_bar.rounded = true
-            _scroll_bar.custom_step = 1
-            _scroll_bar.visible = false
-            _scroll_bar.value_changed.connect(
-                func(value: float) -> void:
-                    _panel.queue_redraw()
-            )
-            add_child(_scroll_bar)
-
             set_process_input(false)
             _cache.update(self)
 
             # TODO: Remove! This is test data!
-            if not NodeUtil.is_node_being_edited(self):
+            if not NodeUtil.is_node_being_edited(self) and _items.size() == 0:
                 var default_theme := ThemeDB.get_default_theme()
                 for type in default_theme.get_type_list():
                     _items.append(_Item.new(type))
@@ -158,11 +159,12 @@ func _notification(what: int) -> void:
                         if editor_theme.has_icon(item.text, &"EditorIcons"):
                             item.icon = editor_theme.get_icon(item.text, &"EditorIcons")
         NOTIFICATION_THEME_CHANGED:
-            if is_node_ready():
-                _cache.update(self)
-                if not NodeUtil.is_node_being_edited(self) and visible:
-                    _update_size()
-                _panel.queue_redraw()
+            if not is_node_ready():
+                return
+            _cache.update(self)
+            if not NodeUtil.is_node_being_edited(self) and visible:
+                _update_size()
+            _panel.queue_redraw()
         NOTIFICATION_VISIBILITY_CHANGED:
             if NodeUtil.is_node_being_edited(self):
                 return
@@ -178,11 +180,9 @@ func _notification(what: int) -> void:
         NOTIFICATION_VP_MOUSE_ENTER:
             if not NodeUtil.is_node_being_edited(self):
                 set_process_input(true)
-                print("Mouse entered")
         NOTIFICATION_VP_MOUSE_EXIT:
             if not NodeUtil.is_node_being_edited(self):
                 set_process_input(false)
-                print("Mouse exited")
         NOTIFICATION_PARENTED:
             if NodeUtil.is_node_being_edited(self):
                 update_configuration_warnings()
