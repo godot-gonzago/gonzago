@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cw1h6kcqnfnfn"]
+
+[ext_resource type="Script" uid="uid://cdsh1kjl8oa0c" path="res://addons/gonzago-dev_tools/theme_explorer/views/widgets/resource_picker.gd" id="1_20d25"]
+
+[node name="ResourcePicker" type="HBoxContainer"]
+script = ExtResource("1_20d25")
