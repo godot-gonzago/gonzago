@@ -113,7 +113,8 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 if constant_type == ThemeUtil.ConstantType.FLAG:
                     item.set_suffix(1, "flag")
             Theme.DATA_TYPE_FONT:
-                pass
+                item.set_cell_mode(1, TreeItem.CELL_MODE_CUSTOM)
+                item.set_custom_draw_callback(1, _custom_draw_font)
             Theme.DATA_TYPE_FONT_SIZE:
                 var value: int = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_FONT_SIZE, theme_item, _theme_type)
                 item.set_text(1, str(value))
@@ -123,11 +124,53 @@ func _update_types_items(parent: TreeItem, data_type: Theme.DataType) -> bool:
                 item.set_icon(1, value)
                 item.set_icon_max_width(1, 16)
             Theme.DATA_TYPE_STYLEBOX:
-                pass
+                item.set_cell_mode(1, TreeItem.CELL_MODE_CUSTOM)
+                item.set_editable(1, true)
 
         if item.visible:
             has_visibile_children = true
     return has_visibile_children
+
+
+func _custom_draw_font(item: TreeItem, rect: Rect2) -> void:
+    var theme_item := item.get_text(0)
+    var value: Font = ThemeUtil.get_theme_item(_theme, Theme.DATA_TYPE_FONT, theme_item, _theme_type)
+
+    var sb := get_theme_stylebox(&"normal", &"Button")
+    _tree.draw_style_box(sb, rect)
+    if item.is_selected:
+        var sel_sb := get_theme_stylebox(&"focus", &"Button")
+        _tree.draw_style_box(sel_sb, rect)
+
+
+func _on_tree_custom_item_clicked(mouse_button_index: int) -> void:
+    var column := _tree.get_selected_column()
+    if column != 1:
+        return
+
+    var item := _tree.get_selected()
+    var theme_item := item.get_text(0)
+    print("Custom Item Clicked: %s" % theme_item)
+
+
+func _on_tree_item_mouse_selected(mouse_position: Vector2, mouse_button_index: int) -> void:
+    var column := _tree.get_column_at_position(mouse_position)
+    if column != 1:
+        return
+
+    var item := _tree.get_item_at_position(mouse_position)
+    var theme_item := item.get_text(0)
+    print("Mouse Selected: %s" % theme_item)
+
+
+func _on_tree_item_edited() -> void:
+    var column := _tree.get_edited_column()
+    if column != 1:
+        return
+
+    var item := _tree.get_edited()
+    var theme_item := item.get_text(0)
+    print("Editited: %s" % theme_item)
 
 
 func _on_tree_item_selected() -> void:
@@ -141,6 +184,8 @@ func _on_tree_item_selected() -> void:
         theme_item_selected.emit(data_type, theme_type, theme_item)
     else:
         data_type_selected.emit(data_type, theme_type)
+
+    _tree.queue_redraw()
 
 #region List
 

@@ -176,4 +176,7 @@ select_mode = 1
 [node name="ItemsList" parent="." instance=ExtResource("4_b7hj8")]
 layout_mode = 2
 
+[connection signal="custom_item_clicked" from="Tree" to="." method="_on_tree_custom_item_clicked"]
+[connection signal="item_edited" from="Tree" to="." method="_on_tree_item_edited"]
+[connection signal="item_mouse_selected" from="Tree" to="." method="_on_tree_item_mouse_selected"]
 [connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]
