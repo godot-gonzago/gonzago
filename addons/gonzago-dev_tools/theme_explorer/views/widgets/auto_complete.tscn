@@ -5,3 +5,4 @@
 [node name="AutoComplete" type="Window"]
 visible = false
 script = ExtResource("1_c81oc")
+item_count = 0

@@ -2,22 +2,6 @@
 extends RefCounted
 
 
-static func has_theme_override(node: Node, data_type: Theme.DataType, name: StringName) -> bool:
-    if not node is Control or not node is Window:
-        return false
-
-    var type: String
-    match data_type:
-        Theme.DATA_TYPE_COLOR:     type = "color"
-        Theme.DATA_TYPE_CONSTANT:  type = "constant"
-        Theme.DATA_TYPE_FONT:      type = "font"
-        Theme.DATA_TYPE_FONT_SIZE: type = "font_size"
-        Theme.DATA_TYPE_ICON:      type = "icon"
-        Theme.DATA_TYPE_STYLEBOX:  type = "stylebox"
-        _:                        return false
-    return node.callv("has_theme_%s_override" % type, [name]) as bool
-
-
 static func get_theme_override_group_property() -> Dictionary:
     return {
         "name": "Theme Overrides",
@@ -28,20 +12,18 @@ static func get_theme_override_group_property() -> Dictionary:
     }
 
 
-static func is_theme_override_property(property: Dictionary) -> bool:
-    var name := property.get("name", &"") as StringName
-    return name.begins_with("theme_override_")
+static func is_theme_override_property(property: StringName) -> bool:
+    return property and property.begins_with("theme_override_")
 
 
-static func get_theme_override_property(node: Node, property: Dictionary) -> Variant:
+static func get_theme_override_property(node: Node, property: StringName) -> Variant:
     if not node is Control or not node is Window:
         return null
 
-    var property_name := property.get("name", &"") as StringName
-    if not property_name or not property_name.begins_with("theme_override_"):
+    if not property or not property.begins_with("theme_override_"):
         return null
 
-    var split := property_name.split("/", false, 1)
+    var split := property.split("/", false, 1)
     if split.size() != 2:
         return null
 
@@ -52,15 +34,14 @@ static func get_theme_override_property(node: Node, property: Dictionary) -> Var
     return null
 
 
-static func set_theme_override_property(node: Node, property: Dictionary, value: Variant) -> bool:
+static func set_theme_override_property(node: Node, property: StringName, value: Variant) -> bool:
     if not node is Control or not node is Window:
         return false
 
-    var property_name := property.get("name", &"") as StringName
-    if not property_name or not property_name.begins_with("theme_override_"):
+    if not property or not property.begins_with("theme_override_"):
         return false
 
-    var split := property_name.split("/", false, 1)
+    var split := property.split("/", false, 1)
     if split.size() != 2:
         return false
 
@@ -75,16 +56,15 @@ static func set_theme_override_property(node: Node, property: Dictionary, value:
 
 
 static func get_theme_override_property_item(
+    node: Node,
     data_type: Theme.DataType,
-    name: StringName,
-    has_override: bool
+    name: StringName
 ) -> Dictionary:
     var cls_name := &""
     var type := TYPE_NIL
     var hint := PROPERTY_HINT_NONE
     var hint_string := ""
 
-    var property := {}
     match data_type:
         Theme.DATA_TYPE_COLOR:
             name = "theme_override_colors/%s" % name
@@ -119,7 +99,7 @@ static func get_theme_override_property_item(
             hint_string = "StyleBox"
 
     var usage := PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE
-    if has_override:
+    if has_theme_override(node, data_type, name):
         usage |= PROPERTY_USAGE_CHECKED
 
     return {
@@ -127,3 +107,19 @@ static func get_theme_override_property_item(
         "hint": hint, "hint_string": hint_string,
         "usage": usage
     }
+
+
+static func has_theme_override(node: Node, data_type: Theme.DataType, name: StringName) -> bool:
+    if not node is Control or not node is Window:
+        return false
+
+    var type: String
+    match data_type:
+        Theme.DATA_TYPE_COLOR:     type = "color"
+        Theme.DATA_TYPE_CONSTANT:  type = "constant"
+        Theme.DATA_TYPE_FONT:      type = "font"
+        Theme.DATA_TYPE_FONT_SIZE: type = "font_size"
+        Theme.DATA_TYPE_ICON:      type = "icon"
+        Theme.DATA_TYPE_STYLEBOX:  type = "stylebox"
+        _:                        return false
+    return node.callv("has_theme_%s_override" % type, [name]) as bool

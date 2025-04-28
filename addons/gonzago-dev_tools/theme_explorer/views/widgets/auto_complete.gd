@@ -14,6 +14,7 @@ extends Window
 
 
 const NodeUtil := Gonzago.NodeUtil
+const ThemePropertiesUtil := preload("uid://cquh4vm0q62u7")
 
 class _ThemeCache extends RefCounted:
     var panel: StyleBox
@@ -86,7 +87,7 @@ class _Item extends Object:
     var icon: Texture2D
     var priority := -1
 
-    func _init(text: String, icon: Texture2D = null) -> void:
+    func _init(text: String = "", icon: Texture2D = null) -> void:
         self.text = text
         self.icon = icon
 
@@ -226,11 +227,169 @@ func _notification(what: int) -> void:
 
 
 func _validate_property(property: Dictionary) -> void:
-    match property.name:
+    var property_name := property.get("name", &"") as StringName
+    match property_name:
         "transient", "exclusive", "unresizable", "borderless", \
         "transparent", "transparent_bg", "unfocusable":
             var property_usage := PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_READ_ONLY
-            property.usage = property_usage
+            property["usage"] = property_usage
+
+
+func _property_can_revert(property: StringName) -> bool:
+    if property.begins_with("item_"):
+        var split := property.split("/")
+        if split.size() < 2:
+            return false
+        if not split[0].trim_prefix("item_").is_valid_int():
+            return false
+        match split[1]:
+            &"text", &"icon": return true
+        return false
+
+    if ThemePropertiesUtil.is_theme_override_property(property):
+        return true
+    return false
+
+
+func _property_get_revert(property: StringName) -> Variant:
+    if property.begins_with("item_"):
+        var split := property.split("/")
+        if split.size() < 2:
+            return false
+        if not split[0].trim_prefix("item_").is_valid_int():
+            return false
+        if split[1] == &"text":
+            return ""
+        return null
+
+    return null
+
+
+func _set(property: StringName, value: Variant) -> bool:
+    if property == &"item_count":
+        var old_size := _items.size()
+        var new_size := int(value)
+        if old_size > new_size:
+            for i in range(old_size - 1, new_size - 1, -1):
+                _items[i].free()
+            _items.resize(new_size)
+            notify_property_list_changed()
+        elif old_size < new_size:
+            _items.resize(new_size)
+            for i in range(old_size, new_size):
+                _items[i] = _Item.new()
+            notify_property_list_changed()
+        return true
+
+    if property.begins_with("item_"):
+        var split := property.split("/")
+        if split.size() < 2:
+            return false
+        var str_idx := split[0].trim_prefix("item_")
+        if not str_idx.is_valid_int():
+            return false
+        var idx := int(str_idx)
+        if not _items[idx]:
+            _items[idx] = _Item.new()
+        match split[1]:
+            &"text":
+                _items[idx].text = str(value)
+                return true
+            &"icon":
+                _items[idx].icon = value as Texture2D
+                return true
+        return false
+
+    return ThemePropertiesUtil.set_theme_override_property(self, property, value)
+
+
+func _get(property: StringName) -> Variant:
+    if property == &"item_count":
+        return _items.size()
+
+    if property.begins_with("item_"):
+        var split := property.split("/")
+        if split.size() < 2:
+            return null
+        var str_idx := split[0].trim_prefix("item_")
+        if not str_idx.is_valid_int():
+            return null
+        var idx := int(str_idx)
+        if not _items[idx]:
+            _items[idx] = _Item.new()
+        match split[1]:
+            &"text": return _items[idx].text
+            &"icon": return _items[idx].icon
+        return null
+
+    return ThemePropertiesUtil.get_theme_override_property(self, property)
+
+
+func _get_property_list() -> Array[Dictionary]:
+    var properties: Array[Dictionary] = []
+
+    properties.append({
+        "name": &"item_count",
+        "class_name": "Items,item_",
+        "type": TYPE_INT,
+        "usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_ARRAY
+    })
+    for i in _items.size():
+        properties.append_array([{
+            "name": "item_%d/text" % i,
+            "type": TYPE_STRING
+        },{
+            "name": "item_%d/icon" % i,
+            "class_name": &"Texture2D",
+            "type": TYPE_OBJECT,
+            "hint": PROPERTY_HINT_RESOURCE_TYPE,
+            "hint_string": "Texture2D"
+        }])
+
+    properties.append_array([
+        ThemePropertiesUtil.get_theme_override_group_property(),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_COLOR, &"font_color"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_COLOR, &"font_hover_color"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_COLOR, &"font_outline_color"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_CONSTANT, &"h_separation"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_CONSTANT, &"v_separation"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_CONSTANT, &"item_start_padding"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_CONSTANT, &"item_end_padding"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_CONSTANT, &"icon_max_width"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_CONSTANT, &"outline_size"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_FONT, &"font"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_FONT_SIZE, &"font_size"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_STYLEBOX, &"panel"
+        ),
+        ThemePropertiesUtil.get_theme_override_property_item(
+            self, Theme.DATA_TYPE_STYLEBOX, &"hover"
+        )
+    ])
+
+    return properties
 
 
 func _get_configuration_warnings() -> PackedStringArray:
