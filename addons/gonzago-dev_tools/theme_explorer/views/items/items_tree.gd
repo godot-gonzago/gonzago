@@ -2,11 +2,13 @@
 extends VBoxContainer
 
 const ThemeUtil := Gonzago.ThemeUtil
+const ItemsList := preload("uid://cih5nr6v1i0e2")
 
 signal data_type_selected(data_type: Theme.DataType, theme_type: StringName)
 signal theme_item_selected(data_type: Theme.DataType, theme_type: StringName, theme_item: StringName)
 
 @onready var _tree := get_node("Tree") as Tree
+@onready var _list := get_node("ItemsList") as ItemsList
 
 # TODO: Add Button like Manage Items menu in default Theme Menu
 #       Add Data Type entries and remove entries. But as a PopupMenu.
