@@ -36,6 +36,7 @@ class _ThemeCache extends RefCounted:
     var cell_ofs_start: Vector2
     var cell_ofs_end: Vector2
     var cell_ofs: Vector2
+    var item_margin: int
 
     var hovered: StyleBox
     var hovered_dimmed: StyleBox
@@ -120,6 +121,7 @@ class _ThemeCache extends RefCounted:
             c.get_theme_constant(&"inner_item_margin_bottom", &"Tree")
         )
         cell_ofs = cell_ofs_start + cell_ofs_end
+        item_margin = c.get_theme_constant(&"item_margin", &"Tree")
 
         hovered = c.get_theme_stylebox(&"hovered", &"Tree")
         hovered_dimmed = c.get_theme_stylebox(&"hovered_dimmed", &"Tree")
@@ -231,17 +233,16 @@ func _notification(what: int) -> void:
         NOTIFICATION_READY:
             _update_headers()
             _cache.update(self)
-            _update_size()
+            if _theme and _theme_type:
+                inspect(_theme, _theme_type)
         NOTIFICATION_THEME_CHANGED:
             if is_node_ready():
                 _update_headers()
                 _cache.update(self)
                 _update_size()
-                #queue_redraw()
         NOTIFICATION_RESIZED:
             if is_node_ready():
                 _update_size()
-                #queue_redraw()
         NOTIFICATION_PREDELETE:
             for data_type in Theme.DATA_TYPE_MAX:
                 var header := _headers[data_type]
@@ -255,6 +256,8 @@ func _notification(what: int) -> void:
 func inspect(theme: Theme, theme_type: StringName) -> void:
     _theme = theme
     _theme_type = theme_type
+    if not is_node_ready():
+        return
 
     for data_type in Theme.DATA_TYPE_MAX:
         var header := _headers[data_type]
@@ -262,16 +265,17 @@ func inspect(theme: Theme, theme_type: StringName) -> void:
             child.free()
         header.children.clear()
 
-    if not _theme: return
-    if not _theme_type: return
+    if _theme and _theme_type:
+        for data_type in Theme.DATA_TYPE_MAX:
+            var header := _headers[data_type]
+            var theme_items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type)
+            for theme_item in theme_items:
+                var item := _ListItem.new()
+                item.text = theme_item
+                header.children.append(item)
 
-    for data_type in Theme.DATA_TYPE_MAX:
-        var header := _headers[data_type]
-        var theme_items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type)
-        for theme_item in theme_items:
-            var item := _ListItem.new()
-            item.text = theme_item
-            header.children.append(item)
+    _update_size()
+    queue_redraw()
 
 
 func _update_headers() -> void:
@@ -395,7 +399,7 @@ func _draw() -> void:
     var header_count := 0
     for data_type in Theme.DATA_TYPE_MAX:
         var header := _headers[data_type]
-        if header.has_visible_children():
+        if not header.has_visible_children():
             continue
         header_count += 1
 
@@ -404,16 +408,23 @@ func _draw() -> void:
 
         for child in header.children:
             _draw_item(child, line_rect)
+            line_rect.position.y += line_rect.size.y
+
+    if header_count == 0:
+        pass # TODO: Draw no items message
 
     if has_focus():
         draw_style_box(_cache.focus, _full_rect)
 
 func _draw_header(header: _Header, rect: Rect2) -> void:
+    var test_sb := get_theme_stylebox(&"bg_group_note", &"EditorProperty")
+    draw_style_box(test_sb, rect)
+
     if false:
         draw_style_box(_cache.selected, rect)
 
     var content_rect := rect
-    content_rect.position += _cache.cell_ofs_start
+    content_rect.position.y += _cache.cell_ofs_start.y
     content_rect.size -= _cache.cell_ofs
 
     var foldout_rect := Rect2(
@@ -460,6 +471,8 @@ func _draw_item(item: _ListItem, rect: Rect2) -> void:
     var content_rect := rect
     content_rect.position += _cache.cell_ofs_start
     content_rect.size -= _cache.cell_ofs
+    content_rect.position.x += _cache.item_margin
+    content_rect.size.x -= _cache.item_margin
 
     var text_rect := content_rect
 

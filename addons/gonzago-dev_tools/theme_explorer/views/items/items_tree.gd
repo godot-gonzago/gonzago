@@ -24,6 +24,7 @@ func _notification(what: int) -> void:
         NOTIFICATION_READY:
             #_tree.set_column_expand(0, true)
             if _theme and _theme_type:
+                _list.inspect(_theme, _theme_type)
                 _build_tree()
         NOTIFICATION_THEME_CHANGED:
             if _theme and _theme_type and is_node_ready():
@@ -33,8 +34,8 @@ func _notification(what: int) -> void:
 func inspect(theme: Theme, theme_type: StringName) -> void:
     _theme = theme
     _theme_type = theme_type
-    _list.inspect(theme, theme_type)
     if is_node_ready():
+        _list.inspect(theme, theme_type)
         _build_tree()
 
 
