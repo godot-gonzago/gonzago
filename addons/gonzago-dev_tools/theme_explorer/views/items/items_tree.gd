@@ -33,6 +33,7 @@ func _notification(what: int) -> void:
 func inspect(theme: Theme, theme_type: StringName) -> void:
     _theme = theme
     _theme_type = theme_type
+    _list.inspect(theme, theme_type)
     if is_node_ready():
         _build_tree()
 

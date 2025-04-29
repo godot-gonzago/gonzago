@@ -23,24 +23,20 @@ enum DisplayMode {
 
 class _ThemeCache extends RefCounted:
     var panel: StyleBox
+    var panel_ofs_start: Vector2
+    var panel_ofs_end: Vector2
+    var panel_ofs: Vector2
     var focus: StyleBox
 
-    var scrollbar_h_separation: int
-    var scrollbar_v_separation: int
-    var scrollbar_margin_bottom: int
-    var scrollbar_margin_left: int
-    var scrollbar_margin_right: int
-    var scrollbar_margin_top: int
+    var scrollbar_separation: Vector2
+    var scrollbar_ofs_start: Vector2
+    var scrollbar_ofs_end: Vector2
 
-    var h_separation: int
-    var v_separation: int
-    var inner_item_margin_bottom: int
-    var inner_item_margin_left: int
-    var inner_item_margin_right: int
-    var inner_item_margin_top: int
+    var separation: Vector2
+    var cell_ofs_start: Vector2
+    var cell_ofs_end: Vector2
+    var cell_ofs: Vector2
 
-    var cursor: StyleBox
-    var cursor_unfocused: StyleBox
     var hovered: StyleBox
     var hovered_dimmed: StyleBox
     var selected: StyleBox
@@ -53,66 +49,78 @@ class _ThemeCache extends RefCounted:
     var font_hovered_color: Color
     var font_hovered_dimmed_color: Color
     var font_selected_color: Color
+
     var outline_size: int
     var font_outline_color: Color
 
     var arrow: Texture2D
     var arrow_collapsed: Texture2D
     var arrow_collapsed_mirrored: Texture2D
+    var arrow_size: Vector2
+
+    func get_arrow(expanded: bool, rtl: bool) -> Texture2D:
+        if expanded:
+            return arrow
+        return arrow_collapsed_mirrored if rtl else arrow_collapsed
 
     var button_hover: StyleBox
     var button_pressed: StyleBox
     var button_margin: int
     var button_collapsed: Texture2D
 
-    #var max_control_panel: StyleBox
-    #var max_control_font: Font
-    #var max_control_font_size: int
+    var icon_size: int
+    var thumb_size: int
 
-    var panel_min_size: Vector2
-    var panel_start_offset: Vector2
-    var panel_end_offset: Vector2
-    var panel_total_offset: Vector2
-
-    var cell_start_offset: Vector2
-    var cell_end_offset: Vector2
-    var cell_total_offset: Vector2
-
-    var icon_min_size: Vector2
-
-    var header_min_size: Vector2
-    var header_start_offset: Vector2
-    var header_end_offset: Vector2
-    var header_total_offset: Vector2
+    var cell_min_size: Vector2
 
     func update(c: Control) -> void:
         panel = c.get_theme_stylebox(&"panel", &"Tree")
+        panel_ofs_start = Vector2(
+            panel.get_margin(SIDE_LEFT),
+            panel.get_margin(SIDE_TOP)
+        )
+        panel_ofs_end = Vector2(
+            panel.get_margin(SIDE_RIGHT),
+            panel.get_margin(SIDE_BOTTOM)
+        )
+        panel_ofs = panel_ofs_start + panel_ofs_end
         focus = c.get_theme_stylebox(&"focus", &"Tree")
 
-        scrollbar_h_separation = c.get_theme_constant(&"scrollbar_h_separation", &"Tree")
-        scrollbar_v_separation = c.get_theme_constant(&"scrollbar_v_separation", &"Tree")
-        scrollbar_margin_bottom = c.get_theme_constant(&"scrollbar_margin_bottom", &"Tree")
-        if scrollbar_margin_bottom < 0:
-            scrollbar_margin_bottom = panel.get_margin(SIDE_BOTTOM)
-        scrollbar_margin_left = c.get_theme_constant(&"scrollbar_margin_left", &"Tree")
-        if scrollbar_margin_left < 0:
-            scrollbar_margin_left = panel.get_margin(SIDE_LEFT)
-        scrollbar_margin_right = c.get_theme_constant(&"scrollbar_margin_right", &"Tree")
-        if scrollbar_margin_right < 0:
-            scrollbar_margin_right = panel.get_margin(SIDE_RIGHT)
-        scrollbar_margin_top = c.get_theme_constant(&"scrollbar_margin_top", &"Tree")
-        if scrollbar_margin_top < 0:
-            scrollbar_margin_top = panel.get_margin(SIDE_TOP)
+        scrollbar_separation = Vector2(
+            c.get_theme_constant(&"scrollbar_h_separation", &"Tree"),
+            c.get_theme_constant(&"scrollbar_v_separation", &"Tree")
+        )
+        scrollbar_ofs_start = Vector2(
+            c.get_theme_constant(&"scrollbar_margin_left", &"Tree"),
+            c.get_theme_constant(&"scrollbar_margin_top", &"Tree")
+        )
+        if scrollbar_ofs_start.x < 0:
+            scrollbar_ofs_start.x = panel_ofs_start.x
+        if scrollbar_ofs_start.y < 0:
+            scrollbar_ofs_start.y = panel_ofs_start.y
+        scrollbar_ofs_end = Vector2(
+            c.get_theme_constant(&"scrollbar_margin_right", &"Tree"),
+            c.get_theme_constant(&"scrollbar_margin_bottom", &"Tree")
+        )
+        if scrollbar_ofs_end.x < 0:
+            scrollbar_ofs_end.x = panel_ofs_end.x
+        if scrollbar_ofs_end.y < 0:
+            scrollbar_ofs_end.y = panel_ofs_end.y
 
-        h_separation = c.get_theme_constant(&"h_separation", &"Tree")
-        v_separation = c.get_theme_constant(&"v_separation", &"Tree")
-        inner_item_margin_bottom = c.get_theme_constant(&"inner_item_margin_bottom", &"Tree")
-        inner_item_margin_left = c.get_theme_constant(&"inner_item_margin_left", &"Tree")
-        inner_item_margin_right = c.get_theme_constant(&"inner_item_margin_right", &"Tree")
-        inner_item_margin_top = c.get_theme_constant(&"inner_item_margin_top", &"Tree")
+        separation = Vector2(
+            c.get_theme_constant(&"h_separation", &"Tree"),
+            c.get_theme_constant(&"v_separation", &"Tree")
+        )
+        cell_ofs_start = Vector2(
+            c.get_theme_constant(&"inner_item_margin_left", &"Tree"),
+            c.get_theme_constant(&"inner_item_margin_top", &"Tree")
+        )
+        cell_ofs_end = Vector2(
+            c.get_theme_constant(&"inner_item_margin_right", &"Tree"),
+            c.get_theme_constant(&"inner_item_margin_bottom", &"Tree")
+        )
+        cell_ofs = cell_ofs_start + cell_ofs_end
 
-        cursor = c.get_theme_stylebox(&"cursor", &"Tree")
-        cursor_unfocused = c.get_theme_stylebox(&"cursor_unfocused", &"Tree")
         hovered = c.get_theme_stylebox(&"hovered", &"Tree")
         hovered_dimmed = c.get_theme_stylebox(&"hovered_dimmed", &"Tree")
         selected = c.get_theme_stylebox(&"selected", &"Tree")
@@ -125,72 +133,48 @@ class _ThemeCache extends RefCounted:
         font_hovered_color = c.get_theme_color(&"font_hovered_color", &"Tree")
         font_hovered_dimmed_color = c.get_theme_color(&"font_hovered_dimmed_color", &"Tree")
         font_selected_color = c.get_theme_color(&"font_selected_color", &"Tree")
+
         outline_size = c.get_theme_constant(&"outline_size", &"Tree")
         font_outline_color = c.get_theme_color(&"font_outline_color", &"Tree")
 
         arrow = c.get_theme_icon(&"arrow", &"Tree")
         arrow_collapsed = c.get_theme_icon(&"arrow_collapsed", &"Tree")
         arrow_collapsed_mirrored = c.get_theme_icon(&"arrow_collapsed_mirrored", &"Tree")
+        arrow_size = arrow.get_size()
 
         button_hover = c.get_theme_stylebox(&"button_hover", &"Tree")
         button_pressed = c.get_theme_stylebox(&"button_pressed", &"Tree")
         button_margin = c.get_theme_constant(&"button_margin", &"Tree")
         button_collapsed = c.get_theme_icon(&"menu_hightlight", &"TabContainer")
 
-        #max_control_panel = c.get_theme_stylebox(&"normal", &"ColorPickerButton")
-        #max_control_font = c.get_theme_font(&"font", &"ColorPickerButton")
-        #max_control_font_size = c.get_theme_font_size(&"font_size", &"ColorPickerButton")
+        icon_size = c.get_theme_constant(&"class_icon_size", &"Editor")
+        if icon_size <= 0:
+            icon_size = ThemeDB.fallback_icon.get_width()
 
-        panel_min_size = panel.get_minimum_size()
-        panel_start_offset = Vector2(
-            scrollbar_margin_left,
-            scrollbar_margin_top
-        )
-        panel_end_offset = Vector2(
-            scrollbar_margin_right,
-            scrollbar_margin_bottom
-        )
-        panel_total_offset = panel_start_offset + panel_end_offset
+        thumb_size = c.get_theme_constant(&"thumb_size", &"Editor")
+        if thumb_size <= 0:
+            thumb_size = icon_size * 4
 
-        cell_start_offset = Vector2(
-            inner_item_margin_left,
-            inner_item_margin_top
-        )
-        cell_end_offset = Vector2(
-            inner_item_margin_right,
-            inner_item_margin_bottom
-        )
-        cell_total_offset = cell_start_offset + cell_end_offset
-
-        icon_min_size = ThemeDB.fallback_icon.get_size() * c.get_theme_default_base_scale()
-
-        header_start_offset = Vector2(
-            panel.content_margin_left,
-            panel.content_margin_top
-        )
-        header_end_offset = Vector2(
-            panel.content_margin_right,
-            panel.content_margin_bottom
-        )
-        header_total_offset = header_start_offset# + header_end_offset
-
-        header_min_size = header_total_offset + cell_total_offset
-        header_min_size.x += icon_min_size.x * 2 + h_separation
-        header_min_size.y += max(icon_min_size.y, font.get_height(font_size))
+        var font_height := font.get_height(font_size)
+        var control_height := c.get_theme_constant(&"color_picker_button_height", &"Editor") - cell_ofs.y
+        cell_min_size = Vector2(
+            thumb_size,
+            max(font_height, control_height, icon_size)
+        ) + cell_ofs
 
 var _cache := _ThemeCache.new()
 
 #endregion
 
 class _ListItem extends Object:
-    var visible: bool
+    var visible: bool = true
     var text: String
     var control: Control
 
 class _Header extends Object:
     var text: String
     var icon: Texture2D
-    var folded: bool
+    var expanded: bool = true
     var children: Array[_ListItem] = []
 
     func has_visible_children() -> bool:
@@ -207,29 +191,19 @@ class _Header extends Object:
         return count
 
 var _headers: Array[_Header] = []
+var _theme: Theme = null
+var _theme_type: StringName = StringName()
 
 var _v_scroll_bar: VScrollBar
 var _h_scroll_bar: HScrollBar
+var _scroll_ofs: Vector2
 
-
-
-var _line_rect: Rect2 # TODO: Calc rect for single full width line
-var _cell_rect: Rect2 # TODO: Calc rect for single cell
-var _columns: int = 1 # TODO: Calc columns
-
-
-# TODO: This is unnecessairy. Need to calculate grid and then the other stuff.
-var _header_rect: Rect2
-var _header_content_rect: Rect2
-var _header_foldout_rect: Rect2
-var _header_icon_rect: Rect2
-var _header_text_rect: Rect2
-
-var _item_rect: Rect2
-var _item_text_rect: Rect2
-var _item_button_rect: Rect2
-var _item_control_rect: Rect2
-
+var _full_rect: Rect2
+var _viewport_rect: Rect2
+var _content_size: Vector2
+var _line_rect: Rect2
+var _cell_rect: Rect2
+var _columns: int = 1
 
 func _init() -> void:
     for data_type in Theme.DATA_TYPE_MAX:
@@ -259,71 +233,15 @@ func _notification(what: int) -> void:
             _cache.update(self)
             _update_size()
         NOTIFICATION_THEME_CHANGED:
-            if not is_node_ready():
-                return
-            _update_headers()
-            _cache.update(self)
-            _update_size()
-            queue_redraw()
+            if is_node_ready():
+                _update_headers()
+                _cache.update(self)
+                _update_size()
+                #queue_redraw()
         NOTIFICATION_RESIZED:
-            if not is_node_ready():
-                return
-            _update_size()
-            queue_redraw()
-        NOTIFICATION_DRAW:
-            var rect := Rect2(Vector2.ZERO, size)
-            draw_style_box(_cache.panel, rect)
-
-            var header_offset := _cache.header_min_size.y
-            var header_rect := _header_rect
-            var header_content_rect := _header_content_rect
-            var foldout_rect := _header_foldout_rect
-            foldout_rect.size.y = foldout_rect.size.x
-            foldout_rect.position.y += (_header_foldout_rect.size.y - foldout_rect.size.y) * 0.5
-            var icon_rect := _header_icon_rect
-            icon_rect.size.y = icon_rect.size.x
-            icon_rect.position.y += (_header_icon_rect.size.y - icon_rect.size.y) * 0.5
-            var text_rect := _header_text_rect
-            for data_type in Theme.DATA_TYPE_MAX:
-                if data_type % 2 == 0:
-                    draw_style_box(_cache.selected, header_content_rect)
-
-                var header := _headers[data_type]
-                if header.folded:
-                    draw_texture_rect(_cache.arrow_collapsed, foldout_rect, false)
-                else:
-                    draw_texture_rect(_cache.arrow, foldout_rect, false)
-                draw_texture_rect(header.icon, icon_rect, false)
-
-                var ci := get_canvas_item()
-                var text_line := TextLine.new()
-                text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-                text_line.width = text_rect.size.x
-                text_line.add_string(header.text, _cache.font, _cache.font_size)
-                var text_size := text_line.get_size()
-                var position := text_rect.position
-                position.y += (text_rect.size.y - text_size.y) * 0.5
-                if _cache.outline_size > 0:
-                    text_line.draw_outline(
-                        ci, position,
-                        _cache.outline_size, _cache.font_outline_color
-                    )
-                var color := _cache.font_color
-                if data_type % 2 == 0:
-                    color = _cache.font_selected_color
-
-                text_line.draw(ci, position, color)
-
-                #draw_style_box(_cache.cursor, _header_text_rect)
-
-                header_rect.position.y += header_offset
-                header_content_rect.position.y += header_offset
-                foldout_rect.position.y += header_offset
-                icon_rect.position.y += header_offset
-                text_rect.position.y += header_offset
-
-            if has_focus():
-                draw_style_box(_cache.focus, rect)
+            if is_node_ready():
+                _update_size()
+                #queue_redraw()
         NOTIFICATION_PREDELETE:
             for data_type in Theme.DATA_TYPE_MAX:
                 var header := _headers[data_type]
@@ -332,6 +250,28 @@ func _notification(what: int) -> void:
                 header.children.clear()
                 header.free()
             _headers.clear()
+
+
+func inspect(theme: Theme, theme_type: StringName) -> void:
+    _theme = theme
+    _theme_type = theme_type
+
+    for data_type in Theme.DATA_TYPE_MAX:
+        var header := _headers[data_type]
+        for child in header.children:
+            child.free()
+        header.children.clear()
+
+    if not _theme: return
+    if not _theme_type: return
+
+    for data_type in Theme.DATA_TYPE_MAX:
+        var header := _headers[data_type]
+        var theme_items := ThemeUtil.get_theme_item_list(_theme, data_type, _theme_type)
+        for theme_item in theme_items:
+            var item := _ListItem.new()
+            item.text = theme_item
+            header.children.append(item)
 
 
 func _update_headers() -> void:
@@ -343,13 +283,22 @@ func _update_headers() -> void:
 
 func _update_size() -> void:
     # Update basic rect cache
-    var full_rect := Rect2(Vector2.ZERO, size)
+    _full_rect = Rect2(Vector2.ZERO, size)
 
-    var viewport_rect := full_rect
-    viewport_rect.position += _cache.panel_start_offset
-    viewport_rect.size -= _cache.panel_total_offset
+    var full_rect_with_ofs := _full_rect
+    full_rect_with_ofs.position += _cache.panel_ofs_start
+    full_rect_with_ofs.size -= _cache.panel_ofs
 
-    var content_rect := viewport_rect # TODO: Calc content
+    _viewport_rect = full_rect_with_ofs
+
+    var lines_count := 0
+    for data_type in Theme.DATA_TYPE_MAX:
+        var header := _headers[data_type]
+        var visible_children := header.get_visible_children_count()
+        if visible_children > 0:
+            lines_count += 1
+            lines_count += visible_children
+    lines_count = maxi(1, lines_count)
 
     # Update scroll bars
 
@@ -360,38 +309,34 @@ func _update_size() -> void:
     var h_scroll_min_size := Vector2.ZERO
     if _h_scroll_bar.visible:
         h_scroll_min_size = _h_scroll_bar.get_combined_minimum_size()
-        var h_scroll_offset := h_scroll_min_size.y + _cache.scrollbar_v_separation
-        viewport_rect.size.y -= h_scroll_offset
+        var h_scroll_offset := h_scroll_min_size.y + _cache.scrollbar_separation.y
+        _viewport_rect.size.y -= h_scroll_offset
 
     var v_scroll_min_size := Vector2.ZERO
     if _v_scroll_bar.visible:
         v_scroll_min_size = _v_scroll_bar.get_combined_minimum_size()
-        var v_scroll_offset := v_scroll_min_size.x + _cache.scrollbar_h_separation
-        viewport_rect.size.x -= v_scroll_offset
+        var v_scroll_offset := v_scroll_min_size.x + _cache.scrollbar_separation.x
+        _viewport_rect.size.x -= v_scroll_offset
         if is_layout_rtl():
-            viewport_rect.position.x += v_scroll_offset
+            _viewport_rect.position.x += v_scroll_offset
 
     if _v_scroll_bar.visible:
-        var v_scroll_bar_rect := Rect2(
-            full_rect.position.x + _cache.panel_start_offset.x,
-            full_rect.position.y + _cache.panel_start_offset.y,
-            v_scroll_min_size.x,
-            full_rect.position.y - _cache.panel_total_offset.y - h_scroll_min_size.y
-        )
+        var v_scroll_bar_rect := full_rect_with_ofs
+        v_scroll_bar_rect.size.x = v_scroll_min_size.x
+        v_scroll_bar_rect.size.y -= h_scroll_min_size.y
         if not is_layout_rtl():
-            v_scroll_bar_rect.position.x = full_rect.end.x - _cache.panel_end_offset.x - v_scroll_min_size.x
+            v_scroll_bar_rect.position.x = full_rect_with_ofs.end.x - v_scroll_min_size.x
 
         _v_scroll_bar.position = v_scroll_bar_rect.position
         _v_scroll_bar.size = v_scroll_bar_rect.size
-        _v_scroll_bar.max_value = 100.0 # TODO: content_rect.size.y
-        _v_scroll_bar.page = 10.0 # TODO: viewport_rect.size.y
+        _v_scroll_bar.max_value = _content_size.y
+        _v_scroll_bar.page = _viewport_rect.size.y
 
     if _h_scroll_bar.visible:
-        var h_scroll_bar_rect := Rect2()
-        h_scroll_bar_rect = Rect2(
-            full_rect.position.x + _cache.panel_start_offset.x,
-            full_rect.end.y - _cache.panel_total_offset.y - h_scroll_min_size.y,
-            full_rect.size.x - _cache.panel_total_offset.x - v_scroll_min_size.x,
+        var h_scroll_bar_rect := Rect2(
+            full_rect_with_ofs.position.x,
+            full_rect_with_ofs.end.y - h_scroll_min_size.y,
+            full_rect_with_ofs.size.x - v_scroll_min_size.x,
             h_scroll_min_size.y
         )
         if is_layout_rtl():
@@ -399,29 +344,14 @@ func _update_size() -> void:
 
         _h_scroll_bar.position = h_scroll_bar_rect.position
         _h_scroll_bar.size = h_scroll_bar_rect.size
-        _h_scroll_bar.max_value = 100 # TODO: content_rect.size.x
-        _h_scroll_bar.page = 10 # TODO: viewport_rect.size.x
+        _h_scroll_bar.max_value = _content_size.x
+        _h_scroll_bar.page = _viewport_rect.size.x
 
-    content_rect = viewport_rect
+    _line_rect = _viewport_rect
+    _line_rect.size.y = _cache.cell_min_size.y
 
-    _header_rect = content_rect
-    _header_rect.size.y = _cache.header_min_size.y
-
-    _header_content_rect = _header_rect
-    _header_content_rect.position += _cache.header_start_offset
-    _header_content_rect.size -= _cache.header_total_offset
-
-    _header_foldout_rect = _header_content_rect
-    _header_foldout_rect.size.x = _cache.arrow.get_width()
-
-    _header_icon_rect = _header_content_rect
-    _header_icon_rect.position.x = _header_foldout_rect.end.x + _cache.h_separation
-    _header_icon_rect.size.x = _cache.icon_min_size.x
-
-    _header_text_rect = _header_content_rect
-    var header_text_offset := _header_foldout_rect.size.x + _header_icon_rect.size.x + _cache.h_separation * 2
-    _header_text_rect.position.x += header_text_offset
-    _header_text_rect.size.x -= header_text_offset
+    _content_size = _viewport_rect.size
+    _content_size.y = lines_count * _line_rect.size.y
 
 # TODO:
 #    var full_width := 1000.0
@@ -453,3 +383,100 @@ func _update_size() -> void:
     #       autohide groups when no visible children
     #       add tooltip callback? (to group?)
     #       add context menu callback? (to group?)
+
+func _draw() -> void:
+    draw_style_box(_cache.panel, _full_rect)
+
+    var line_rect := _line_rect
+    var line_content_rect := line_rect
+    line_content_rect.position += _cache.cell_ofs_start
+    line_content_rect.size -= _cache.cell_ofs
+
+    var header_count := 0
+    for data_type in Theme.DATA_TYPE_MAX:
+        var header := _headers[data_type]
+        if header.has_visible_children():
+            continue
+        header_count += 1
+
+        _draw_header(header, line_rect)
+        line_rect.position.y += line_rect.size.y
+
+        for child in header.children:
+            _draw_item(child, line_rect)
+
+    if has_focus():
+        draw_style_box(_cache.focus, _full_rect)
+
+func _draw_header(header: _Header, rect: Rect2) -> void:
+    if false:
+        draw_style_box(_cache.selected, rect)
+
+    var content_rect := rect
+    content_rect.position += _cache.cell_ofs_start
+    content_rect.size -= _cache.cell_ofs
+
+    var foldout_rect := Rect2(
+        content_rect.position.x,
+        content_rect.position.y + (content_rect.size.y - _cache.arrow_size.y) * 0.5,
+        _cache.arrow_size.x,
+        _cache.arrow_size.y
+    )
+    var arrow := _cache.get_arrow(header.expanded, is_layout_rtl())
+    draw_texture_rect(arrow, foldout_rect, false)
+
+    var icon_rect = Rect2(
+        foldout_rect.end.x + _cache.separation.x,
+        content_rect.position.y + (content_rect.size.y - _cache.icon_size) * 0.5,
+        _cache.icon_size,
+        _cache.icon_size
+    )
+    draw_texture_rect(header.icon, icon_rect, false)
+
+    var text_rect := content_rect
+    var text_offset: float = foldout_rect.size.x + icon_rect.size.x + _cache.separation.x * 2.0
+    text_rect.position.x += text_offset
+    text_rect.size.x -= text_offset
+
+    var ci := get_canvas_item()
+    var text_line := TextLine.new()
+    text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+    text_line.width = text_rect.size.x
+    text_line.add_string(header.text, _cache.font, _cache.font_size)
+    var text_size := text_line.get_size()
+    var position := text_rect.position
+    position.y += (text_rect.size.y - text_size.y) * 0.5
+    if _cache.outline_size > 0:
+        text_line.draw_outline(
+            ci, position,
+            _cache.outline_size, _cache.font_outline_color
+        )
+    var color := _cache.font_color
+    if false:
+        color = _cache.font_selected_color
+    text_line.draw(ci, position, color)
+
+func _draw_item(item: _ListItem, rect: Rect2) -> void:
+    var content_rect := rect
+    content_rect.position += _cache.cell_ofs_start
+    content_rect.size -= _cache.cell_ofs
+
+    var text_rect := content_rect
+
+    var ci := get_canvas_item()
+    var text_line := TextLine.new()
+    text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+    text_line.width = text_rect.size.x
+    text_line.add_string(item.text, _cache.font, _cache.font_size)
+    var text_size := text_line.get_size()
+    var position := text_rect.position
+    position.y += (text_rect.size.y - text_size.y) * 0.5
+    if _cache.outline_size > 0:
+        text_line.draw_outline(
+            ci, position,
+            _cache.outline_size, _cache.font_outline_color
+        )
+    var color := _cache.font_color
+    if false:
+        color = _cache.font_selected_color
+    text_line.draw(ci, position, color)
