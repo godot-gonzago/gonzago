@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdhhxgye5oe6c"]
+
+[ext_resource type="Script" uid="uid://wre04r00irpb" path="res://addons/gonzago-dev_tools/todos/icon_picker.gd" id="1_5xix8"]
+
+[node name="IconPicker" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_5xix8")
+
+[node name="Layout" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Filter" type="LineEdit" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter Icons"
+clear_button_enabled = true
+select_all_on_focus = true
+
+[node name="IconsList" type="ItemList" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+icon_mode = 0
+
+[connection signal="resized" from="IconsList" to="." method="_on_icons_list_resized"]

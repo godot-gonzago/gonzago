@@ -1,6 +1,8 @@
 @tool
 extends VBoxContainer
 
+const NodeUtil := Gonzago.NodeUtil
+
 @onready var _filter := get_node("%Filter") as LineEdit
 @onready var _options := get_node("%Options") as MenuButton
 @onready var _tree := get_node("%Tree") as Tree
@@ -13,6 +15,9 @@ func _init() -> void:
 
 
 func _notification(what: int) -> void:
+    if NodeUtil.is_node_being_edited(self):
+        return
+
     match what:
         NOTIFICATION_READY:
             _update_theme()
