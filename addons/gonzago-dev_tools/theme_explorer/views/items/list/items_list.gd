@@ -65,9 +65,9 @@ class _ThemeCache extends RefCounted:
     var button_margin: int
     var button_collapsed: Texture2D
 
-    var max_control_panel: StyleBox
-    var max_control_font: Font
-    var max_control_font_size: int
+    #var max_control_panel: StyleBox
+    #var max_control_font: Font
+    #var max_control_font_size: int
 
     var panel_min_size: Vector2
     var panel_start_offset: Vector2
@@ -137,9 +137,9 @@ class _ThemeCache extends RefCounted:
         button_margin = c.get_theme_constant(&"button_margin", &"Tree")
         button_collapsed = c.get_theme_icon(&"menu_hightlight", &"TabContainer")
 
-        max_control_panel = c.get_theme_stylebox(&"normal", &"ColorPickerButton")
-        max_control_font = c.get_theme_font(&"font", &"ColorPickerButton")
-        max_control_font_size = c.get_theme_font_size(&"font_size", &"ColorPickerButton")
+        #max_control_panel = c.get_theme_stylebox(&"normal", &"ColorPickerButton")
+        #max_control_font = c.get_theme_font(&"font", &"ColorPickerButton")
+        #max_control_font_size = c.get_theme_font_size(&"font_size", &"ColorPickerButton")
 
         panel_min_size = panel.get_minimum_size()
         panel_start_offset = Vector2(
@@ -172,7 +172,7 @@ class _ThemeCache extends RefCounted:
             panel.content_margin_right,
             panel.content_margin_bottom
         )
-        header_total_offset = header_start_offset + header_start_offset
+        header_total_offset = header_start_offset# + header_end_offset
 
         header_min_size = header_total_offset + cell_total_offset
         header_min_size.x += icon_min_size.x * 2 + h_separation
@@ -211,6 +211,14 @@ var _headers: Array[_Header] = []
 var _v_scroll_bar: VScrollBar
 var _h_scroll_bar: HScrollBar
 
+
+
+var _line_rect: Rect2 # TODO: Calc rect for single full width line
+var _cell_rect: Rect2 # TODO: Calc rect for single cell
+var _columns: int = 1 # TODO: Calc columns
+
+
+# TODO: This is unnecessairy. Need to calculate grid and then the other stuff.
 var _header_rect: Rect2
 var _header_content_rect: Rect2
 var _header_foldout_rect: Rect2
@@ -301,7 +309,12 @@ func _notification(what: int) -> void:
                         _cache.outline_size, _cache.font_outline_color
                     )
                 var color := _cache.font_color
+                if data_type % 2 == 0:
+                    color = _cache.font_selected_color
+
                 text_line.draw(ci, position, color)
+
+                #draw_style_box(_cache.cursor, _header_text_rect)
 
                 header_rect.position.y += header_offset
                 header_content_rect.position.y += header_offset
@@ -332,12 +345,13 @@ func _update_size() -> void:
     # Update basic rect cache
     var full_rect := Rect2(Vector2.ZERO, size)
 
-    var content_rect := full_rect
-    content_rect.position += _cache.panel_start_offset
-    content_rect.size -= _cache.panel_total_offset
+    var viewport_rect := full_rect
+    viewport_rect.position += _cache.panel_start_offset
+    viewport_rect.size -= _cache.panel_total_offset
+
+    var content_rect := viewport_rect # TODO: Calc content
 
     # Update scroll bars
-    var viewport_rect := content_rect
 
     #var content_size := get_combined_minimum_size()
     #_h_scroll_bar.visible = viewport_rect.size.x < content_size.x
@@ -352,32 +366,32 @@ func _update_size() -> void:
     var v_scroll_min_size := Vector2.ZERO
     if _v_scroll_bar.visible:
         v_scroll_min_size = _v_scroll_bar.get_combined_minimum_size()
-        var v_scroll_offset :=v_scroll_min_size.x + _cache.scrollbar_h_separation
+        var v_scroll_offset := v_scroll_min_size.x + _cache.scrollbar_h_separation
         viewport_rect.size.x -= v_scroll_offset
         if is_layout_rtl():
             viewport_rect.position.x += v_scroll_offset
 
     if _v_scroll_bar.visible:
         var v_scroll_bar_rect := Rect2(
-            content_rect.position.x,
-            content_rect.position.y,
+            full_rect.position.x + _cache.panel_start_offset.x,
+            full_rect.position.y + _cache.panel_start_offset.y,
             v_scroll_min_size.x,
-            content_rect.size.y - h_scroll_min_size.y
+            full_rect.position.y - _cache.panel_total_offset.y - h_scroll_min_size.y
         )
         if not is_layout_rtl():
-            v_scroll_bar_rect.position.x = content_rect.end.x - v_scroll_min_size.x
+            v_scroll_bar_rect.position.x = full_rect.end.x - _cache.panel_end_offset.x - v_scroll_min_size.x
 
         _v_scroll_bar.position = v_scroll_bar_rect.position
         _v_scroll_bar.size = v_scroll_bar_rect.size
-        _v_scroll_bar.max_value = 100.0
-        _v_scroll_bar.page = 10.0
+        _v_scroll_bar.max_value = 100.0 # TODO: content_rect.size.y
+        _v_scroll_bar.page = 10.0 # TODO: viewport_rect.size.y
 
     if _h_scroll_bar.visible:
         var h_scroll_bar_rect := Rect2()
         h_scroll_bar_rect = Rect2(
-            content_rect.position.x,
-            content_rect.end.y - h_scroll_min_size.y,
-            content_rect.size.x - v_scroll_min_size.x,
+            full_rect.position.x + _cache.panel_start_offset.x,
+            full_rect.end.y - _cache.panel_total_offset.y - h_scroll_min_size.y,
+            full_rect.size.x - _cache.panel_total_offset.x - v_scroll_min_size.x,
             h_scroll_min_size.y
         )
         if is_layout_rtl():
@@ -385,10 +399,12 @@ func _update_size() -> void:
 
         _h_scroll_bar.position = h_scroll_bar_rect.position
         _h_scroll_bar.size = h_scroll_bar_rect.size
-        _h_scroll_bar.max_value = 100
-        _h_scroll_bar.page = 10
+        _h_scroll_bar.max_value = 100 # TODO: content_rect.size.x
+        _h_scroll_bar.page = 10 # TODO: viewport_rect.size.x
 
-    _header_rect = viewport_rect
+    content_rect = viewport_rect
+
+    _header_rect = content_rect
     _header_rect.size.y = _cache.header_min_size.y
 
     _header_content_rect = _header_rect
