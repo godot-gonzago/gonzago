@@ -196,6 +196,7 @@ var _headers: Array[_Header] = []
 var _theme: Theme = null
 var _theme_type: StringName = StringName()
 
+#var _panel: Container
 var _v_scroll_bar: VScrollBar
 var _h_scroll_bar: HScrollBar
 var _scroll_ofs: Vector2
@@ -210,6 +211,15 @@ var _columns: int = 1
 func _init() -> void:
     for data_type in Theme.DATA_TYPE_MAX:
         _headers.append(_Header.new())
+
+    clip_contents = true
+
+    #_panel = Container.new()
+    #_panel.draw.connect(_draw_panel)
+    #_panel.resized.connect(_panel_resized)
+    #_panel.pre_sort_children.connect(_presort_panel_children)
+    #_panel.sort_children.connect(_sort_panel_children)
+    #add_child(_panel, false, Node.INTERNAL_MODE_FRONT)
 
     _v_scroll_bar = VScrollBar.new()
     #_v_scroll_bar.visible = false
