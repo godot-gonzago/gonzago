@@ -24,6 +24,11 @@ func _enter_tree() -> void:
     _main_view = MainView.instantiate() as Control
     add_control_to_bottom_panel(_main_view, "Theme Explorer")
 
+    #var editor_theme := EditorInterface.get_editor_theme()
+    #var properties := editor_theme.get_property_list()
+    #for dict in properties:
+    #    print(dict)
+
 
 func _exit_tree() -> void:
     if _main_view:
